@@ -1,0 +1,159 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "ProjetC_IG",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "button::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-button-Debug-b4054f74e40c2d925448.json",
+					"name" : "button",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "doc::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-doc-Debug-3f4c97630568daa929e1.json",
+					"name" : "doc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "entry::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-entry-Debug-b1c9557866413502fb67.json",
+					"name" : "entry",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ext_testclass::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ext_testclass-Debug-341a5f43548d19f890dd.json",
+					"name" : "ext_testclass",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ext_testgm::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ext_testgm-Debug-25ba3ba251dcfbb5a654.json",
+					"name" : "ext_testgm",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "frame::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-frame-Debug-e6534a86a9817e7c3b1a.json",
+					"name" : "frame",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "hello_world::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-hello_world-Debug-ed617b80222c40e6897e.json",
+					"name" : "hello_world",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "minesweeper::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-minesweeper-Debug-35bef285d46c91091160.json",
+					"name" : "minesweeper",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "minimal::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-minimal-Debug-99d0ae9394a17e830860.json",
+					"name" : "minimal",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "parsing::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-parsing-Debug-51d3621ce90a330d9b7e.json",
+					"name" : "parsing",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "puzzle::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-puzzle-Debug-01c8a127af30143f67dc.json",
+					"name" : "puzzle",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "two048::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-two048-Debug-e897805a9f40e9471ab7.json",
+					"name" : "two048",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/build",
+		"source" : "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}
