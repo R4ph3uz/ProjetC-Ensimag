@@ -68,10 +68,19 @@ link_directories(${PLATFORM_DIR})
 # target ei (libei)
 
 set(LIB_EI_SOURCES
-     ${SRC}/ei_application.c
-     ${SRC}/ei_widget_configure.c
-	 ${SRC}/ei_widget.c 
-	 ${SRC}/ei_placer.c
+		${SRC}/ei_application.c
+		${SRC}/ei_draw.c
+		${SRC}/ei_entry.c
+		${SRC}/ei_event.c
+		${SRC}/ei_geometrymanager.c
+		${SRC}/ei_parser.c
+		${SRC}/ei_placer.c
+		${SRC}/ei_types.c
+		${SRC}/ei_utils.c
+		${SRC}/ei_widget.c
+		${SRC}/ei_widget_attributes.c
+		${SRC}/ei_widget_configure.c
+		${SRC}/ei_widgetclass.c
 )
 
 add_library(ei STATIC			${LIB_EI_SOURCES})
