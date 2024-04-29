@@ -1,5 +1,7 @@
 #include "ei_application.h"
+
 /* ----------------------------------------------------------------- */
+
 void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 {
     hw_init();
