@@ -1,6 +1,3 @@
-//
-// Created by legrandh on 29/04/24.
-//
 #include "ei_widget.h"
 
 ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,

@@ -1,6 +1,3 @@
-//
-// Created by legrandh on 29/04/24.
-//
 #include "ei_widget_configure.h"
 
 void			ei_frame_configure		(ei_widget_t		widget,

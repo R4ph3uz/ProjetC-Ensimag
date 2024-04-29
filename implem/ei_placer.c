@@ -1,6 +1,3 @@
-//
-// Created by legrandh on 29/04/24.
-//
 #include "ei_placer.h"
 
 void		ei_place	(ei_widget_t		widget,
