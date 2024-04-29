@@ -26,7 +26,7 @@ typedef struct ei_impl_widget_t {
 	void*			user_data;	///< Pointer provided by the programmer for private use. May be NULL.
 	ei_widget_destructor_t	destructor;	///< Pointer to the programmer's function to call before destroying this widget. May be NULL.
 
-	/* Widget Hierachy Management */
+	/* Widget Hierarchy Management */
 	ei_widget_t		parent;		///< Pointer to the parent of this widget.
 	ei_widget_t		children_head;	///< Pointer to the first child of this widget.	Children are chained with the "next_sibling" field.
 	ei_widget_t		children_tail;	///< Pointer to the last child of this widget.
