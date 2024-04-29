@@ -1,0 +1,57 @@
+[
+{
+  "directory": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/build",
+  "command": "/usr/bin/gcc-12 -I/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/api -I/usr/include/SDL2 -g -o CMakeFiles/parsing.dir/tests/parsing.c.o -c /user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/parsing.c",
+  "file": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/parsing.c"
+},
+{
+  "directory": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/build",
+  "command": "/usr/bin/gcc-12 -I/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/api -I/usr/include/SDL2 -g -o CMakeFiles/hello_world.dir/tests/hello_world.c.o -c /user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/hello_world.c",
+  "file": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/hello_world.c"
+},
+{
+  "directory": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/build",
+  "command": "/usr/bin/gcc-12 -I/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/api -I/usr/include/SDL2 -g -o CMakeFiles/two048.dir/tests/two048.c.o -c /user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/two048.c",
+  "file": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/two048.c"
+},
+{
+  "directory": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/build",
+  "command": "/usr/bin/gcc-12 -I/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/api -I/usr/include/SDL2 -g -o CMakeFiles/button.dir/tests/button.c.o -c /user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/button.c",
+  "file": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/button.c"
+},
+{
+  "directory": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/build",
+  "command": "/usr/bin/gcc-12 -I/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/api -I/usr/include/SDL2 -g -o CMakeFiles/frame.dir/tests/frame.c.o -c /user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/frame.c",
+  "file": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/frame.c"
+},
+{
+  "directory": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/build",
+  "command": "/usr/bin/gcc-12 -I/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/api -I/usr/include/SDL2 -g -o CMakeFiles/minimal.dir/tests/minimal.c.o -c /user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/minimal.c",
+  "file": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/minimal.c"
+},
+{
+  "directory": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/build",
+  "command": "/usr/bin/gcc-12 -I/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/api -I/usr/include/SDL2 -g -o CMakeFiles/entry.dir/tests/entry.c.o -c /user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/entry.c",
+  "file": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/entry.c"
+},
+{
+  "directory": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/build",
+  "command": "/usr/bin/gcc-12 -I/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/api -I/usr/include/SDL2 -g -o CMakeFiles/ext_testgm.dir/tests/ext_testgm.c.o -c /user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/ext_testgm.c",
+  "file": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/ext_testgm.c"
+},
+{
+  "directory": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/build",
+  "command": "/usr/bin/gcc-12 -I/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/api -I/usr/include/SDL2 -g -o CMakeFiles/puzzle.dir/tests/puzzle.c.o -c /user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/puzzle.c",
+  "file": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/puzzle.c"
+},
+{
+  "directory": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/build",
+  "command": "/usr/bin/gcc-12 -I/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/api -I/usr/include/SDL2 -g -o CMakeFiles/minesweeper.dir/tests/minesweeper.c.o -c /user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/minesweeper.c",
+  "file": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/minesweeper.c"
+},
+{
+  "directory": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/build",
+  "command": "/usr/bin/gcc-12 -I/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/api -I/usr/include/SDL2 -g -o CMakeFiles/ext_testclass.dir/tests/ext_testclass.c.o -c /user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/ext_testclass.c",
+  "file": "/user/5/.base/euzebyr/home/ENSIMAG/PLC/projetc/tests/ext_testclass.c"
+}
+]
