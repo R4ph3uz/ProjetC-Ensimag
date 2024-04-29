@@ -1,4 +1,6 @@
-#include "ei_placer.h"
+#include "ei_geometrymanager.h"
+
+/*-------------------------------------------------------------------------------------------------------*/
 
 void		ei_place	(ei_widget_t		widget,
                          ei_anchor_t*		anchor,

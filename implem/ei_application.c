@@ -8,7 +8,8 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 
 /* ----------------------------------------------------------------- */
 
-void ei_app_run(void){
+void ei_app_run(void)
+{
     getchar();
     hw_quit();
 }
@@ -29,7 +30,8 @@ void ei_app_quit_request(void)
 
 /* ----------------------------------------------------------------- */
 
-ei_surface_t ei_app_root_surface(void){
+ei_surface_t ei_app_root_surface(void)
+{
 
 }
 
