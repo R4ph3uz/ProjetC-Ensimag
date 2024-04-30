@@ -41,10 +41,18 @@ void frame_drawfunc(ei_widget_t widget,
 {
     ei_frame_t frame = (ei_frame_t) widget;
 
-    /* Afficher le cadre */
+    ei_point_t* points = malloc(sizeof(ei_point_t));
+    points[0] = (ei_point_t) {0, 0 };
+//    points[1] = (ei_point_t) {frame->widget->requested_size->width, 0 };
+//    points[2] = (ei_point_t) {frame->widget->requested_size->width, frame->widget->requested_size->height };
+//    points[3] = (ei_point_t) {0, frame->widget->requested_size->height };
+
+
+            /* Afficher le cadre */
     hw_surface_lock(surface);
-//    ei_draw_polygon();
+    ei_draw_polygon(surface, points, 4, *frame->color, clipper);
     hw_surface_unlock(surface);
+    hw_surface_update_rects(surface, NULL);
 
 
     if (frame->text){
@@ -70,9 +78,6 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     ei_frame_t frame = (ei_frame_t) widget;
 
     /* Suite spécifique à une  frame*/
-    ei_size_t* requested_size = malloc(sizeof(ei_size_t ));
-    requested_size->height = 100;
-    requested_size->width = 100;
 
     ei_color_t* color = malloc(sizeof(ei_color_t ));
     color->alpha = 100;
@@ -87,7 +92,7 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     *relief = ei_relief_none;
 
 
-    frame->requested_size = requested_size ;
+    //widget->requested_size = requested_size ; il faut gérer requested size
     frame->color = color;
     frame->border_width = border_width;
     frame->relief = relief;

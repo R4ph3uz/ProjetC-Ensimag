@@ -2,7 +2,7 @@
 
 
 /*-------------------------------------------------------------------------------------------------------*/
-static ei_widgetclass_t* LISTE_WIDGETCLASS;
+static ei_widgetclass_t* LISTE_WIDGETCLASS= NULL;
 
 void			ei_widgetclass_register		(ei_widgetclass_t* widgetclass)
 {
@@ -22,9 +22,9 @@ void			ei_widgetclass_register		(ei_widgetclass_t* widgetclass)
 ei_widgetclass_t*	ei_widgetclass_from_name	(ei_const_string_t name)
 {
     ei_widgetclass_t* actual = LISTE_WIDGETCLASS;
-    while(actual->next != NULL)
+    while(actual != NULL)
     {
-        if (actual->name == name)
+        if (strcmp(actual->name, name)==0)
         {
             return actual;
         }

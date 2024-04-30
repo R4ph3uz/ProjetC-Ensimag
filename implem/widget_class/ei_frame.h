@@ -9,7 +9,6 @@ typedef struct{
     ei_widget_t widget;
 
     /* Suite spécifique à une  frame*/
-    ei_size_t*		requested_size;
     ei_color_t*	color;
     int*			border_width;
     ei_relief_t*		relief;
