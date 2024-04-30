@@ -82,7 +82,7 @@ set(LIB_EI_SOURCES
 		${SRC}/ei_widget_configure.c
 		${SRC}/ei_widgetclass.c
 		${SRC}/widget_class/ei_frame.c
-		implem/ei_implementation.c
+		${SRC}/ei_implementation.c
 )
 
 add_library(ei STATIC			${LIB_EI_SOURCES})

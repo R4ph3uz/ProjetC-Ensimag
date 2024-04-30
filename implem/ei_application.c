@@ -3,9 +3,8 @@
 #include "ei_geometrymanager.h"
 #include "widget_class/ei_frame.h"
 #include "ei_implementation.h"
-
+#include "ei_widget_configure.h"
 /* ----------------------------------------------------------------- */
-
 ei_impl_widget_t ARBRE_WIDGET;
 
 ei_surface_t ROOT;
@@ -23,11 +22,7 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 
 void ei_app_run(void)
 {
-    // pesudo code
-    // while true:
-    // iterer sur l'arbre de widget
-    // dessiner le widget
-    // passer à celui d'après
+    // draw func de root et ça se débrouille
     getchar();
     hw_quit();
 }
@@ -57,5 +52,5 @@ ei_surface_t ei_app_root_surface(void)
 
 ei_widget_t ei_app_root_widget(void)
 {
-    return ROOT;
+
 }
