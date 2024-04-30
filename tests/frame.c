@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 			   			&(ei_color_t){0x88, 0x88, 0x88, 0xff},
 			 			&(int){6},
 					 	&(ei_relief_t){ei_relief_raised}, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-	ei_place_xy			(frame, 150, 200);
+ei_place_xy			(frame, 150, 200);
 
 	/* Run the application's main loop. */
 	ei_app_run();

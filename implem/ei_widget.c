@@ -24,9 +24,18 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 //  /* Widget Hierarchy Management */
     widget->parent= parent;
     if(parent!=NULL){
-    parent->children_tail->next_sibling=widget;
-    parent->children_tail= widget;
+        if(parent->children_head==NULL)
+        {
+            parent->children_head=widget;
+            parent->children_tail=widget;
+        }
+        else
+        {
+            parent->children_tail->next_sibling=widget;
+            parent->children_tail= widget;
+        }
     }
+
     widget->children_head=NULL;
     widget->children_tail=NULL;
     widget->next_sibling= NULL;///< Pointer to the next child of this widget's parent widget.

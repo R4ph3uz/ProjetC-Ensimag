@@ -53,6 +53,5 @@ ei_surface_t ei_app_root_surface(void)
 
 ei_widget_t ei_app_root_widget(void)
 {
-    fprintf(stderr,"je suis dans ei_app_root_widget\n");
     return ROOT_WIDGET;
 }
