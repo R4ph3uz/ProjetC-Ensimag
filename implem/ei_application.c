@@ -3,8 +3,12 @@
 #include "ei_geometrymanager.h"
 #include "widget_class/ei_frame.h"
 #include "ei_implementation.h"
+
 /* ----------------------------------------------------------------- */
+
 ei_impl_widget_t ARBRE_WIDGET;
+
+ei_surface_t ROOT;
 
 void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 {
@@ -12,7 +16,7 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ei_widgetclass_t* frame = create_frame_widgetclass();
     ei_widgetclass_register(frame);
 //    ei_geometrymanager_register();
-    hw_create_window(main_window_size, fullscreen);
+    ROOT =  hw_create_window(main_window_size, fullscreen);
 }
 
 /* ----------------------------------------------------------------- */
@@ -53,5 +57,5 @@ ei_surface_t ei_app_root_surface(void)
 
 ei_widget_t ei_app_root_widget(void)
 {
-
+    return ROOT;
 }

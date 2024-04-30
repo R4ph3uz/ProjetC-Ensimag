@@ -40,12 +40,11 @@ void frame_drawfunc(ei_widget_t widget,
                     ei_rect_t* clipper)
 {
     ei_frame_t frame = (ei_frame_t) widget;
-    hw_surface_lock(surface);
-    hw_surface_lock(pick_surface);
-
 
     /* Afficher le cadre */
-
+    hw_surface_lock(surface);
+    ei_draw_polygon();
+    hw_surface_unlock(surface);
 
 
     if (frame->text){
@@ -55,8 +54,6 @@ void frame_drawfunc(ei_widget_t widget,
         // Si il y a un image a afficher (pour l'instant ignoré)
     }
 
-    hw_surface_unlock(surface);
-    hw_surface_unlock(pick_surface);
 }
 
 /*--------------------------------------------------------------------------------*/
