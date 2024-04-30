@@ -1,4 +1,5 @@
 #include "ei_frame.h"
+#include "../ei_implementation.h"
 #include <stdlib.h>
 #include <string.h>
 /*--------------------------------------------------------------------------------*/
@@ -14,9 +15,6 @@ ei_widget_t frame_allocfunc()
 void frame_releasefunc(ei_widget_t widget)
 {
     ei_impl_frame_t* frame = (ei_impl_frame_t*) widget;
-
-    free(frame->requested_size);
-
     free(frame->color);
     free(frame->border_width);
     free(frame->relief);
@@ -41,14 +39,14 @@ void frame_drawfunc(ei_widget_t widget,
 {
     ei_frame_t frame = (ei_frame_t) widget;
 
-    ei_point_t* points = malloc(sizeof(ei_point_t));
+    ei_point_t* points = malloc(4*sizeof(ei_point_t));
     points[0] = (ei_point_t) {0, 0 };
-//    points[1] = (ei_point_t) {frame->widget->requested_size->width, 0 };
-//    points[2] = (ei_point_t) {frame->widget->requested_size->width, frame->widget->requested_size->height };
-//    points[3] = (ei_point_t) {0, frame->widget->requested_size->height };
+    points[1] = (ei_point_t) {widget->requested_size.width, 0 };
+    points[2] = (ei_point_t) {widget->requested_size.width, widget->requested_size.height };
+    points[3] = (ei_point_t) {0, widget->requested_size.height };
 
 
-            /* Afficher le cadre */
+    /* Afficher le cadre */
     hw_surface_lock(surface);
     ei_draw_polygon(surface, points, 4, *frame->color, clipper);
     hw_surface_unlock(surface);

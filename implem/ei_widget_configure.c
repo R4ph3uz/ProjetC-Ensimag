@@ -17,8 +17,8 @@ void			ei_frame_configure		(ei_widget_t		widget,
                                            ei_rect_ptr_t*		img_rect,
                                            ei_anchor_t*		img_anchor)
 {
+//    widget->requested_size=(ei_size_t)*requested_size;
     ei_frame_t frame = (ei_frame_t) widget;
-    frame->requested_size=(ei_size_t *)requested_size;
     frame->color=(ei_color_t*) color;
     frame->border_width= border_width;
     frame->relief = relief;
