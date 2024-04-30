@@ -18,3 +18,18 @@ uint32_t	ei_impl_map_rgba(ei_surface_t surface, ei_color_t color){
 }
 
 /*------------------------------------------------------------------------------------*/
+
+void		ei_impl_widget_draw_children	(ei_widget_t		widget,
+                         ei_surface_t		surface,
+                         ei_surface_t		pick_surface,
+                         ei_rect_t*		clipper) {
+    (*(widget->wclass->drawfunc))(widget,surface,pick_surface,clipper);
+    ei_widget_t actuel = widget->children_head;
+    if (actuel!=NULL) {
+        while(actuel!=NULL) {
+            // verifier surface
+            ei_impl_widget_draw_children(actuel,surface,pick_surface,clipper);
+            actuel=actuel->next_sibling;
+        }
+    }
+}
