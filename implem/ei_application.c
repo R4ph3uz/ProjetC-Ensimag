@@ -1,14 +1,15 @@
 #include "ei_application.h"
 #include "ei_widgetclass.h"
 #include "ei_geometrymanager.h"
-
+#include "widget_class/ei_frame.h"
 /* ----------------------------------------------------------------- */
 
 void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 {
     hw_init();
-    ei_widgetclass_register();
-    ei_geometrymanager_register();
+    ei_widgetclass_t* frame = create_frame_widgetclass();
+    ei_widgetclass_register(frame);
+//    ei_geometrymanager_register();
     hw_create_window(main_window_size, fullscreen);
 }
 

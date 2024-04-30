@@ -56,7 +56,7 @@ ei_widgetclass_t* create_frame_widgetclass()
 
     char name[] = "frame";
     strcpy(res->name, name);
-
+    
+    res->next = NULL;
     return res;
-
 }

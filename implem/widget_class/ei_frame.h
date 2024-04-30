@@ -22,6 +22,7 @@ typedef struct{
     ei_anchor_t*		img_anchor;
 
 } ei_impl_frame_t;
+
 typedef ei_impl_frame_t* ei_frame_t;
 
 ei_widget_t frame_allocfunc();
@@ -36,7 +37,11 @@ void frame_drawfunc(ei_widget_t widget,
                     ei_rect_t* clipper);
 
 void frame_geomnotifyfunc(ei_widget_t widget);
-
+/**
+ * @brief	Prend rien, crée une frame, renvoie un ei_widgetclass_t* ; permet d'acceder aux fonctions 'drawfunc ...' de frame
+ *
+ * @param	void
+ */
 ei_widgetclass_t* create_frame_widgetclass();
 
 #endif //PROJETC_IG_FRAME_H
