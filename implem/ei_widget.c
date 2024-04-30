@@ -1,7 +1,7 @@
 #include "ei_geometrymanager.h"
 #include "ei_implementation.h"
 /*-------------------------------------------------------------------------------------------------------*/
-extern ei_impl_widget_t ARBRE_WIDGET;
+
 static int PICKID=0;
 ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
                                             ei_widget_t		parent,
@@ -23,8 +23,10 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 
 //  /* Widget Hierarchy Management */
     widget->parent= parent;
+    if(parent!=NULL){
     parent->children_tail->next_sibling=widget;
     parent->children_tail= widget;
+    }
     widget->children_head=NULL;
     widget->children_tail=NULL;
     widget->next_sibling= NULL;///< Pointer to the next child of this widget's parent widget.
@@ -32,12 +34,12 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 //  /* Geometry Management */
     widget->geom_params = NULL;///< Pointer to the geometry management parameters for this widget. If NULL, the widget is not currently managed and thus, is not displayed on the screen.
 
-    widget->requested_size.height=0;///< See \ref ei_widget_get_requested_size.
-    widget->requested_size.width=0;///< See \ref ei_widget_get_requested_size.
+    widget->requested_size.height=100;///< See \ref ei_widget_get_requested_size.
+    widget->requested_size.width=100;///< See \ref ei_widget_get_requested_size.
     widget->screen_location.top_left.x=0;///< See \ref ei_widget_get_screen_location.
     widget->screen_location.top_left.y=0;///< See \ref ei_widget_get_screen_location.
-    widget->screen_location.size.width=0;///< See \ref ei_widget_get_screen_location.
-    widget->screen_location.size.height=0;///< See \ref ei_widget_get_screen_location.
+    widget->screen_location.size.width=100;///< See \ref ei_widget_get_screen_location.
+    widget->screen_location.size.height=100;///< See \ref ei_widget_get_screen_location.
 
     widget->content_rect=NULL;	///< See ei_widget_get_content_rect. By defaults, points to the screen_location.
     return widget;
