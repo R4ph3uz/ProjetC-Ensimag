@@ -10,7 +10,7 @@ typedef struct{
 
     /* Suite spécifique à une  frame*/
     ei_size_t*		requested_size;
-    const ei_color_t*	color;
+    ei_color_t*	color;
     int*			border_width;
     ei_relief_t*		relief;
     ei_string_t*		text;
