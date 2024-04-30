@@ -2,28 +2,6 @@
 
 /*------------------------------------------------------------------------------*/
 
-void	ei_draw_polyline	(ei_surface_t		surface,
-                             ei_point_t*		point_array,
-                             size_t			point_array_size,
-                             ei_color_t		color,
-                             const ei_rect_t*	clipper)
-{
-
-}
-
-/*------------------------------------------------------------------------------*/
-
-void	ei_draw_polygon		(ei_surface_t		surface,
-                                ei_point_t*		point_array,
-                                size_t			point_array_size,
-                                ei_color_t		color,
-                                const ei_rect_t*	clipper)
-{
-
-}
-
-/*------------------------------------------------------------------------------*/
-
 void	ei_draw_text		(ei_surface_t		surface,
                              const ei_point_t*	where,
                              ei_const_string_t	text,
