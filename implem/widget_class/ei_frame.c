@@ -43,7 +43,7 @@ void frame_drawfunc(ei_widget_t widget,
 
     /* Afficher le cadre */
     hw_surface_lock(surface);
-    ei_draw_polygon();
+//    ei_draw_polygon();
     hw_surface_unlock(surface);
 
 
