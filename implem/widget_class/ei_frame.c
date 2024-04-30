@@ -25,12 +25,20 @@ void frame_drawfunc(ei_widget_t widget,
                     ei_surface_t pick_surface,
                     ei_rect_t* clipper)
 {
+    ei_frame_t frame = (ei_frame_t) widget;
 
 }
 
 /*--------------------------------------------------------------------------------*/
 
 void frame_geomnotifyfunc(ei_widget_t widget)
+{
+
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void frame_setdefaultsfunc(ei_widget_t widget)
 {
 
 }
@@ -44,6 +52,7 @@ ei_widgetclass_t* create_frame_widgetclass()
     res->releasefunc = frame_releasefunc;
     res->drawfunc = frame_drawfunc;
     res->geomnotifyfunc= frame_geomnotifyfunc;
+    res->setdefaultsfunc = frame_setdefaultsfunc;
 
     char name[] = "frame";
     strcpy(res->name, name);

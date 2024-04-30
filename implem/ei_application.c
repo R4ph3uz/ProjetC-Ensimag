@@ -1,6 +1,7 @@
 #include "ei_application.h"
 #include "ei_widgetclass.h"
 #include "ei_geometrymanager.h"
+
 /* ----------------------------------------------------------------- */
 
 void ei_app_create(ei_size_t main_window_size, bool fullscreen)
