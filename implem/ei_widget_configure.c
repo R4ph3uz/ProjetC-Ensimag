@@ -54,18 +54,19 @@ void			ei_button_configure		(ei_widget_t		widget,
 							 ei_callback_t*		callback,
 							 ei_user_param_t*	user_param)
 {
-//    widget->requested_size=*requested_size;
+	if (requested_size)
+		widget->requested_size=(ei_size_t )*requested_size;
 //    ei_button_t button = (ei_button_t) widget;
-//    button->color=(ei_color_t*) color;
-//    button->border_width= border_width;
-//    button->relief = relief;
-//    button->text=text;
-//    button->text_font=text_font;
-//    button->text_color=text_color;
-//    button->text_anchor=text_anchor;
-//    button->img=img;
-//    button->img_rect=img_rect;
-//    button->img_anchor=img_anchor;
+//    ASSIGN_IF_NOT_NULL(button->color,(ei_color_t*) color);
+//    ASSIGN_IF_NOT_NULL(button->border_width, border_width);
+//    ASSIGN_IF_NOT_NULL(button->relief , relief);
+//    ASSIGN_IF_NOT_NULL(button->text,text);
+//    ASSIGN_IF_NOT_NULL(button->text_font,text_font);
+//    ASSIGN_IF_NOT_NULL(button->text_color,text_color);
+//    ASSIGN_IF_NOT_NULL(button->text_anchor,text_anchor);
+//    ASSIGN_IF_NOT_NULL(button->img,img);
+//    ASSIGN_IF_NOT_NULL(button->img_rect,img_rect);
+//    ASSIGN_IF_NOT_NULL(button->img_anchor,img_anchor);
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
@@ -79,6 +80,18 @@ void			ei_toplevel_configure		(ei_widget_t		widget,
 							 ei_axis_set_t*		resizable,
 						 	 ei_size_ptr_t*		min_size)
 {
-
+	if (requested_size)
+		widget->requested_size=(ei_size_t )*requested_size;
+	//    ei_toplevel_t toplevel = (ei_toplevel_t) widget;
+	//    ASSIGN_IF_NOT_NULL(toplevel->color,(ei_color_t*) color);
+	//    ASSIGN_IF_NOT_NULL(toplevel->border_width, border_width);
+	//    ASSIGN_IF_NOT_NULL(toplevel->relief , relief);
+	//    ASSIGN_IF_NOT_NULL(toplevel->text,text);
+	//    ASSIGN_IF_NOT_NULL(toplevel->text_font,text_font);
+	//    ASSIGN_IF_NOT_NULL(toplevel->text_color,text_color);
+	//    ASSIGN_IF_NOT_NULL(toplevel->text_anchor,text_anchor);
+	//    ASSIGN_IF_NOT_NULL(toplevel->img,img);
+	//    ASSIGN_IF_NOT_NULL(toplevel->img_rect,img_rect);
+	//    ASSIGN_IF_NOT_NULL(toplevel->img_anchor,img_anchor);
 }
 
