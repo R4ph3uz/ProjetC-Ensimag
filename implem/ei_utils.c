@@ -1,3 +1,1 @@
-#include "ei_geometrymanager.h"
-
-/*-------------------------------------------------------------------------------------------------------*/
+// rien à déclarer ici car aucune fonction à implémenter dans ei_utils.h (toutes les fonctions sont inline)

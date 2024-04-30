@@ -1,2 +1,1 @@
-#include "ei_geometrymanager.h"
-#include "ei_widgetclass.h"
+// rien à déclarer ici car aucune fonction à implémenter dans ei_types.h
