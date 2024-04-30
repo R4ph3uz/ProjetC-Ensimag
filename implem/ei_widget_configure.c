@@ -85,13 +85,10 @@ void			ei_toplevel_configure		(ei_widget_t		widget,
 	//    ei_toplevel_t toplevel = (ei_toplevel_t) widget;
 	//    ASSIGN_IF_NOT_NULL(toplevel->color,(ei_color_t*) color);
 	//    ASSIGN_IF_NOT_NULL(toplevel->border_width, border_width);
-	//    ASSIGN_IF_NOT_NULL(toplevel->relief , relief);
-	//    ASSIGN_IF_NOT_NULL(toplevel->text,text);
-	//    ASSIGN_IF_NOT_NULL(toplevel->text_font,text_font);
-	//    ASSIGN_IF_NOT_NULL(toplevel->text_color,text_color);
+	//    ASSIGN_IF_NOT_NULL(toplevel->title,title);
+	//    ASSIGN_IF_NOT_NULL(toplevel->closable,closable);
+	//    ASSIGN_IF_NOT_NULL(toplevel->resizable,resizable);
 	//    ASSIGN_IF_NOT_NULL(toplevel->text_anchor,text_anchor);
-	//    ASSIGN_IF_NOT_NULL(toplevel->img,img);
-	//    ASSIGN_IF_NOT_NULL(toplevel->img_rect,img_rect);
-	//    ASSIGN_IF_NOT_NULL(toplevel->img_anchor,img_anchor);
+	//    ASSIGN_IF_NOT_NULL(toplevel->min_size,min_size);
 }
 
