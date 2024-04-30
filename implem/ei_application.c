@@ -2,7 +2,9 @@
 #include "ei_widgetclass.h"
 #include "ei_geometrymanager.h"
 #include "widget_class/ei_frame.h"
+#include "ei_implementation.h"
 /* ----------------------------------------------------------------- */
+ei_impl_widget_t ARBRE_WIDGET;
 
 void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 {
@@ -17,6 +19,11 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 
 void ei_app_run(void)
 {
+    // pesudo code
+    // while true:
+    // iterer sur l'arbre de widget
+    // dessiner le widget
+    // passer à celui d'après
     getchar();
     hw_quit();
 }
