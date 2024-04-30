@@ -5,7 +5,7 @@
 #include "ei_implementation.h"
 #include "ei_widget_configure.h"
 #include "widget_class/ei_frame.h"
-
+#include "ei_widget_attributes.h"
 /* ----------------------------------------------------------------- */
 
 ei_impl_widget_t ARBRE_WIDGET;
@@ -21,6 +21,7 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 //    ei_geometrymanager_register();
     ROOT_SURFACE =  hw_create_window(main_window_size, fullscreen);
     ROOT_WIDGET =  ei_widget_create("frame",NULL,NULL,NULL);
+    ei_widget_set_requested_size(ROOT_WIDGET,(ei_size_t) {600, 600});
 }
 
 /* ----------------------------------------------------------------- */
