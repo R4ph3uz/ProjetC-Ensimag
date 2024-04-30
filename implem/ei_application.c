@@ -1,10 +1,10 @@
 #include "ei_application.h"
 #include "ei_widgetclass.h"
 #include "ei_geometrymanager.h"
-#include "widget_class/ei_frame.h"
+#include "widgetclass/ei_frame.h"
 #include "ei_implementation.h"
 #include "ei_widget_configure.h"
-#include "widget_class/ei_frame.h"
+#include "widgetclass/ei_frame.h"
 #include "ei_widget_attributes.h"
 /* ----------------------------------------------------------------- */
 

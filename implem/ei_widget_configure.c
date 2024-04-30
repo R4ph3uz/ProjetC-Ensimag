@@ -1,7 +1,7 @@
 #include "ei_geometrymanager.h"
 #include "ei_implementation.h"
 #include "ei_application.h"
-#include "widget_class/ei_frame.h"
+#include "widgetclass/ei_frame.h"
 
 #define ASSIGN_IF_NOT_NULL(field, value) if ((value) != NULL) { (field) = (value);}
 
