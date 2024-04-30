@@ -35,9 +35,9 @@ void frame_drawfunc(ei_widget_t widget,
                     ei_surface_t pick_surface,
                     ei_rect_t* clipper);
 
-void frame_geomnotifyfunc(ei_widget_t);
+void frame_geomnotifyfunc(ei_widget_t widget);
 
-
+ei_widgetclass_t* create_frame_widgetclass();
 
 #endif //PROJETC_IG_FRAME_H
 

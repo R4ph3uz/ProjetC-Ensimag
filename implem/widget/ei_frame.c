@@ -1,6 +1,6 @@
 #include "ei_frame.h"
 #include <stdlib.h>
-
+#include <string.h>
 /*--------------------------------------------------------------------------------*/
 
 ei_widget_t frame_allocfunc()
@@ -28,5 +28,26 @@ void frame_drawfunc(ei_widget_t widget,
 
 }
 
+/*--------------------------------------------------------------------------------*/
+
+void frame_geomnotifyfunc(ei_widget_t widget)
+{
+
+}
 
 /*--------------------------------------------------------------------------------*/
+
+ei_widgetclass_t* create_frame_widgetclass()
+{
+    ei_widgetclass_t* res = malloc(sizeof(ei_widgetclass_t));
+    res->allocfunc = frame_allocfunc;
+    res->releasefunc = frame_releasefunc;
+    res->drawfunc = frame_drawfunc;
+    res->geomnotifyfunc= frame_geomnotifyfunc;
+
+    char name[] = "frame";
+    strcpy(res->name, name);
+
+    return res;
+
+}
