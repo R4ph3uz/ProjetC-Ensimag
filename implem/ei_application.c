@@ -7,7 +7,7 @@
 /* ----------------------------------------------------------------- */
 ei_impl_widget_t ARBRE_WIDGET;
 
-ei_surface_t ROOT;
+static ei_widget_t ROOT_WIDGET;
 
 void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 {
@@ -15,7 +15,8 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ei_widgetclass_t* frame = create_frame_widgetclass();
     ei_widgetclass_register(frame);
 //    ei_geometrymanager_register();
-    ROOT =  hw_create_window(main_window_size, fullscreen);
+    ROOT_WIDGET =  ei_widget_create("frame",NULL,NULL,NULL);
+    hw_create_window(main_window_size,fullscreen);
 }
 
 /* ----------------------------------------------------------------- */
@@ -52,5 +53,6 @@ ei_surface_t ei_app_root_surface(void)
 
 ei_widget_t ei_app_root_widget(void)
 {
-
+    fprintf(stderr,"je suis dans ei_app_root_widget\n");
+    return ROOT_WIDGET;
 }
