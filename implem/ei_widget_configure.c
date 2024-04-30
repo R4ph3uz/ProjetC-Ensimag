@@ -2,6 +2,9 @@
 #include "ei_implementation.h"
 #include "ei_application.h"
 #include "widget_class/ei_frame.h"
+
+#define ASSIGN_IF_NOT_NULL(field, value) if ((value) != NULL) { (field) = (value);}
+
 /*-------------------------------------------------------------------------------------------------------*/
 
 void			ei_frame_configure		(ei_widget_t		widget,
@@ -17,18 +20,20 @@ void			ei_frame_configure		(ei_widget_t		widget,
                                            ei_rect_ptr_t*		img_rect,
                                            ei_anchor_t*		img_anchor)
 {
-//    widget->requested_size=(ei_size_t)*requested_size;
+    if (requested_size)
+        widget->requested_size=(ei_size_t )*requested_size;
     ei_frame_t frame = (ei_frame_t) widget;
-    frame->color=(ei_color_t*) color;
-    frame->border_width= border_width;
-    frame->relief = relief;
-    frame->text=text;
-    frame->text_font=text_font;
-    frame->text_color=text_color;
-    frame->text_anchor=text_anchor;
-    frame->img=img;
-    frame->img_rect=img_rect;
-    frame->img_anchor=img_anchor;
+    ASSIGN_IF_NOT_NULL(frame->color, (ei_color_t*) color);
+    ASSIGN_IF_NOT_NULL(frame->border_width, border_width);
+    ASSIGN_IF_NOT_NULL(frame->relief, relief);
+    ASSIGN_IF_NOT_NULL(frame->text, text);
+    ASSIGN_IF_NOT_NULL(frame->text_font, text_font);
+    ASSIGN_IF_NOT_NULL(frame->text_color, text_color);
+    ASSIGN_IF_NOT_NULL(frame->text_anchor, text_anchor);
+    ASSIGN_IF_NOT_NULL(frame->img, img);
+    ASSIGN_IF_NOT_NULL(frame->img_rect, img_rect);
+    ASSIGN_IF_NOT_NULL(frame->img_anchor, img_anchor);
+
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
