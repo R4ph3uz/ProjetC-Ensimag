@@ -2,6 +2,7 @@
 #include "ei_implementation.h"
 #include "ei_application.h"
 #include "widgetclass/ei_frame.h"
+#include "widgetclass/ei_button.h"
 #include <string.h>
 
 #define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { memcpy((field), (value),sizeof(*(field)) );}
@@ -57,18 +58,21 @@ void			ei_button_configure		(ei_widget_t		widget,
 							 ei_user_param_t*	user_param)
 {
 	if (requested_size)
-		widget->requested_size=(ei_size_t )*requested_size;
-//    ei_button_t button = (ei_button_t) widget;
-//    ASSIGN_IF_NOT_NULL(button->color,(ei_color_t*) color);
-//    ASSIGN_IF_NOT_NULL(button->border_width, border_width);
-//    ASSIGN_IF_NOT_NULL(button->relief , relief);
-//    ASSIGN_IF_NOT_NULL(button->text,text);
-//    ASSIGN_IF_NOT_NULL(button->text_font,text_font);
-//    ASSIGN_IF_NOT_NULL(button->text_color,text_color);
-//    ASSIGN_IF_NOT_NULL(button->text_anchor,text_anchor);
-//    ASSIGN_IF_NOT_NULL(button->img,img);
-//    ASSIGN_IF_NOT_NULL(button->img_rect,img_rect);
-//    ASSIGN_IF_NOT_NULL(button->img_anchor,img_anchor);
+		widget->requested_size=*requested_size;
+    ei_button_t button = (ei_button_t) widget;
+    COPY_IF_NOT_NULL(button->color,(ei_color_t*) color);
+    COPY_IF_NOT_NULL(button->border_width, border_width);
+	COPY_IF_NOT_NULL(button->corner_radius,corner_radius);
+    COPY_IF_NOT_NULL(button->relief , relief);
+    COPY_IF_NOT_NULL(button->text,text);
+    COPY_IF_NOT_NULL(button->text_font,text_font);
+    COPY_IF_NOT_NULL(button->text_color,text_color);
+    COPY_IF_NOT_NULL(button->text_anchor,text_anchor);
+    COPY_IF_NOT_NULL(button->img,img);
+    COPY_IF_NOT_NULL(button->img_rect,img_rect);
+    COPY_IF_NOT_NULL(button->img_anchor,img_anchor);
+	COPY_IF_NOT_NULL(button->callback,callback);
+	COPY_IF_NOT_NULL(button->user_param,user_param);
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
