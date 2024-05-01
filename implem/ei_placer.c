@@ -77,7 +77,7 @@ void		ei_place	(ei_widget_t		widget,
 
     widget->geom_params->rel_x=malloc(sizeof(float));
     if (rel_x) {
-        widget->geom_params->rel_x=rel_x;
+        *widget->geom_params->rel_x=*rel_x;
     }
     else
     {
@@ -86,7 +86,7 @@ void		ei_place	(ei_widget_t		widget,
 
     widget->geom_params->rel_width=malloc(sizeof(float));
     if (rel_width) {
-        widget->geom_params->rel_width=rel_width;
+        *widget->geom_params->rel_width=*rel_width;
     }
     else
     {
@@ -95,7 +95,7 @@ void		ei_place	(ei_widget_t		widget,
 
     widget->geom_params->rel_height=malloc(sizeof(float));
     if (rel_height) {
-        widget->geom_params->rel_height=rel_height;
+        *widget->geom_params->rel_height=*rel_height;
     }
     else
     {
@@ -111,7 +111,7 @@ void		ei_place	(ei_widget_t		widget,
 
     widget->geom_params->width = malloc(sizeof(int));
     if(width) {
-        widget->geom_params->width=width;
+        *widget->geom_params->width=*width;
     }
     else {
         if(requested_width) {
@@ -129,7 +129,7 @@ void		ei_place	(ei_widget_t		widget,
 
     widget->geom_params->height = malloc(sizeof(int));
     if(height) {
-        widget->geom_params->height=height;
+        *widget->geom_params->height=*height;
     }
     else {
         if(requested_height) {
@@ -144,7 +144,6 @@ void		ei_place	(ei_widget_t		widget,
             }
         }
     }
-
 
 }
 
