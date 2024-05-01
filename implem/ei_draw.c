@@ -1,5 +1,6 @@
 #include "ei_draw.h"
-
+#include "ei_implementation.h"
+#include <string.h>
 /*------------------------------------------------------------------------------*/
 
 void	ei_draw_text		(ei_surface_t		surface,
@@ -9,6 +10,8 @@ void	ei_draw_text		(ei_surface_t		surface,
                              ei_color_t		color,
                              const ei_rect_t*	clipper)
 {
+    ei_surface_t surface_text = hw_text_create_surface(text, font, color);
+
 
 }
 
@@ -25,13 +28,76 @@ void	ei_fill			(ei_surface_t		surface,
 }
 
 /*------------------------------------------------------------------------------*/
-
+//FONCTION BEAUCOUP TROP LONGUE SANS TESTER FORCEMENT UNE ERREUR
 int	ei_copy_surface		(ei_surface_t		destination,
                                const ei_rect_t*	dst_rect,
                                ei_surface_t		source,
                                const ei_rect_t*	src_rect,
                                bool			alpha)
 {
+    ei_size_t size_src = src_rect ? src_rect->size : hw_surface_get_size(source);
+    ei_size_t size_dest = src_rect ? dst_rect->size: hw_surface_get_size(destination);
+
+    if(memcmp(&size_src, &size_dest, sizeof(ei_size_t)) != 0 )
+        return 1; //tailles différentes on ne copie pas
+
+    ei_point_t top_left_dest = dst_rect ? dst_rect->top_left : (ei_point_t){0, 0};
+    ei_point_t top_left_src = src_rect ? src_rect->top_left : (ei_point_t){0, 0 };
+
+    uint32_t* buffer_dest = (uint32_t*)*hw_surface_get_buffer(destination);
+    uint32_t* buffer_src  = (uint32_t*)*hw_surface_get_buffer(source);
+
+
+
+    ei_size_t real_dest_size = hw_surface_get_size(destination);
+    ei_size_t real_src_size = hw_surface_get_size(source);
+
+    for(uint32_t i = 0; i< size_dest.height; i++)
+        for(uint32_t j = 0; j < size_dest.width; j++) {
+
+            uint32_t index_dest = (j+top_left_dest.x)+(i+top_left_dest.y)*real_dest_size.width;
+            uint32_t index_src = (j+top_left_src.x)+(i+top_left_src.y)*real_src_size.width;
+
+            if(alpha) {
+                uint32_t source_pixel = buffer_src[index_src];
+                uint32_t dest_pixel = buffer_dest[index_dest];
+
+                int ir,ig,ib,ia;
+                hw_surface_get_channel_indices( source, &ir, &ig, &ib, &ia);
+                uint8_t src_color[4];
+                // Décalage de bits et masquage pour extraire chaque octet
+                src_color[0] = (uint8_t)( source_pixel & 0xFF);
+                src_color[1] = (uint8_t)((source_pixel >> 8) & 0xFF);
+                src_color[2] = (uint8_t)((source_pixel >> 16) & 0xFF);
+                src_color[3] = (uint8_t)((source_pixel >> 24) & 0xFF);
+
+                uint8_t dest_color[4];
+                // Décalage de bits et masquage pour extraire chaque octet
+                dest_color[0] = (uint8_t)( dest_pixel & 0xFF);
+                dest_color[1] = (uint8_t)((dest_pixel >> 8) & 0xFF);
+                dest_color[2] = (uint8_t)((dest_pixel >> 16) & 0xFF);
+                dest_color[3] = (uint8_t)((dest_pixel >> 24) & 0xFF);
+
+                dest_color[ir] = (dest_color[ir]*(255-src_color[ia]) + src_color[ir]*src_color[ia])/255;
+                dest_color[ig] = (dest_color[ir]*(255-src_color[ia]) + src_color[ir]*src_color[ia])/255;
+                dest_color[ib] = (dest_color[ir]*(255-src_color[ia]) + src_color[ir]*src_color[ia])/255;
+
+                uint32_t value = ((uint32_t)dest_color[0]) |
+                                 ((uint32_t)dest_color[1] << 8) |
+                                 ((uint32_t)dest_color[2] << 16) |
+                                 ((uint32_t)dest_color[3] << 24);
+
+                buffer_dest[index_dest] = value;
+            }
+            else
+                buffer_dest[index_dest] =  buffer_src[index_src];
+
+
+        }
+
+
+
+
     return 0;
 }
 
