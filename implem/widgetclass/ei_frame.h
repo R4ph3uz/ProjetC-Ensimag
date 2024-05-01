@@ -10,6 +10,7 @@ typedef struct{
     ei_impl_widget_t widget;
 
     /* Suite spécifique à une  frame*/
+
     ei_color_t*	color;
     int*			border_width;
     ei_relief_t*		relief;
@@ -20,6 +21,7 @@ typedef struct{
     ei_surface_t*		img;
     ei_rect_ptr_t*		img_rect;
     ei_anchor_t*		img_anchor;
+
 
 } ei_impl_frame_t;
 

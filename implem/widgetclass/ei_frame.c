@@ -7,6 +7,17 @@
 ei_widget_t frame_allocfunc()
 {
     ei_impl_frame_t* frame = malloc(sizeof(ei_impl_frame_t));
+
+    frame->color = malloc(sizeof(ei_color_t));
+    frame->relief = malloc(sizeof(ei_relief_t));
+    frame->text = malloc(sizeof(ei_string_t));
+    frame->text_font = malloc(sizeof(ei_font_t));
+    frame->text_color = malloc(sizeof(ei_color_t));
+    frame->text_anchor = malloc(sizeof(ei_anchor_t));
+    frame->img = malloc(sizeof(ei_surface_t));
+    frame->img_rect = malloc(sizeof(ei_rect_ptr_t));
+    frame->img_anchor = malloc(sizeof(ei_anchor_t));
+    frame->border_width = malloc(sizeof(int));
     return (ei_widget_t) frame;
 }
 
@@ -26,7 +37,9 @@ void frame_releasefunc(ei_widget_t widget)
     free(frame->img_rect);
     free(frame->img_anchor);
 
-    // free trucs spécifique aux widgets
+    // free trucs spécifique aux widgets ?
+
+
     free(frame);
 }
 
@@ -78,29 +91,20 @@ void frame_setdefaultsfunc(ei_widget_t widget)
 
     /* Suite spécifique à une  frame*/
 
-    ei_color_t* color = malloc(sizeof(ei_color_t ));
-    color->alpha = 100;
-    color->blue = 255;
-    color->green = 100;
-    color->red= 0;
+    frame->color->alpha = 100;
+    frame->color->blue = 255;
+    frame->color->green = 100;
+    frame->color->red= 0;
+    *frame->border_width = 2;
+    *frame->relief = ei_relief_none;
 
-    int* border_width = malloc(sizeof(int));
-    *border_width = 2;
-
-    ei_relief_t * relief = malloc(sizeof(ei_relief_t));
-    *relief = ei_relief_none;
-
-    frame->color = color;
-    frame->border_width = border_width;
-    frame->relief = relief;
-
-    frame->text = NULL;
-    frame->text_font = NULL;
-    frame->text_color = NULL;
-    frame->text_anchor = NULL;
-    frame->img = NULL;
-    frame->img_rect = NULL;
-    frame->img_anchor = NULL;
+    // frame->text = NULL;
+    // frame->text_font = NULL;
+    // frame->text_color = NULL;
+    // frame->text_anchor = NULL;
+    // frame->img = NULL;
+    // frame->img_rect = NULL;
+    // frame->img_anchor = NULL;
 }
 
 /*--------------------------------------------------------------------------------*/
