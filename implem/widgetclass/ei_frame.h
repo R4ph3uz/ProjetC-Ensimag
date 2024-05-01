@@ -3,10 +3,11 @@
 
 #include "ei_widgetclass.h"
 #include "ei_types.h"
+#include "../ei_implementation.h"
 
 typedef struct{
     /* Commun à tous les widgets */
-    ei_widget_t widget;
+    ei_impl_widget_t widget;
 
     /* Suite spécifique à une  frame*/
     ei_color_t*	color;
