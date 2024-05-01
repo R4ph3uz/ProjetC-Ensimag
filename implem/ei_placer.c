@@ -39,68 +39,25 @@ void		ei_place	(ei_widget_t		widget,
     strcpy(widget->geom_params->manager->name,naame);
 
     widget->geom_params->anchor = malloc(sizeof(ei_anchor_t));
-    if (anchor) {
-        *widget->geom_params->anchor=*anchor;
-    }
-    else
-    {
-       *widget->geom_params->anchor= ei_anc_northeast;
-    }
-
+    *widget->geom_params->anchor=anchor?*anchor:ei_anc_northeast; // anchor ? si oui *anchor sinon ei...
 
     widget->geom_params->x=malloc(sizeof(int));
-    if (x) {
-        *widget->geom_params->x=*x;
-    }
-    else
-    {
-        *widget->geom_params->x = 0;
-    }
+    *widget->geom_params->x=x?*x:0;
 
     widget->geom_params->y=malloc(sizeof(int));
-    if (y) {
-        *(widget->geom_params->y)=*y;
-    }
-    else
-    {
-        *(widget->geom_params->y) = 0;
-    }
+    *widget->geom_params->y=y?*y:0;
 
     widget->geom_params->rel_y=malloc(sizeof(float));
-    if (rel_y) {
-        *widget->geom_params->rel_y=*rel_y;
-    }
-    else
-    {
-        *widget->geom_params->rel_y = 0;
-    }
+    *widget->geom_params->rel_y=rel_y?*rel_y:0;
 
     widget->geom_params->rel_x=malloc(sizeof(float));
-    if (rel_x) {
-        *widget->geom_params->rel_x=*rel_x;
-    }
-    else
-    {
-        *widget->geom_params->rel_x = 0;
-    }
+    *widget->geom_params->rel_x=rel_x?*rel_x:0;
 
     widget->geom_params->rel_width=malloc(sizeof(float));
-    if (rel_width) {
-        *widget->geom_params->rel_width=*rel_width;
-    }
-    else
-    {
-        *widget->geom_params->rel_width = 0;
-    }
+    *widget->geom_params->rel_width=rel_width?*rel_width:0;
 
     widget->geom_params->rel_height=malloc(sizeof(float));
-    if (rel_height) {
-        *widget->geom_params->rel_height=*rel_height;
-    }
-    else
-    {
-        *widget->geom_params->rel_height = 0;
-    }
+    *widget->geom_params->rel_height=rel_height?*rel_height:0;
 
 
     // passer par des pointeurs ?
