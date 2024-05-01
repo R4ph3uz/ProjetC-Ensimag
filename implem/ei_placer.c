@@ -2,9 +2,6 @@
 #include "ei_implementation.h"
 #include "ei_types.h"
 #include <stdlib.h>
-#define ASSIGN_IF_NULL(field, value,value2) if ((value) != NULL) { (field) = (value);} else {*(field)=(value2);}
-#define ASSIGN_IF_NULL2(field, value,value2) if ((value) != NULL) { (field) = (value);} else {(field)=(value2);}
-#define ASSIGN_IF_NULL3(field, value,value2,value3) if ((value) != NULL) { (field) = (value2);} else {(field)=(value3);}
 
 /*-------------------------------------------------------------------------------------------------------*/
 
@@ -31,69 +28,137 @@ void		ei_place	(ei_widget_t		widget,
                          float*			rel_x,
                          float*			rel_y,
                          float*			rel_width,
-                         float*			rel_height)
-{
+                         float*			rel_height) {
 
-    ei_geom_param_t param=malloc(sizeof(ei_geom_param_t));
-    // int*			default_width=malloc(sizeof(int));
-    int*			requested_width =malloc(sizeof(int));
-    // int*			default_height=malloc(sizeof(int));
-    int*			requested_height=malloc(sizeof(int));
-    int*          cas1=malloc(sizeof(int));
-    int*          cas2=malloc(sizeof(int));
-    int*          cas3=malloc(sizeof(int));
+    ei_impl_geom_param_t* param=malloc(sizeof(ei_geom_param_t));
 
+    ei_geometrymanager_t* manager = malloc(sizeof(ei_geometrymanager_t));
+    manager->runfunc=ei_placer_runfunc;
+    manager->releasefunc=ei_placer_releasefunc;
+    manager->next=NULL;
     char name[] = "placer";
-    strcpy(param->manager->name,name);
-    param->manager->runfunc=ei_placer_runfunc;
-    param->manager->releasefunc=ei_placer_releasefunc;
-    param->manager->next=NULL;
-    ASSIGN_IF_NULL2(param->anchor,anchor,ei_anc_northeast);
-    if (anchor)
-    {param->anchor=anchor;}
-    else
-    {
-       param->anchor = malloc(sizeof(ei_anchor_t));
-       *param->anchor=ei_anc_northeast;
+    strcpy(manager->name,name);
+    memcpy(param->manager,manager, sizeof(ei_geometrymanager_t));
+    free(manager);
+
+
+
+
+    param->anchor = malloc(sizeof(ei_anchor_t));
+    if (anchor) {
+        *param->anchor=*anchor;
     }
-    if (y)
-    {param->y=y;}
     else
     {
-        param->y = malloc(sizeof(int));
-        *param->y = 0;
+       *param->anchor= ei_anc_northeast;
     }
-    if (x)
-    {param->x=x;}
+
+
+    param->x=malloc(sizeof(int));
+    if (x) {
+        *param->x=*x;
+    }
     else
     {
-        param->x = malloc(sizeof(int));
         *param->x = 0;
     }
-    if (rel_y)
-    {param->rel_y=rel_y;}
+
+    param->y=malloc(sizeof(int));
+    if (y) {
+        *(param->y)=*y;
+    }
     else
     {
-        param->rel_y = malloc(sizeof(float));
+        *(param->y) = 0;
+    }
+
+    param->rel_y=malloc(sizeof(float));
+    if (rel_y) {
+        *param->rel_y=*rel_y;
+    }
+    else
+    {
         *param->rel_y = 0;
     }
-    if (rel_x)
-    {param->rel_x=rel_x;}
+
+    param->rel_x=malloc(sizeof(float));
+    if (rel_x) {
+        param->rel_x=rel_x;
+    }
     else
     {
-        param->rel_x = malloc(sizeof(float));
         *param->rel_x = 0;
     }
-    if (rel_width)
-    {param->rel_width=rel_width;}
+
+    param->rel_width=malloc(sizeof(float));
+    if (rel_width) {
+        param->rel_width=rel_width;
+    }
     else
     {
-        param->rel_width = malloc(sizeof(float));
         *param->rel_width = 0;
     }
 
+    param->rel_height=malloc(sizeof(float));
+    if (rel_height) {
+        param->rel_height=rel_height;
+    }
+    else
+    {
+        *param->rel_height = 0;
+    }
 
-    // if (requested_width)
+
+    // passer par des pointeurs ?
+    int			requested_width = widget->requested_size.width;
+    int			requested_height= widget->requested_size.height;
+    int         default_width = requested_width;
+    int         default_height = requested_height;
+
+    int* largeur = malloc(sizeof(int));
+    if(width) {
+        largeur=width;
+    }
+    else {
+        if(requested_width) {
+            *largeur=requested_width;
+        }
+        else {
+            if(rel_width == NULL) {
+                *largeur = default_width;
+            }
+            else {
+                *largeur=0;
+            }
+        }
+    }
+    param->width=largeur;
+
+    int* hauteur = malloc(sizeof(int));
+    if(height) {
+        hauteur=height;
+    }
+    else {
+        if(requested_height) {
+            *hauteur=requested_height;
+        }
+        else {
+            if(rel_height == NULL) {
+                *hauteur = default_height;
+            }
+            else {
+                *hauteur=0;
+            }
+        }
+    }
+    param->height=hauteur;
+
+    widget->geom_params=param;
+}
+
+
+// POUR PLUS TARD
+// if (requested_width)
     // {  cas1=requested_width;}
     // else
     // {
@@ -151,21 +216,6 @@ void		ei_place	(ei_widget_t		widget,
     //     param->height=cas3;
     // }
 
-    *requested_width  = widget->requested_size.width;
-    *requested_height = widget->requested_size.height;
-    int* default_width  = widget->requested_size.width;
-    int* default_height = widget->requested_size.height;
-    param->width=requested_width;
-    param->height=requested_height;
 
-    if (rel_height)
-    {param->rel_height=rel_height;}
-    else
-    {
-        param->rel_height = malloc(sizeof(float));
-        *param->rel_height = 0;
-    }
-    widget->geom_params=param;
-}
 
 /*-------------------------------------------------------------------------------------------------------*/
