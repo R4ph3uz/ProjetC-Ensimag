@@ -98,13 +98,13 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     *frame->border_width = 2;
     *frame->relief = ei_relief_none;
 
-    // frame->text = NULL;
-    // frame->text_font = NULL;
-    // frame->text_color = NULL;
-    // frame->text_anchor = NULL;
-    // frame->img = NULL;
-    // frame->img_rect = NULL;
-    // frame->img_anchor = NULL;
+    frame->text = NULL;
+    frame->text_font = NULL;
+    frame->text_color = NULL;
+    frame->text_anchor = NULL;
+    frame->img = NULL;
+    frame->img_rect = NULL;
+    frame->img_anchor = NULL;
 }
 
 /*--------------------------------------------------------------------------------*/
@@ -118,7 +118,7 @@ ei_widgetclass_t* create_frame_widgetclass()
     res->geomnotifyfunc= frame_geomnotifyfunc;
     res->setdefaultsfunc = frame_setdefaultsfunc;
 
-    char name[] = "frame";
+    const char name[] = "frame";
     strcpy(res->name, name);
     
     res->next = NULL;
