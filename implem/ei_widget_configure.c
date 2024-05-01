@@ -24,16 +24,8 @@ void			ei_frame_configure		(ei_widget_t		widget,
 
     if (requested_size)
         widget->requested_size= *requested_size;
-
     ei_frame_t frame = (ei_frame_t) widget;
-
-	if (color) {
-		frame->color->alpha = color->alpha;
-		frame->color->blue = color->blue;
-		frame->color->red = color->red;
-		frame->color->green = color->green;
-
-	}
+	COPY_IF_NOT_NULL(frame->color,color);
     COPY_IF_NOT_NULL(frame->border_width, border_width);
     COPY_IF_NOT_NULL(frame->relief, relief);
     COPY_IF_NOT_NULL(frame->text, text);
