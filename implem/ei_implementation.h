@@ -59,6 +59,10 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
 
 
 
+
+/************** **************/
+
+
 /**
  * \brief	Converts the red, green, blue and alpha components of a color into a 32 bits integer
  * 		than can be written directly in the memory returned by \ref hw_surface_get_buffer.
@@ -78,7 +82,15 @@ uint32_t	ei_impl_map_rgba(ei_surface_t surface, ei_color_t color);
  * \brief	Fields common to all geometry managers. Every geometry manager specializes this by adding its own fields.
  */
 typedef struct ei_impl_geom_param_t {
-	ei_geometrymanager_t*		manager;	///< The geometry managers that manages this widget.
+	ei_anchor_t*		anchor;
+	int*			x;
+	int*			y;
+	int*			width;
+	int*			height;
+	float*			rel_x;
+	float*			rel_y;
+	float*			rel_width;
+	float*			rel_height;
 } ei_impl_geom_param_t;
 
 
