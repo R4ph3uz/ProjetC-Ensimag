@@ -12,7 +12,6 @@
 #define HW_INTERFACE_H
 
 #include <stdint.h>
-
 #include "ei_types.h"
 
 

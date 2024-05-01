@@ -29,83 +29,77 @@ void		ei_place	(ei_widget_t		widget,
                          float*			rel_y,
                          float*			rel_width,
                          float*			rel_height) {
+    widget->geom_params=malloc(sizeof(ei_geom_param_t));
 
-    ei_impl_geom_param_t* param=malloc(sizeof(ei_geom_param_t));
+    widget->geom_params->manager = malloc(sizeof(ei_geometrymanager_t));
+    widget->geom_params->manager->runfunc=ei_placer_runfunc;
+    widget->geom_params->manager->releasefunc=ei_placer_releasefunc;
+    widget->geom_params->manager->next=NULL;
+    const char naame[] = "placer";
+    strcpy(widget->geom_params->manager->name,naame);
 
-    ei_geometrymanager_t* manager = malloc(sizeof(ei_geometrymanager_t));
-    manager->runfunc=ei_placer_runfunc;
-    manager->releasefunc=ei_placer_releasefunc;
-    manager->next=NULL;
-    char name[] = "placer";
-    strcpy(manager->name,name);
-    memcpy(param->manager,manager, sizeof(ei_geometrymanager_t));
-    free(manager);
-
-
-
-
-    param->anchor = malloc(sizeof(ei_anchor_t));
+    widget->geom_params->anchor = malloc(sizeof(ei_anchor_t));
     if (anchor) {
-        *param->anchor=*anchor;
+        *widget->geom_params->anchor=*anchor;
     }
     else
     {
-       *param->anchor= ei_anc_northeast;
+       *widget->geom_params->anchor= ei_anc_northeast;
     }
 
 
-    param->x=malloc(sizeof(int));
+    widget->geom_params->x=malloc(sizeof(int));
     if (x) {
-        *param->x=*x;
+        *widget->geom_params->x=*x;
     }
     else
     {
-        *param->x = 0;
+        *widget->geom_params->x = 0;
     }
 
-    param->y=malloc(sizeof(int));
+    widget->geom_params->y=malloc(sizeof(int));
     if (y) {
-        *(param->y)=*y;
+        *(widget->geom_params->y)=*y;
     }
     else
     {
-        *(param->y) = 0;
+        *(widget->geom_params->y) = 0;
     }
 
-    param->rel_y=malloc(sizeof(float));
+    widget->geom_params->rel_y=malloc(sizeof(float));
     if (rel_y) {
-        *param->rel_y=*rel_y;
+        *widget->geom_params->rel_y=*rel_y;
     }
     else
     {
-        *param->rel_y = 0;
+        *widget->geom_params->rel_y = 0;
     }
 
-    param->rel_x=malloc(sizeof(float));
+    widget->geom_params->rel_x=malloc(sizeof(float));
     if (rel_x) {
-        param->rel_x=rel_x;
+        widget->geom_params->rel_x=rel_x;
     }
     else
     {
-        *param->rel_x = 0;
+        *widget->geom_params->rel_x = 0;
     }
 
-    param->rel_width=malloc(sizeof(float));
+    widget->geom_params->rel_width=malloc(sizeof(float));
     if (rel_width) {
-        param->rel_width=rel_width;
+        widget->geom_params->rel_width=rel_width;
     }
     else
     {
-        *param->rel_width = 0;
+        *widget->geom_params->rel_width = 0;
     }
 
-    param->rel_height=malloc(sizeof(float));
+    widget->geom_params->rel_height=malloc(sizeof(float));
     if (rel_height) {
-        param->rel_height=rel_height;
+        widget->geom_params->rel_height=rel_height;
     }
     else
     {
-        *param->rel_height = 0;
+        *widget->geom_params->rel_height = 0;
     }
 
 
@@ -115,45 +109,43 @@ void		ei_place	(ei_widget_t		widget,
     int         default_width = requested_width;
     int         default_height = requested_height;
 
-    int* largeur = malloc(sizeof(int));
+    widget->geom_params->width = malloc(sizeof(int));
     if(width) {
-        largeur=width;
+        widget->geom_params->width=width;
     }
     else {
         if(requested_width) {
-            *largeur=requested_width;
+            *widget->geom_params->width=requested_width;
         }
         else {
             if(rel_width == NULL) {
-                *largeur = default_width;
+                *widget->geom_params->width = default_width;
             }
             else {
-                *largeur=0;
+                *widget->geom_params->width=0;
             }
         }
     }
-    param->width=largeur;
 
-    int* hauteur = malloc(sizeof(int));
+    widget->geom_params->height = malloc(sizeof(int));
     if(height) {
-        hauteur=height;
+        widget->geom_params->height=height;
     }
     else {
         if(requested_height) {
-            *hauteur=requested_height;
+            *widget->geom_params->height=requested_height;
         }
         else {
             if(rel_height == NULL) {
-                *hauteur = default_height;
+                *widget->geom_params->height = default_height;
             }
             else {
-                *hauteur=0;
+                *widget->geom_params->height=0;
             }
         }
     }
-    param->height=hauteur;
 
-    widget->geom_params=param;
+
 }
 
 

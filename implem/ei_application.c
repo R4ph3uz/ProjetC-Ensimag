@@ -29,7 +29,8 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 void ei_app_run(void)
 {
     // draw func de root et ça se débrouille
-    (*(ROOT_WIDGET->wclass->drawfunc))(ROOT_WIDGET, ei_app_root_surface(), NULL, NULL);
+    ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),NULL,NULL);
+    // (*(ROOT_WIDGET->wclass->drawfunc))(ROOT_WIDGET, ei_app_root_surface(), NULL, NULL);
     getchar();
     hw_quit();
 }
