@@ -26,6 +26,7 @@ void frame_releasefunc(ei_widget_t widget)
     free(frame->img_rect);
     free(frame->img_anchor);
 
+    // free trucs spécifique aux widgets
     free(frame);
 }
 
@@ -89,8 +90,6 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     ei_relief_t * relief = malloc(sizeof(ei_relief_t));
     *relief = ei_relief_none;
 
-
-    //widget->requested_size = requested_size ; il faut gérer requested size
     frame->color = color;
     frame->border_width = border_width;
     frame->relief = relief;
