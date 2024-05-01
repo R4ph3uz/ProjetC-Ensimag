@@ -20,10 +20,20 @@ void			ei_frame_configure		(ei_widget_t		widget,
                                            ei_rect_ptr_t*		img_rect,
                                            ei_anchor_t*		img_anchor)
 {
+
     if (requested_size)
         widget->requested_size=(ei_size_t )*requested_size;
+
     ei_frame_t frame = (ei_frame_t) widget;
-    ASSIGN_IF_NOT_NULL(frame->color, (ei_color_t*) color);
+
+	frame->color = malloc(sizeof(ei_color_t));
+	if (color) {
+		frame->color->alpha = color->alpha;
+		frame->color->blue = color->blue;
+		frame->color->red = color->red;
+		frame->color->green = color->green;
+
+	}
     ASSIGN_IF_NOT_NULL(frame->border_width, border_width);
     ASSIGN_IF_NOT_NULL(frame->relief, relief);
     ASSIGN_IF_NOT_NULL(frame->text, text);
