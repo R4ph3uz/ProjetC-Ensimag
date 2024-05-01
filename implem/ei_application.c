@@ -5,6 +5,7 @@
 #include "ei_implementation.h"
 #include "ei_widget_configure.h"
 #include "widgetclass/ei_frame.h"
+#include "widgetclass/ei_button.h"
 #include "ei_widget_attributes.h"
 /* ----------------------------------------------------------------- */
 
@@ -17,7 +18,9 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 {
     hw_init();
     ei_widgetclass_t* frame = create_frame_widgetclass();
+    ei_widgetclass_t* button = create_button_widgetclass();
     ei_widgetclass_register(frame);
+    ei_widgetclass_register(button);
 //    ei_geometrymanager_register();
     ROOT_SURFACE =  hw_create_window(main_window_size, fullscreen);
     ROOT_WIDGET =  ei_widget_create("frame",NULL,NULL,NULL);
