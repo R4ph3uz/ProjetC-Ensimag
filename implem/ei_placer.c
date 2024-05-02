@@ -18,7 +18,17 @@ void ei_placer_runfunc(ei_widget_t widget)
 
 void ei_placer_releasefunc(ei_widget_t widget)
 {
-
+ if (widget->children_head!=NULL)
+ {
+     ei_widget_t children;
+     children=widget->children_head;
+     while (children!=widget->children_tail)
+     {
+         ei_geometrymanager_unmap(children);
+         children=children->next_sibling;
+     }
+     ei_geometrymanager_unmap(children);
+ }
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
@@ -152,64 +162,6 @@ void		ei_place	(ei_widget_t		widget,
 }
 
 
-// POUR PLUS TARD
-// if (requested_width)
-    // {  cas1=requested_width;}
-    // else
-    // {
-    //     *cas1 = 0;
-    // }
-    // if (default_width)
-    // {
-    //     cas2=default_width;
-    // }
-    // else
-    // {
-    //     *cas2 = 0;
-    // }
-    //
-    // if (rel_width)
-    // { cas3=cas1;}
-    // else
-    // {
-    //     cas3 = cas1 ;
-    // }
-    // if (width)
-    // {  param->width=width;}
-    // else
-    // {
-    //     param->width = malloc(sizeof(int));
-    //     param->width=cas3;
-    // }
-    //
-    // if (requested_height)
-    // { cas1=requested_height;}
-    // else
-    // {
-    //     cas1 = malloc(sizeof(int));
-    //     *cas1 = 0;
-    // }
-    // if (default_height)
-    // { cas2=default_height;}
-    // else
-    // {
-    //     cas2 = malloc(sizeof(int));
-    //     *cas2 = 0;
-    // }
-
-    // if (rel_height)
-    // { cas3=cas1;}
-    // else
-    // {
-    //     cas3 = cas1 ;
-    // }
-    // if (height)
-    // {  param->height=height;}
-    // else
-    // {
-    //     param->height = malloc(sizeof(int));
-    //     param->height=cas3;
-    // }
 
 
 
