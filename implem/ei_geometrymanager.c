@@ -59,6 +59,11 @@ ei_geometrymanager_t*	ei_geometrymanager_from_name	(ei_geometrymanager_name_t na
 void			ei_geometrymanager_unmap	(ei_widget_t widget)
 {
     widget->geom_params= NULL;
+    widget->geom_params->manager->releasefunc(widget);
+    widget->screen_location.size.height=0;
+    widget->screen_location.size.width=0;
+    widget->screen_location.top_left.x=0;
+    widget->screen_location.top_left.y=0;
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
