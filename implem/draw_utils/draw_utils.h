@@ -2,6 +2,7 @@
 #define DRAW_UTILS_H
 
 #include "ei_types.h"
+#include "hw_interface.h"
 
 
 typedef enum rounded_frame_part {
@@ -22,9 +23,9 @@ typedef enum rounded_frame_part {
 */
 ei_point_t* polygon_arc(ei_point_t centre,
                         uint32_t rayon,
-                        uint8_t angle_debut,
-                        uint8_t angle_fin,
-                        uint32_t* size_tableau);
+                        uint32_t angle_debut,
+                        uint32_t angle_fin,
+                        size_t* size_tableau);
 
 
 
@@ -38,7 +39,31 @@ ei_point_t* polygon_arc(ei_point_t centre,
  */
 ei_point_t* rounded_frame(ei_rect_t* rectangle,
                             uint32_t rayon,
-                            const rounded_frame_part part
+                            rounded_frame_part part,
+                            size_t* nb_concat
                             );
+
+/**
+ * \brief	crée un tableau de points en ajoutant les points de points1 a points2, alloc un nouveau tableau de size1 + size2
+ *
+ * @param	points1 tableau de point 1
+ * @param	points2		tableau de point 2
+ * @param	size1	    taille de tableau point1
+ * @param   size2   taille de tableau point2
+ *
+ */
+ei_point_t* concatene_points(ei_point_t* points1, ei_point_t* points2, size_t size1, size_t size2);
+
+/**
+ * \brief	dessine un bouton (change selon le relief, la taille du rectangle et sa place)
+ *          Surface must be lock before calling the function
+ *
+ * @param	surface surface sur laquelle dessiner
+ * @param	rectangle	rectangle dans lequel inclure le bouton
+ * @param	color	    couleur du bouton
+ * @param   relief  relief du bouton
+ * @param   clipper clipper
+ */
+void draw_button(ei_surface_t surface, ei_rect_t rectangle,ei_color_t color,ei_relief_t  relief, ei_rect_t* clipper);
 
 #endif //DRAW_UTILS_H

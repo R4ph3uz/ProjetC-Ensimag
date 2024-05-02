@@ -12,6 +12,7 @@ void	ei_draw_text		(ei_surface_t		surface,
 {
     ei_surface_t surface_text = hw_text_create_surface(text, font, color);
 
+    ei_copy_surface(surface, )
 
 }
 
@@ -36,7 +37,7 @@ int	ei_copy_surface		(ei_surface_t		destination,
                                bool			alpha)
 {
     ei_size_t size_src = src_rect ? src_rect->size : hw_surface_get_size(source);
-    ei_size_t size_dest = src_rect ? dst_rect->size: hw_surface_get_size(destination);
+    ei_size_t size_dest = dst_rect ? dst_rect->size: hw_surface_get_size(destination);
 
     if(memcmp(&size_src, &size_dest, sizeof(ei_size_t)) != 0 )
         return 1; //tailles différentes on ne copie pas
