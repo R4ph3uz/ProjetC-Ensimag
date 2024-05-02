@@ -7,6 +7,10 @@
 
 void ei_placer_runfunc(ei_widget_t widget)
 {
+    widget->screen_location.size.height = *widget->geom_params->height;
+    widget->screen_location.size.width = *widget->geom_params->width;
+    widget->screen_location.top_left.x = *widget->geom_params->x;
+    widget->screen_location.top_left.y = *widget->geom_params->y;
 
 }
 
@@ -29,7 +33,7 @@ void		ei_place	(ei_widget_t		widget,
                          float*			rel_y,
                          float*			rel_width,
                          float*			rel_height) {
-    widget->geom_params=malloc(sizeof(ei_geom_param_t));
+    widget->geom_params=malloc(sizeof(ei_impl_geom_param_t));
 
     widget->geom_params->manager = malloc(sizeof(ei_geometrymanager_t));
     widget->geom_params->manager->runfunc=ei_placer_runfunc;

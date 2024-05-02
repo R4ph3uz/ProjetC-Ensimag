@@ -54,21 +54,22 @@ void frame_drawfunc(ei_widget_t widget,
     ei_frame_t frame = (ei_frame_t) widget;
 
     //Si requested size est bien géré
-    // uint32_t top_left_x = widget->screen_location.top_left.x;
-    // uint32_t top_left_y = widget->screen_location.top_left.y;
+    int top_left_x = widget->screen_location.top_left.x;
+    int top_left_y = widget->screen_location.top_left.y;
 
-    // ei_point_t* points = malloc(4*sizeof(ei_point_t));
-    // points[0] = (ei_point_t) {top_left_x, top_left_y };
-    // points[1] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y };
-    // points[2] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y+widget->requested_size.height };
-    // points[3] = (ei_point_t) {top_left_x, top_left_y+widget->requested_size.height };
 
-    // Toujours en haut a gauche
-    ei_point_t* points = malloc(4*sizeof(ei_point_t));
-    points[0] = (ei_point_t) {0, 0 };
-    points[1] = (ei_point_t) {widget->requested_size.width, 0 };
-    points[2] = (ei_point_t) {widget->requested_size.width, widget->requested_size.height };
-    points[3] = (ei_point_t) {0, widget->requested_size.height };
+     ei_point_t* points = malloc(4*sizeof(ei_point_t));
+     points[0] = (ei_point_t) {top_left_x, top_left_y };
+     points[1] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y };
+     points[2] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y+widget->requested_size.height };
+     points[3] = (ei_point_t) {top_left_x, top_left_y+widget->requested_size.height };
+
+//    // Toujours en haut a gauche
+//    ei_point_t* points = malloc(4*sizeof(ei_point_t));
+//    points[0] = (ei_point_t) {0, 0 };
+//    points[1] = (ei_point_t) {widget->requested_size.width, 0 };
+//    points[2] = (ei_point_t) {widget->requested_size.width, widget->requested_size.height };
+//    points[3] = (ei_point_t) {0, widget->requested_size.height };
 
     /* Afficher le cadre */
     hw_surface_lock(surface);

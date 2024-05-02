@@ -12,6 +12,7 @@ size_t		ei_geom_param_size()
 {
     size_t i=10;
     return i;
+//    return sizeof(ei_impl_geom_param_t);
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
@@ -57,15 +58,14 @@ ei_geometrymanager_t*	ei_geometrymanager_from_name	(ei_geometrymanager_name_t na
 
 void			ei_geometrymanager_unmap	(ei_widget_t widget)
 {
-
+    widget->geom_params= NULL;
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
 
 ei_geometrymanager_t*	ei_widget_get_geom_manager	(ei_widget_t widget)
 {
-    ei_geometrymanager_t* geommanager = (ei_geometrymanager_t*) widget;
-    return geommanager;
+    return widget->geom_params->manager;
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
