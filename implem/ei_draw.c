@@ -11,8 +11,8 @@ void	ei_draw_text		(ei_surface_t		surface,
                              const ei_rect_t*	clipper)
 {
     ei_surface_t surface_text = hw_text_create_surface(text, font, color);
-
-    ei_copy_surface(surface, )
+    ei_rect_t test = hw_surface_get_rect(surface_text);
+    ei_copy_surface(surface, &test, surface_text, NULL, true);
 
 }
 
