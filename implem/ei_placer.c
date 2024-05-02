@@ -7,10 +7,59 @@
 
 void ei_placer_runfunc(ei_widget_t widget)
 {
-    widget->screen_location.size.height = *widget->geom_params->height;
-    widget->screen_location.size.width = *widget->geom_params->width;
-    widget->screen_location.top_left.x = *widget->geom_params->x;
-    widget->screen_location.top_left.y = *widget->geom_params->y;
+    int res=(int)((float)*widget->geom_params->height + *(widget->geom_params->rel_height) * (float)(widget->parent->screen_location.size.height));
+    widget->screen_location.size.height =res ;
+    int res2=(int)((float)*widget->geom_params->width + *(widget->geom_params->rel_width) * (float)(widget->parent->screen_location.size.width));
+    widget->screen_location.size.width = res2;
+    int x =(int)(widget->parent->screen_location.top_left.x+*widget->geom_params->x+(int) ((float)(widget->parent->screen_location.size.width)**(widget->geom_params->rel_x)));
+    int y =(int)(widget->parent->screen_location.top_left.y+*widget->geom_params->y+(int) ((float)(widget->parent->screen_location.size.height)**(widget->geom_params->rel_y)));
+    if (*widget->geom_params->anchor==ei_anc_northwest)
+    {
+        widget->screen_location.top_left.x = x;
+        widget->screen_location.top_left.y = y;
+    }
+    if (*widget->geom_params->anchor==ei_anc_north)
+    {
+        widget->screen_location.top_left.x = x - (int) (widget->screen_location.size.width/2);
+        widget->screen_location.top_left.y = y;
+    }
+    if (*widget->geom_params->anchor==ei_anc_northeast)
+    {
+        widget->screen_location.top_left.x = x - (int) (widget->screen_location.size.width);
+        widget->screen_location.top_left.y = y;
+    }
+    if (*widget->geom_params->anchor==ei_anc_west)
+    {
+        widget->screen_location.top_left.x = x;
+        widget->screen_location.top_left.y = y- (int) (widget->screen_location.size.height/2);
+    }
+    if (*widget->geom_params->anchor==ei_anc_center)
+    {
+        widget->screen_location.top_left.x = x - (int) (widget->screen_location.size.width/2);
+        widget->screen_location.top_left.y = y- (int) (widget->screen_location.size.height/2);
+    }
+    if (*widget->geom_params->anchor==ei_anc_east)
+    {
+        widget->screen_location.top_left.x = x - (int) (widget->screen_location.size.width);
+        widget->screen_location.top_left.y = y- (int) (widget->screen_location.size.height/2);
+    }
+    if (*widget->geom_params->anchor==ei_anc_southwest)
+    {
+        widget->screen_location.top_left.x = x ;
+        widget->screen_location.top_left.y = y- (int) (widget->screen_location.size.height);
+    }
+    if (*widget->geom_params->anchor==ei_anc_south)
+    {
+        widget->screen_location.top_left.x = x - (int) (widget->screen_location.size.width/2);
+        widget->screen_location.top_left.y = y- (int) (widget->screen_location.size.height);
+    }
+    if (*widget->geom_params->anchor==ei_anc_southeast)
+    {
+        widget->screen_location.top_left.x = x - (int) (widget->screen_location.size.width);
+        widget->screen_location.top_left.y = y- (int) (widget->screen_location.size.height);
+    }
+
+
 
 }
 
@@ -58,7 +107,7 @@ void		ei_place	(ei_widget_t		widget,
     }
     else
     {
-       *widget->geom_params->anchor= ei_anc_northeast;
+       *widget->geom_params->anchor= ei_anc_northwest;
     }
 
 
@@ -120,8 +169,8 @@ void		ei_place	(ei_widget_t		widget,
     // passer par des pointeurs ?
     int			requested_width = widget->requested_size.width;
     int			requested_height= widget->requested_size.height;
-    int         default_width = requested_width;
-    int         default_height = requested_height;
+    int         default_width = widget->parent->screen_location.size.width;
+    int         default_height = widget->parent->screen_location.size.height;
 
     widget->geom_params->width = malloc(sizeof(int));
     if(width) {

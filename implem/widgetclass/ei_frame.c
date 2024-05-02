@@ -51,6 +51,8 @@ void frame_drawfunc(ei_widget_t widget,
                     ei_surface_t pick_surface,
                     ei_rect_t* clipper)
 {
+    if(widget->geom_params)
+        widget->geom_params->manager->runfunc(widget);
     ei_frame_t frame = (ei_frame_t) widget;
 
     //Si requested size est bien géré
@@ -60,9 +62,9 @@ void frame_drawfunc(ei_widget_t widget,
 
      ei_point_t* points = malloc(4*sizeof(ei_point_t));
      points[0] = (ei_point_t) {top_left_x, top_left_y };
-     points[1] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y };
-     points[2] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y+widget->requested_size.height };
-     points[3] = (ei_point_t) {top_left_x, top_left_y+widget->requested_size.height };
+     points[1] = (ei_point_t) {top_left_x+widget->screen_location.size.width, top_left_y };
+     points[2] = (ei_point_t) {top_left_x+widget->screen_location.size.width, top_left_y+widget->screen_location.size.height };
+     points[3] = (ei_point_t) {top_left_x, top_left_y+widget->screen_location.size.height };
 
 //    // Toujours en haut a gauche
 //    ei_point_t* points = malloc(4*sizeof(ei_point_t));
