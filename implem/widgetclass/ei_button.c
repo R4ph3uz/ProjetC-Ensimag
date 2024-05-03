@@ -65,11 +65,11 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     button->text_font=NULL;
     *button->text_color= (ei_color_t) ei_default_background_color;
     *button->text_anchor =ei_anc_northwest;
-//    button->img=NULL;
-//    button->img_rect=NULL;
-//    button->img_anchor=NULL;
+    button->img=NULL;
+    button->img_rect=NULL;
+    button->img_anchor=NULL;
     // que mettre au callback ?
-    button->callback=;
+    button->callback=NULL;
     button->user_param =NULL;
 }
 
