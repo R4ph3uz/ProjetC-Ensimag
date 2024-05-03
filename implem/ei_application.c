@@ -21,7 +21,18 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ei_widgetclass_t* button = create_button_widgetclass();
     ei_widgetclass_register(frame);
     ei_widgetclass_register(button);
-//    ei_geometrymanager_register();
+
+    //défini le geometry manager
+    ei_geometrymanager_t* placer = malloc(sizeof(ei_geometrymanager_t));
+    placer->runfunc = ei_placer_runfunc;
+    placer->releasefunc = ei_placer_releasefunc;
+
+    const char name[] = "button";
+    strcpy(placer->name, name);
+
+    placer->next = NULL;
+    // enregistre
+    ei_geometrymanager_register(placer);
     ROOT_SURFACE =  hw_create_window(main_window_size, fullscreen);
     ROOT_WIDGET =  ei_widget_create("frame",NULL,NULL,NULL);
     ei_widget_set_requested_size(ROOT_WIDGET,(ei_size_t) main_window_size);

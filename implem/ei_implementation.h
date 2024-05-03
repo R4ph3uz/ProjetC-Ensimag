@@ -13,7 +13,8 @@
 #include "ei_widget.h"
 #include "ei_geometrymanager.h"
 
-
+void ei_placer_releasefunc(ei_widget_t widget);
+void ei_placer_runfunc(ei_widget_t widget);
 
 /**
  * \brief	Fields common to all types of widget. Every widget classes specializes this base

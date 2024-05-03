@@ -3,8 +3,86 @@
 #include <stdlib.h>
 
 /*------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------*/
+
+void ei_placer_runfunc(ei_widget_t widget)
+{
+    ei_rect_t* newscreen=malloc(sizeof (ei_rect_t));
+    int res=(int)((float)*widget->geom_params->height + *(widget->geom_params->rel_height) * (float)(widget->parent->screen_location.size.height));
+    newscreen->size.height =res ;
+    int res2=(int)((float)*widget->geom_params->width + *(widget->geom_params->rel_width) * (float)(widget->parent->screen_location.size.width));
+    newscreen->size.width = res2;
+    int x =(int)(widget->parent->screen_location.top_left.x+*widget->geom_params->x+(int) ((float)(newscreen->size.width)**(widget->geom_params->rel_x)));
+    int y =(int)(widget->parent->screen_location.top_left.y+*widget->geom_params->y+(int) ((float)(newscreen->size.height)**(widget->geom_params->rel_y)));
+
+    if (*widget->geom_params->anchor==ei_anc_northwest)
+    {
+        newscreen->top_left.x = x;
+        newscreen->top_left.y = y;
+    }
+    if (*widget->geom_params->anchor==ei_anc_north)
+    {
+        newscreen->top_left.x = x - (int) (widget->screen_location.size.width/2);
+        newscreen->top_left.y = y;
+    }
+    if (*widget->geom_params->anchor==ei_anc_northeast)
+    {
+        newscreen->top_left.x = x - (int) (widget->screen_location.size.width);
+        newscreen->top_left.y = y;
+    }
+    if (*widget->geom_params->anchor==ei_anc_west)
+    {
+        newscreen->top_left.x = x;
+        newscreen->top_left.y = y- (int) (widget->screen_location.size.height/2);
+    }
+    if (*widget->geom_params->anchor==ei_anc_center)
+    {
+        newscreen->top_left.x = x - (int) (widget->screen_location.size.width/2);
+        newscreen->top_left.y = y- (int) (widget->screen_location.size.height/2);
+    }
+    if (*widget->geom_params->anchor==ei_anc_east)
+    {
+        newscreen->top_left.x = x - (int) (widget->screen_location.size.width);
+        newscreen->top_left.y = y- (int) (widget->screen_location.size.height/2);
+    }
+    if (*widget->geom_params->anchor==ei_anc_southwest)
+    {
+        newscreen->top_left.x = x ;
+        newscreen->top_left.y = y- (int) (widget->screen_location.size.height);
+    }
+    if (*widget->geom_params->anchor==ei_anc_south)
+    {
+        newscreen->top_left.x = x - (int) (widget->screen_location.size.width/2);
+        newscreen->top_left.y = y- (int) (widget->screen_location.size.height);
+    }
+    if (*widget->geom_params->anchor==ei_anc_southeast)
+    {
+        newscreen->top_left.x = x - (int) (widget->screen_location.size.width);
+        newscreen->top_left.y = y- (int) (widget->screen_location.size.height);
+    }
+    ei_geometry_run_finalize(widget,newscreen);
 
 
+}
+
+/*-------------------------------------------------------------------------------------------------------*/
+
+void ei_placer_releasefunc(ei_widget_t widget)
+{
+    if (widget->children_head!=NULL)
+    {
+        ei_widget_t children;
+        children=widget->children_head;
+        while (children!=widget->children_tail)
+        {
+            ei_geometrymanager_unmap(children);
+            children=children->next_sibling;
+        }
+        ei_geometrymanager_unmap(children);
+    }
+}
+
+/*-------------------------------------------------------------------------------------------------------*/
 ei_rect_t* intersection_rectangle(ei_rect_t rect1 , ei_rect_t rect2)
 {
 
