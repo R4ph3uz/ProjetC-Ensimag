@@ -73,11 +73,18 @@ void frame_drawfunc(ei_widget_t widget,
     ei_size_t size = (ei_size_t){200, 50};
     ei_rect_t rect= (ei_rect_t){top_left, size};
 
+    ei_fontstyle_t style = ei_style_normal;
+    ei_const_string_t name = "misc/font.ttf";
+    ei_font_t  font = hw_text_font_create(name, style, 12);
+
+
     /* Afficher le cadre */
     hw_surface_lock(surface);
     ei_draw_polygon(surface, points, nb_points, *frame->color, clipper);
     if(widget->geom_params){
+
         draw_button(surface, rect, *frame->color, ei_relief_raised, NULL) ;
+        ei_draw_text (surface, &(ei_point_t){500,500}, "Bonjour" ,font, (ei_color_t){100,100,100} , NULL);
     }
 
     hw_surface_unlock(surface);

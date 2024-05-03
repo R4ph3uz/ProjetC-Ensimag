@@ -11,8 +11,13 @@ void	ei_draw_text		(ei_surface_t		surface,
                              const ei_rect_t*	clipper)
 {
     ei_surface_t surface_text = hw_text_create_surface(text, font, color);
-    ei_rect_t test = hw_surface_get_rect(surface_text);
-    ei_copy_surface(surface, &test, surface_text, NULL, true);
+
+    ei_rect_t rect_surface_text = hw_surface_get_rect(surface_text);
+    if (where)
+        rect_surface_text.top_left = *where;
+    hw_surface_lock(surface_text);
+    ei_copy_surface(surface, &rect_surface_text, surface_text, NULL, true);
+    hw_surface_unlock(surface_text);
 
 }
 
@@ -45,8 +50,8 @@ int	ei_copy_surface		(ei_surface_t		destination,
     ei_point_t top_left_dest = dst_rect ? dst_rect->top_left : (ei_point_t){0, 0};
     ei_point_t top_left_src = src_rect ? src_rect->top_left : (ei_point_t){0, 0 };
 
-    uint32_t* buffer_dest = (uint32_t*)*hw_surface_get_buffer(destination);
-    uint32_t* buffer_src  = (uint32_t*)*hw_surface_get_buffer(source);
+    uint32_t* buffer_dest = (uint32_t*)hw_surface_get_buffer(destination);
+    uint32_t* buffer_src  = (uint32_t*)hw_surface_get_buffer(source);
 
 
 
