@@ -2,6 +2,7 @@
 #include "ei_implementation.h"
 #include "ei_application.h"
 #include "widgetclass/ei_frame.h"
+#include "widgetclass/ei_button.h"
 #include <string.h>
 
 #define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { memcpy((field), (value),sizeof(*(field)) );}
@@ -58,17 +59,34 @@ void			ei_button_configure		(ei_widget_t		widget,
 {
 	if (requested_size)
 		widget->requested_size=(ei_size_t )*requested_size;
-//    ei_button_t button = (ei_button_t) widget;
-//    ASSIGN_IF_NOT_NULL(button->color,(ei_color_t*) color);
-//    ASSIGN_IF_NOT_NULL(button->border_width, border_width);
-//    ASSIGN_IF_NOT_NULL(button->relief , relief);
-//    ASSIGN_IF_NOT_NULL(button->text,text);
-//    ASSIGN_IF_NOT_NULL(button->text_font,text_font);
-//    ASSIGN_IF_NOT_NULL(button->text_color,text_color);
-//    ASSIGN_IF_NOT_NULL(button->text_anchor,text_anchor);
-//    ASSIGN_IF_NOT_NULL(button->img,img);
-//    ASSIGN_IF_NOT_NULL(button->img_rect,img_rect);
-//    ASSIGN_IF_NOT_NULL(button->img_anchor,img_anchor);
+    ei_button_t button = (ei_button_t) widget;
+    if ((ei_color_t*) color != NULL) {
+        memcpy(button->color, (ei_color_t*) color,sizeof(*button->color) );
+    }
+    COPY_IF_NOT_NULL(button->border_width, border_width);
+    if (corner_radius != NULL) {
+        memcpy(button->corner_radius, corner_radius,sizeof(*button->corner_radius) );
+    }
+    if (relief != NULL) {
+        memcpy(button->relief, relief,sizeof(*button->relief) );
+    }
+    if (text != NULL) {
+        memcpy(button->text, text,sizeof(*button->text) );
+    }
+    COPY_IF_NOT_NULL(button->text_font,text_font);
+    if (text_color != NULL) {
+        memcpy(button->text_color, text_color,sizeof(*button->text_color) );
+    }
+    COPY_IF_NOT_NULL(button->text_anchor,text_anchor);
+    COPY_IF_NOT_NULL(button->img,img);
+    if (img_rect != NULL) {
+        memcpy(button->img_rect, img_rect,sizeof(*button->img_rect) );
+    }
+    COPY_IF_NOT_NULL(button->img_anchor,img_anchor);
+    if (callback != NULL) {
+        memcpy(button->callback, callback,sizeof(*button->callback) );
+    }
+    COPY_IF_NOT_NULL(button->user_param,user_param);
 }
 
 /*-------------------------------------------------------------------------------------------------------*/

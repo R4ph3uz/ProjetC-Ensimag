@@ -1,7 +1,6 @@
 #include "ei_geometrymanager.h"
 #include "ei_implementation.h"
 #include "ei_types.h"
-#include "widgetclass/ei_frame.h"
 #include <stdlib.h>
 /*-------------------------------------------------------------------------------------------------------*/
 
@@ -14,7 +13,6 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
     ei_widgetclass_t* wclass = ei_widgetclass_from_name(class_name);
     ei_widget_t widget = (wclass->allocfunc)();
     (*(wclass->setdefaultsfunc))(widget);
-    ei_frame_t frame = (ei_frame_t) widget;
 
     widget->wclass = wclass;
     widget->pick_id=PICKID; // < Id of this widget in the picking offscreen
@@ -66,9 +64,13 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 
 void			ei_widget_destroy		(ei_widget_t		widget)
 {
-    // destroy children ?
-    // effacer de l'ecran
-    //detruire (comment ?)
+    //détruit les enfants
+    while(widget->children_head){
+        ei_widget_t prochain = widget->children_head->next_sibling;
+        ei_widget_destroy(widget->children_head);
+        widget->children_head=prochain;
+    }
+    ei_geometrymanager_unmap(widget);
     (*(widget->wclass->releasefunc))(widget); // ici libère la mémoire
 }
 
@@ -76,7 +78,13 @@ void			ei_widget_destroy		(ei_widget_t		widget)
 
 bool	 		ei_widget_is_displayed		(ei_widget_t		widget)
 {
-
+    // verifie si geom param est nul
+    // condition suffisante mais pas nécéssaire car il existe d'autres cas où le widget est pas display mais a des
+    // geomparam
+    if (!widget->geom_params){
+        return true;
+    }
+    return false;
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
