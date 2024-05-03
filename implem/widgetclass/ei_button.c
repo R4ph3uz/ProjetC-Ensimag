@@ -1,5 +1,5 @@
 #include "ei_button.h"
-
+#include "../draw_utils/draw_utils.h"
 /*--------------------------------------------------------------------------------*/
 
 ei_widget_t button_allocfunc() {
@@ -60,16 +60,17 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     *button->border_width=1;
     *button->corner_radius = 1;
     *button->relief=ei_relief_none;
-//    button->text=NULL;
-//    button->text_font=NULL;
-//    button->text_color=NULL;
-//    button->text_anchor =NULL;
+    char texte[]="";
+    strcpy(*button->text,texte);
+    button->text_font=NULL;
+    *button->text_color= (ei_color_t) ei_default_background_color;
+    *button->text_anchor =ei_anc_northwest;
 //    button->img=NULL;
 //    button->img_rect=NULL;
 //    button->img_anchor=NULL;
-//    // que mettre au callback ?
-//    button->callback=NULL;
-//    button->user_param =NULL;
+    // que mettre au callback ?
+    button->callback=;
+    button->user_param =NULL;
 }
 
 /*--------------------------------------------------------------------------------*/
@@ -78,7 +79,8 @@ void button_drawfunc(ei_widget_t widget,
                     ei_surface_t surface,
                     ei_surface_t pick_surface,
                     ei_rect_t* clipper) {
-
+    ei_button_t button = (ei_button_t) widget;
+    draw_button(surface,*widget->content_rect,*button->color,*button->relief,clipper);
 }
 
 /*--------------------------------------------------------------------------------*/
