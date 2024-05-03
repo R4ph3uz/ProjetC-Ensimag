@@ -83,7 +83,7 @@ void			ei_button_configure		(ei_widget_t		widget,
         if (!button->text){
             button->text=malloc(sizeof(*button->text));
         }
-        memcpy(button->text, text,sizeof(*button->text) );
+        memcpy(button->text, text,sizeof(*button->text));
     }
     COPY_IF_NOT_NULL(button->text_font,text_font);
     if (text_color != NULL) {

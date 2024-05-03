@@ -137,10 +137,10 @@ void draw_button(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_
 
     conc3 = rounded_frame(&nouveau_rect, 20, low, &nb_concat);
     conc2 = rounded_frame(&nouveau_rect, 20, high, &nb_concat);
-    nouveau_rect.size.width -= nouveau_rect.size.width/25;
-    nouveau_rect.size.height -= nouveau_rect.size.width/25;
-    nouveau_rect.top_left.x += nouveau_rect.size.width/50;
-    nouveau_rect.top_left.y += nouveau_rect.size.width/50;
+    nouveau_rect.size.width -= nouveau_rect.size.height/10;
+    nouveau_rect.size.height -= nouveau_rect.size.height/10;
+    nouveau_rect.top_left.x += nouveau_rect.size.height/20;
+    nouveau_rect.top_left.y += nouveau_rect.size.height/20;
     conc1 = rounded_frame(&nouveau_rect, 20, full, &nb_points1);
 
     color_plus_fonce.red = color.red-10;

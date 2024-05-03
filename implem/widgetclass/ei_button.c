@@ -79,8 +79,13 @@ void button_drawfunc(ei_widget_t widget,
                     ei_surface_t surface,
                     ei_surface_t pick_surface,
                     ei_rect_t* clipper) {
+    if(widget->geom_params)
+        widget->geom_params->manager->runfunc(widget);
     ei_button_t button = (ei_button_t) widget;
+    hw_surface_lock(surface);
     draw_button(surface,widget->screen_location,*button->corner_radius,*button->color,*button->relief,clipper);
+    hw_surface_unlock(surface);
+    hw_surface_update_rects(surface,NULL);
 }
 
 /*--------------------------------------------------------------------------------*/
