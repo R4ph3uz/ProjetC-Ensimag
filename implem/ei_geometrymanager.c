@@ -19,7 +19,22 @@ size_t		ei_geom_param_size()
 
 void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_location)
 {
-
+    //Si différent
+    if ((widget->screen_location.size.height!=new_screen_location->size.height)||(widget->screen_location.size.width!=new_screen_location->size.width)||(widget->screen_location.top_left.x=new_screen_location->top_left.x)||(widget->screen_location.top_left.y=new_screen_location->top_left.y))
+    {
+        widget->screen_location=*new_screen_location;
+        // Il faut schedule un redraw  d'après la doc, a voir comment faire vu que pour l'instant, cette fonction est appeler par draw , donc jsp trop
+        widget->wclass->geomnotifyfunc(widget);
+        if (widget->children_tail)
+        {
+            ei_widget_t enfant=widget->children_head;
+            while(enfant!=NULL)
+            {
+                enfant->geom_params->manager->runfunc(enfant);
+                enfant=enfant->next_sibling;
+            }
+        }
+    }
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
