@@ -34,7 +34,7 @@ void	ei_fill			(ei_surface_t		surface,
 }
 
 /*------------------------------------------------------------------------------*/
-//FONCTION BEAUCOUP TROP LONGUE SANS TESTER FORCEMENT UNE ERREUR
+
 int	ei_copy_surface		(ei_surface_t		destination,
                                const ei_rect_t*	dst_rect,
                                ei_surface_t		source,
@@ -84,9 +84,16 @@ int	ei_copy_surface		(ei_surface_t		destination,
                 dest_color[2] = (uint8_t)((dest_pixel >> 16) & 0xFF);
                 dest_color[3] = (uint8_t)((dest_pixel >> 24) & 0xFF);
 
+                /*
                 dest_color[ir] = (dest_color[ir]*(255-src_color[ia]) + src_color[ir]*src_color[ia])/255;
                 dest_color[ig] = (dest_color[ir]*(255-src_color[ia]) + src_color[ir]*src_color[ia])/255;
                 dest_color[ib] = (dest_color[ir]*(255-src_color[ia]) + src_color[ir]*src_color[ia])/255;
+                 */
+                unsigned int alpha_val = src_color[ia];
+                dest_color[ir] =  ((255-alpha_val) * dest_color[ir] + alpha_val * src_color[ir])/255;
+                dest_color[ig] =  ((255-alpha_val) * dest_color[ig] + alpha_val * src_color[ig])/255;
+                dest_color[ib] =  ((255-alpha_val) * dest_color[ib] + alpha_val * src_color[ib])/255;
+
 
                 uint32_t value = ((uint32_t)dest_color[0]) |
                                  ((uint32_t)dest_color[1] << 8) |

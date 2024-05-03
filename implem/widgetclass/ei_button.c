@@ -62,8 +62,10 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     *button->relief=ei_relief_none;
     char texte[]="";
     strcpy((char *) button->text, texte);
-    button->text_font=NULL;
-    *button->text_color= (ei_color_t) ei_default_background_color;
+    ei_fontstyle_t style = ei_style_normal;
+    ei_const_string_t name = "misc/font.ttf";
+    *button->text_font = hw_text_font_create(name, style, 20);
+    *button->text_color= (ei_color_t) {0,0,0};
     *button->text_anchor =ei_anc_northwest;
     button->img=NULL;
     button->img_rect=NULL;
@@ -83,7 +85,15 @@ void button_drawfunc(ei_widget_t widget,
         widget->geom_params->manager->runfunc(widget);
     ei_button_t button = (ei_button_t) widget;
     hw_surface_lock(surface);
+
+
     draw_button(surface,widget->screen_location,*button->corner_radius,*button->color,*button->relief,clipper);
+
+    if(button->text){
+        ei_point_t place = {widget->screen_location.top_left.x+50,+75};
+        ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
+
+    }
     hw_surface_unlock(surface);
     hw_surface_update_rects(surface,NULL);
 }
