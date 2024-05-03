@@ -1,11 +1,44 @@
 #include "ei_button.h"
 
 ei_widget_t button_allocfunc() {
-    return NULL;
+    ei_impl_button_t* button = malloc(sizeof(ei_impl_button_t));
+
+    button->requested_size = malloc(sizeof(ei_size_t));
+    button->color=malloc(sizeof(ei_color_t));
+
+    button->border_width=malloc(sizeof(int));
+    button->corner_radius = malloc(sizeof(int));
+    button->relief=malloc(sizeof(ei_relief_t));
+    button->text = malloc(sizeof(ei_string_t));
+    button->text_font = malloc(sizeof(ei_font_t));
+    button->text_color = malloc(sizeof(ei_color_t));
+    button->text_anchor = malloc(sizeof(ei_anchor_t));
+    button->img = malloc(sizeof(ei_surface_t));
+    button->img_rect = malloc(sizeof(ei_rect_ptr_t));
+    button->img_anchor = malloc(sizeof(ei_anchor_t));
+    // que mettre au callback ?
+    button->callback=malloc(sizeof(ei_callback_t));
+    button->user_param =malloc(sizeof(ei_user_param_t));
+    return (ei_widget_t) button;
 }
 
 void button_releasefunc(ei_widget_t widget) {
+    ei_impl_button_t* button = (ei_impl_button_t*) widget;
+    free(button->requested_size);
+    free(button->color);
+    free(button->border_width);
+    free(button->corner_radius);
+    free(button->relief);
+    free(button->text);
+    free(button->text_font);
+    free(button->text_color);
+    free(button->text_anchor);
+    free(button->img);
+    free(button->img_rect);
+    free(button->img_anchor);
 
+    free(button->callback);
+    free(button->user_param);
 }
 
 void button_setdefaultsfunc(ei_widget_t widget) {
