@@ -24,8 +24,9 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 //    ei_geometrymanager_register();
     ROOT_SURFACE =  hw_create_window(main_window_size, fullscreen);
     ROOT_WIDGET =  ei_widget_create("frame",NULL,NULL,NULL);
-    ei_widget_set_requested_size(ROOT_WIDGET,(ei_size_t) {600, 600});
+    ei_widget_set_requested_size(ROOT_WIDGET,(ei_size_t) main_window_size);
     ROOT_WIDGET->screen_location.size=main_window_size;
+// a voir si on en a besoin ^
 }
 
 /* ----------------------------------------------------------------- */
