@@ -61,7 +61,7 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     *button->corner_radius = 1;
     *button->relief=ei_relief_none;
     char texte[]="";
-    strcpy(*button->text,texte);
+    strcpy((char *) button->text, texte);
     button->text_font=NULL;
     *button->text_color= (ei_color_t) ei_default_background_color;
     *button->text_anchor =ei_anc_northwest;
@@ -80,7 +80,7 @@ void button_drawfunc(ei_widget_t widget,
                     ei_surface_t pick_surface,
                     ei_rect_t* clipper) {
     ei_button_t button = (ei_button_t) widget;
-    draw_button(surface,*widget->content_rect,*button->color,*button->relief,clipper);
+    draw_button(surface,widget->screen_location,*button->corner_radius,*button->color,*button->relief,clipper);
 }
 
 /*--------------------------------------------------------------------------------*/

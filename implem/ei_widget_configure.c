@@ -68,25 +68,43 @@ void			ei_button_configure		(ei_widget_t		widget,
     }
     COPY_IF_NOT_NULL(button->border_width, border_width);
     if (corner_radius != NULL) {
+        if (!button->corner_radius){
+            button->corner_radius=malloc(sizeof(*button->corner_radius));
+        }
         memcpy(button->corner_radius, corner_radius,sizeof(*button->corner_radius) );
     }
     if (relief != NULL) {
+        if (!button->relief){
+            button->relief=malloc(sizeof(*button->relief));
+        }
         *button->relief= *relief;
     }
     if (text != NULL) {
+        if (!button->text){
+            button->text=malloc(sizeof(*button->text));
+        }
         memcpy(button->text, text,sizeof(*button->text) );
     }
     COPY_IF_NOT_NULL(button->text_font,text_font);
     if (text_color != NULL) {
+        if (!button->text_color){
+            button->text_color=malloc(sizeof(*button->text_color));
+        }
         memcpy(button->text_color, text_color,sizeof(*button->text_color) );
     }
     COPY_IF_NOT_NULL(button->text_anchor,text_anchor);
     COPY_IF_NOT_NULL(button->img,img);
     if (img_rect != NULL) {
+        if (!button->img_rect){
+            button->img_rect=malloc(sizeof(*button->img_rect));
+        }
         memcpy(button->img_rect, img_rect,sizeof(*button->img_rect) );
     }
     COPY_IF_NOT_NULL(button->img_anchor,img_anchor);
     if (callback != NULL) {
+        if (!button->callback){
+            button->callback=malloc(sizeof(*button->callback));
+        }
         memcpy(button->callback, callback,sizeof(*button->callback) );
     }
     COPY_IF_NOT_NULL(button->user_param,user_param);

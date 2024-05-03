@@ -64,6 +64,6 @@ ei_point_t* concatene_points(ei_point_t* points1, ei_point_t* points2, size_t si
  * @param   relief  relief du bouton
  * @param   clipper clipper
  */
-void draw_button(ei_surface_t surface, ei_rect_t rectangle,ei_color_t color,ei_relief_t  relief, ei_rect_t* clipper);
+void draw_button(ei_surface_t surface, ei_rect_t rectangle,int radius,ei_color_t color,ei_relief_t  relief, ei_rect_t* clipper);
 
 #endif //DRAW_UTILS_H

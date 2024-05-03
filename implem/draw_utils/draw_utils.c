@@ -111,7 +111,7 @@ ei_point_t* rounded_frame(ei_rect_t* rectangle,
 }
 
 /*---------------------------------------------------------------------------*/
-void draw_button(ei_surface_t surface, ei_rect_t rectangle,ei_color_t color,ei_relief_t  relief, ei_rect_t* clipper){
+void draw_button(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color,ei_relief_t  relief, ei_rect_t* clipper){
     size_t nb_points = 4;
 
     ei_point_t* points1 = NULL;
@@ -128,13 +128,20 @@ void draw_button(ei_surface_t surface, ei_rect_t rectangle,ei_color_t color,ei_r
     ei_color_t color_plus_fonce;
     ei_color_t color_plus_clair;
 
-    conc3 = rounded_frame(&rectangle, 20, low, &nb_concat);
-    conc2 = rounded_frame(&rectangle, 20, high, &nb_concat);
-    rectangle.size.width -= 10;
-    rectangle.size.height -= 10;
-    rectangle.top_left.x += 5;
-    rectangle.top_left.y += 5;
-    conc1 = rounded_frame(&rectangle, 20, full, &nb_points1);
+    ei_rect_t nouveau_rect = rectangle;
+    nouveau_rect.top_left.x= rectangle.top_left.x+radius;
+    nouveau_rect.top_left.y= rectangle.top_left.y+radius;
+    nouveau_rect.size.height = rectangle.size.height-2*radius;
+    nouveau_rect.size.width = rectangle.size.width-2*radius;
+
+
+    conc3 = rounded_frame(&nouveau_rect, 20, low, &nb_concat);
+    conc2 = rounded_frame(&nouveau_rect, 20, high, &nb_concat);
+    nouveau_rect.size.width -= nouveau_rect.size.width/25;
+    nouveau_rect.size.height -= nouveau_rect.size.width/25;
+    nouveau_rect.top_left.x += nouveau_rect.size.width/50;
+    nouveau_rect.top_left.y += nouveau_rect.size.width/50;
+    conc1 = rounded_frame(&nouveau_rect, 20, full, &nb_points1);
 
     color_plus_fonce.red = color.red-10;
     color_plus_fonce.green = color.green-10;

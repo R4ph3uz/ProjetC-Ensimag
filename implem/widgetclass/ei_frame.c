@@ -75,9 +75,9 @@ void frame_drawfunc(ei_widget_t widget,
     /* Afficher le cadre */
     hw_surface_lock(surface);
     ei_draw_polygon(surface, points, nb_points, *frame->color, clipper);
-//    if(widget->geom_params){
-//        draw_button(surface, rect, *frame->color, ei_relief_raised, NULL) ;
-//    }
+    if(widget->geom_params){
+        draw_button(surface, rect, 10, *frame->color, ei_relief_raised, NULL) ;
+    }
 
     hw_surface_unlock(surface);
     hw_surface_update_rects(surface, NULL);
