@@ -68,7 +68,7 @@ void			ei_button_configure		(ei_widget_t		widget,
         memcpy(button->corner_radius, corner_radius,sizeof(*button->corner_radius) );
     }
     if (relief != NULL) {
-        memcpy(button->relief, relief,sizeof(*button->relief) );
+        *button->relief= *relief;
     }
     if (text != NULL) {
         memcpy(button->text, text,sizeof(*button->text) );

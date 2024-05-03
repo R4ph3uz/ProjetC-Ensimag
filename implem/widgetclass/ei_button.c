@@ -1,5 +1,7 @@
 #include "ei_button.h"
 
+/*--------------------------------------------------------------------------------*/
+
 ei_widget_t button_allocfunc() {
     ei_impl_button_t* button = malloc(sizeof(ei_impl_button_t));
 
@@ -22,6 +24,8 @@ ei_widget_t button_allocfunc() {
     return (ei_widget_t) button;
 }
 
+/*--------------------------------------------------------------------------------*/
+
 void button_releasefunc(ei_widget_t widget) {
     ei_impl_button_t* button = (ei_impl_button_t*) widget;
     free(button->requested_size);
@@ -41,6 +45,8 @@ void button_releasefunc(ei_widget_t widget) {
     free(button->user_param);
 }
 
+/*--------------------------------------------------------------------------------*/
+
 void button_setdefaultsfunc(ei_widget_t widget) {
     ei_button_t button = (ei_button_t) widget;
 
@@ -53,18 +59,20 @@ void button_setdefaultsfunc(ei_widget_t widget) {
 
     *button->border_width=1;
     *button->corner_radius = 1;
-    button->relief=ei_relief_none;
-    button->text=NULL;
-    button->text_font=NULL;
-    button->text_color=NULL;
-    button->text_anchor =NULL;
-    button->img=NULL;
-    button->img_rect=NULL;
-    button->img_anchor=NULL;
-    // que mettre au callback ?
-    button->callback=NULL;
-    button->user_param =NULL;
+    *button->relief=ei_relief_none;
+//    button->text=NULL;
+//    button->text_font=NULL;
+//    button->text_color=NULL;
+//    button->text_anchor =NULL;
+//    button->img=NULL;
+//    button->img_rect=NULL;
+//    button->img_anchor=NULL;
+//    // que mettre au callback ?
+//    button->callback=NULL;
+//    button->user_param =NULL;
 }
+
+/*--------------------------------------------------------------------------------*/
 
 void button_drawfunc(ei_widget_t widget,
                     ei_surface_t surface,
@@ -73,9 +81,13 @@ void button_drawfunc(ei_widget_t widget,
 
 }
 
+/*--------------------------------------------------------------------------------*/
+
 void button_geomnotifyfunc(ei_widget_t widget) {
 
 }
+
+/*--------------------------------------------------------------------------------*/
 
 ei_widgetclass_t* create_button_widgetclass() {
     ei_widgetclass_t* res = malloc(sizeof(ei_widgetclass_t));

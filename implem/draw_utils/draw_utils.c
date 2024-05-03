@@ -146,9 +146,16 @@ void draw_button(ei_surface_t surface, ei_rect_t rectangle,ei_color_t color,ei_r
     color_plus_clair.blue =color.blue+10;
     color_plus_clair.alpha = color.alpha;
 
+    if(relief == ei_relief_raised){
+        ei_draw_polygon(surface, conc3, nb_concat, color_plus_fonce, clipper);
+        ei_draw_polygon(surface, conc2, nb_concat, color_plus_clair, clipper);
+    }
+    else if (relief == ei_relief_sunken){
+        ei_draw_polygon(surface, conc3, nb_concat, color_plus_clair, clipper);
+        ei_draw_polygon(surface, conc2, nb_concat, color_plus_fonce, clipper);
+    }
 
-    ei_draw_polygon(surface, conc3, nb_concat, color_plus_fonce, clipper);
-    ei_draw_polygon(surface, conc2, nb_concat, color_plus_clair, clipper);
+
     ei_draw_polygon(surface, conc1, nb_points1, color, clipper);
 }
 
