@@ -35,6 +35,7 @@ ei_point_t* polygon_arc(ei_point_t centre,
  * @param	rectangle	Centre de l'arc
  * @param	rayon		rayon de l'arrondi
  * @param	part	    génère uniquement la partie haute, ou basse, ou bien la totalité de la forme
+ * @param nb_concat met a *nb_concat la taille du tableau renvoyé
  *
  */
 ei_point_t* rounded_frame(ei_rect_t* rectangle,
@@ -60,10 +61,41 @@ ei_point_t* concatene_points(ei_point_t* points1, ei_point_t* points2, size_t si
  *
  * @param	surface surface sur laquelle dessiner
  * @param	rectangle	rectangle dans lequel inclure le bouton
+ * @param radius rayon de l'arrondi
  * @param	color	    couleur du bouton
  * @param   relief  relief du bouton
  * @param   clipper clipper
  */
 void draw_button(ei_surface_t surface, ei_rect_t rectangle,int radius,ei_color_t color,ei_relief_t  relief, ei_rect_t* clipper);
+
+
+
+/**
+* \brief	crée un tableau de points définissant un cadre aux bords arrondis
+*
+* @param	rectangle	Centre de l'arc
+* @param	rayon		rayon de l'arrondi
+* @param	top	    les bords sont rounded en haut si true, en bas si false
+* @param nb_concat met a *nb_concat la taille du tableau renvoyé
+*
+*/
+ei_point_t* demi_rounded_frame(ei_rect_t* rectangle,
+                            uint32_t rayon,
+                            bool top,
+                            size_t* nb_concat
+                            );
+
+
+/**
+ * \brief	dessine une toplevel (change selon la taille du rectangle et sa place)
+ *          Surface must be lock before calling the function
+ *
+ * @param	surface surface sur laquelle dessiner
+ * @param	rectangle	rectangle dans lequel inclure le bouton
+ * @param	color	    couleur du bouton
+ * @param radius rayon de l'arrondi
+ * @param   clipper clipper
+ */
+void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color, ei_rect_t* clipper);
 
 #endif //DRAW_UTILS_H
