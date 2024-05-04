@@ -91,6 +91,8 @@ set(LIB_EI_SOURCES
 		${SRC}/pick_event.h
 		${SRC}/list_event.c
 		${SRC}/list_event.h
+		${SRC}/widgetclass/ei_top_level.c
+		${SRC}/widgetclass/ei_top_level.h
 )
 
 add_library(ei STATIC			${LIB_EI_SOURCES})

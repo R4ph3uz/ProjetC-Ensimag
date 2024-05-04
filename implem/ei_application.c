@@ -11,6 +11,7 @@
 #include "list_event.h"
 #include "pick_event.h"
 #include "callbacks/button_callbacks.h"
+#include "widgetclass/ei_top_level.h"
 /* ----------------------------------------------------------------- */
 
 ei_impl_widget_t ARBRE_WIDGET;
@@ -28,10 +29,13 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     initialize_pickid_array(); // < init dynamic array to have the widget corresponding to an id
     ei_widgetclass_t* frame = create_frame_widgetclass();
     ei_widgetclass_t* button = create_button_widgetclass();
+    ei_widgetclass_t* top_level = create_top_level_widgetclass();
     ei_widgetclass_register(frame);
+    ei_widgetclass_register(button);
+    ei_widgetclass_register(top_level);
+
     ei_bind(ei_ev_mouse_buttondown,NULL,  "button",down_click_handler, NULL );
     ei_bind(ei_ev_mouse_buttonup,NULL,  "button",up_click_handler,NULL );
-    ei_widgetclass_register(button);
 
     //défini le geometry manager
     ei_geometrymanager_t* placer = malloc(sizeof(ei_geometrymanager_t));
@@ -90,24 +94,29 @@ void ei_app_run(void)
     while(IS_RUNNING){
         ei_event_t *new_event = malloc(sizeof(ei_event_t));
         hw_event_wait_next(new_event);
-        ei_widget_t widget = get_widget_by_pickid(get_pick_id(PICKING_SURFACE,new_event->param.mouse.where ));
-        if(new_event->type == ei_ev_mouse_buttondown || new_event->type == ei_ev_mouse_buttonup || new_event->type == ei_ev_mouse_move)
-            if(new_event->type == ei_ev_mouse_buttondown)
-                fprintf(stderr, "Click %s \n",widget->wclass->name);
+        ei_widget_t widget = NULL;
 
+        if(new_event->type == ei_ev_mouse_buttondown || new_event->type == ei_ev_mouse_buttonup || new_event->type == ei_ev_mouse_move) {
+            widget = get_widget_by_pickid(get_pick_id(PICKING_SURFACE,new_event->param.mouse.where ));
+        }
         //parcourir la liste des callbacks et appeler si le bon type de widget et le bon type d'event
         list_callback* list_call = get_list_callback();
+        if(widget && widget->callback && new_event->type==ei_ev_mouse_buttonup ) {
+            fprintf(stderr , "test");
+            (*widget->callback)(widget, new_event,widget->user_data);
+        }
+
         while(list_call!=NULL) {
-            if(list_call->eventtype == new_event->type && strcmp(list_call->tag, widget->wclass->name)==0 ) {
-                fprintf(stderr, "test2");
-                list_call->callback(widget,new_event,list_call->user_param);
+
+            if(widget && list_call->eventtype == new_event->type && strcmp(list_call->tag, widget->wclass->name)==0 ) {
+                (*list_call->callback)(widget,new_event,list_call->user_param);
+            }
+            if(strcmp(list_call->tag, "all")==0) {
+                (*list_call->callback)(widget, new_event, list_call->user_param);
             }
             list_call = list_call->next;
         }
 
-        if (new_event->type == ei_ev_close){
-            ei_app_quit_request();
-        }
     }
 
     hw_quit();

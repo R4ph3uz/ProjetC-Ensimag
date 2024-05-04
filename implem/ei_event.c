@@ -1,5 +1,6 @@
 #include "ei_event.h"
 
+#include "ei_implementation.h"
 #include "list_event.h"
 #include "pick_event.h"
 
@@ -18,6 +19,7 @@ void		ei_bind			(ei_eventtype_t		eventtype,
     }
     else {
         //assiger au widget le callback et l'eventtype
+        widget->callback = callback;
     }
 }
 

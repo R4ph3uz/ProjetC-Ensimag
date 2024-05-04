@@ -91,7 +91,9 @@ void button_drawfunc(ei_widget_t widget,
     draw_button(pick_surface, widget->screen_location,*button->corner_radius,*button->widget.pick_color,ei_relief_none, clipper );
 
     if(button->text){
-        ei_point_t place = {widget->screen_location.top_left.x+50,widget->screen_location.top_left.y+75};
+        uint32_t decal_x = widget->screen_location.size.width/10;
+        uint32_t decal_y = widget->screen_location.size.height/2;
+        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
         ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
 
     }

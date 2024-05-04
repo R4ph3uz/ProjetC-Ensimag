@@ -6,6 +6,9 @@
 /*-------------------------------------------------------------------------------------------------------*/
 
 static uint32_t PICKID=0;
+
+/*-------------------------------------------------------------------------------------------------------*/
+
 ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
                                             ei_widget_t		parent,
                                             ei_user_param_t	user_data,
@@ -57,7 +60,7 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 
     widget->content_rect=NULL;	///< See ei_widget_get_content_rect. By defaults, points to the screen_location.
 
-    /* Specific to each class */
+    widget->callback= NULL;
 
     return widget;
 

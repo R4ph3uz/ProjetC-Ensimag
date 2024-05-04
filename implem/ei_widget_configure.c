@@ -3,6 +3,7 @@
 #include "ei_application.h"
 #include "widgetclass/ei_frame.h"
 #include "widgetclass/ei_button.h"
+#include "widgetclass/ei_top_level.h"
 #include <string.h>
 
 #define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = malloc(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
@@ -102,10 +103,8 @@ void			ei_button_configure		(ei_widget_t		widget,
     }
     COPY_IF_NOT_NULL(button->img_anchor,img_anchor);
     if (callback != NULL) {
-        if (!button->callback){
-            button->callback=malloc(sizeof(*button->callback));
-        }
-        memcpy(button->callback, callback,sizeof(*button->callback) );
+    	fprintf(stderr,"yeah");
+        button->widget.callback = callback;
     }
     COPY_IF_NOT_NULL(button->user_param,user_param);
 }
@@ -123,13 +122,12 @@ void			ei_toplevel_configure		(ei_widget_t		widget,
 {
 	if (requested_size)
 		widget->requested_size=(ei_size_t )*requested_size;
-	//    ei_toplevel_t toplevel = (ei_toplevel_t) widget;
-	//    ASSIGN_IF_NOT_NULL(toplevel->color,(ei_color_t*) color);
-	//    ASSIGN_IF_NOT_NULL(toplevel->border_width, border_width);
-	//    ASSIGN_IF_NOT_NULL(toplevel->title,title);
-	//    ASSIGN_IF_NOT_NULL(toplevel->closable,closable);
-	//    ASSIGN_IF_NOT_NULL(toplevel->resizable,resizable);
-	//    ASSIGN_IF_NOT_NULL(toplevel->text_anchor,text_anchor);
-	//    ASSIGN_IF_NOT_NULL(toplevel->min_size,min_size);
+        ei_top_level_t toplevel = (ei_top_level_t) widget;
+        COPY_IF_NOT_NULL(toplevel->color,(ei_color_t*) color);
+        COPY_IF_NOT_NULL(toplevel->border_width, border_width);
+        COPY_IF_NOT_NULL(toplevel->title,title);
+        COPY_IF_NOT_NULL(toplevel->closable,closable);
+        COPY_IF_NOT_NULL(toplevel->resizable,resizable);
+        COPY_IF_NOT_NULL(toplevel->min_size,min_size);
 }
 
