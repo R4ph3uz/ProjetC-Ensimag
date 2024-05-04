@@ -2,9 +2,10 @@
 #include "ei_implementation.h"
 #include "ei_types.h"
 #include <stdlib.h>
+#include "pick_event.h"
 /*-------------------------------------------------------------------------------------------------------*/
 
-static uint32_t PICKID=1;
+static uint32_t PICKID=0;
 ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
                                             ei_widget_t		parent,
                                             ei_user_param_t	user_data,
@@ -17,10 +18,12 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
     widget->wclass = wclass;
     widget->pick_id=PICKID; // < Id of this widget in the picking offscreen
     widget->pick_color = malloc(sizeof(ei_color_t));//< pick_id encoded as a color
-    widget->pick_color->red=200;
-    widget->pick_color->green=150;
-    widget->pick_color->blue=48;
+    widget->pick_color->red=(uint8_t)( PICKID & 0xFF);
+    widget->pick_color->green=(uint8_t)((PICKID >> 8) & 0xFF);
+    widget->pick_color->blue=(uint8_t)((PICKID >> 16) & 0xFF);
     widget->pick_color->alpha=255;
+
+    add_widget_pickid_array(widget);
     PICKID++;
     widget->user_data = user_data;
     widget->destructor = destructor;

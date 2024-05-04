@@ -2,7 +2,6 @@
 #include "hw_interface.h"
 #include <stdlib.h>
 
-/*------------------------------------------------------------------------------------*/
 /*-------------------------------------------------------------------------------------------------------*/
 
 void ei_placer_runfunc(ei_widget_t widget)
@@ -152,7 +151,7 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
                          ei_surface_t		pick_surface,
                          ei_rect_t*		clipper) {
     (*(widget->wclass->drawfunc))(widget,surface,pick_surface,clipper);
-    ei_widget_t actuel = widget->children_head;
+        ei_widget_t actuel = widget->children_head;
     if (actuel!=NULL) {
         while(actuel!=NULL) {
             // verifier surface

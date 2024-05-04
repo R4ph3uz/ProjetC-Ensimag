@@ -68,17 +68,23 @@ void frame_drawfunc(ei_widget_t widget,
      points[3] = (ei_point_t) {top_left_x, top_left_y+widget->requested_size.height };
     size_t nb_points = 4;
 
-    ei_point_t top_left = (ei_point_t){200,100};
-    ei_size_t size = (ei_size_t){200, 50};
+    ei_point_t top_left = (ei_point_t){20,100};
+    ei_size_t size = (ei_size_t){200, 200};
     ei_rect_t rect= (ei_rect_t){top_left, size};
 
+    size_t nb_test_demi_frame;
+    ei_point_t* test_demi_frame = demi_rounded_frame(&rect, 30, true, &nb_test_demi_frame);
     /* Afficher le cadre */
     hw_surface_lock(surface);
+    hw_surface_lock(pick_surface);
     ei_draw_polygon(surface, points, nb_points, *frame->color, clipper);
+    ei_draw_polygon(pick_surface, points, nb_points, *frame->widget.pick_color, clipper);
     if(widget->geom_params){
-        draw_button(surface, rect, 10, *frame->color, ei_relief_raised, NULL) ;
+        // draw_button(surface, rect, 10, *frame->color, ei_relief_raised, NULL) ;
+        // ei_draw_polygon(surface, test_demi_frame, nb_test_demi_frame, *frame->color, NULL);
+        draw_toplevel(surface, rect, 20, *frame->color, NULL);
     }
-
+    hw_surface_unlock(pick_surface);
     hw_surface_unlock(surface);
     hw_surface_update_rects(surface, NULL);
 

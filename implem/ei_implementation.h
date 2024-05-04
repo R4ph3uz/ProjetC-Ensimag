@@ -95,5 +95,9 @@ typedef struct ei_impl_geom_param_t {
 	float*			rel_height;
 } ei_impl_geom_param_t;
 
+/**
+ * \brief	Returns the pick surface
+ */
+ei_surface_t get_pick_surface(void);
 
 #endif

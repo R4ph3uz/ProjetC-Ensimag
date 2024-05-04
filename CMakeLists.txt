@@ -85,6 +85,12 @@ set(LIB_EI_SOURCES
 		${SRC}/ei_implementation.c
 		${SRC}/widgetclass/ei_button.c
         ${SRC}/draw_utils/draw_utils.c
+		${SRC}/callbacks/button_callbacks.c
+		${SRC}/callbacks/button_callbacks.h
+		${SRC}/pick_event.c
+		${SRC}/pick_event.h
+		${SRC}/list_event.c
+		${SRC}/list_event.h
 )
 
 add_library(ei STATIC			${LIB_EI_SOURCES})

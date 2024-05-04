@@ -85,17 +85,28 @@ void button_drawfunc(ei_widget_t widget,
         widget->geom_params->manager->runfunc(widget);
     ei_button_t button = (ei_button_t) widget;
     hw_surface_lock(surface);
-
+    hw_surface_lock(pick_surface);
 
     draw_button(surface,widget->screen_location,*button->corner_radius,*button->color,*button->relief,clipper);
+    draw_button(pick_surface, widget->screen_location,*button->corner_radius,*button->widget.pick_color,ei_relief_none, clipper );
 
     if(button->text){
-        ei_point_t place = {widget->screen_location.top_left.x+50,+75};
+        ei_point_t place = {widget->screen_location.top_left.x+50,widget->screen_location.top_left.y+75};
         ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
 
     }
+    ei_surface_t surface_image = hw_image_load("misc/bomb.png",surface);
+    ei_rect_t rect_surface_image = hw_surface_get_rect(surface_image);
+
+    hw_surface_unlock(pick_surface);
+    hw_surface_lock(surface_image);
+    ei_copy_surface(surface, &rect_surface_image, surface_image, NULL, true);
+    hw_surface_unlock(surface_image);
+
     hw_surface_unlock(surface);
     hw_surface_update_rects(surface,NULL);
+
+
 }
 
 /*--------------------------------------------------------------------------------*/
