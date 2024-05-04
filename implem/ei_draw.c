@@ -12,6 +12,12 @@ void	ei_draw_text		(ei_surface_t		surface,
 {
     ei_surface_t surface_text = hw_text_create_surface(text, font, color);
 
+    ei_rect_t rect_surface_text = hw_surface_get_rect(surface_text);
+    if (where)
+        rect_surface_text.top_left = *where;
+    hw_surface_lock(surface_text);
+    ei_copy_surface(surface, &rect_surface_text, surface_text, NULL, true);
+    hw_surface_unlock(surface_text);
 
 }
 
@@ -28,7 +34,7 @@ void	ei_fill			(ei_surface_t		surface,
 }
 
 /*------------------------------------------------------------------------------*/
-//FONCTION BEAUCOUP TROP LONGUE SANS TESTER FORCEMENT UNE ERREUR
+
 int	ei_copy_surface		(ei_surface_t		destination,
                                const ei_rect_t*	dst_rect,
                                ei_surface_t		source,
@@ -36,7 +42,7 @@ int	ei_copy_surface		(ei_surface_t		destination,
                                bool			alpha)
 {
     ei_size_t size_src = src_rect ? src_rect->size : hw_surface_get_size(source);
-    ei_size_t size_dest = src_rect ? dst_rect->size: hw_surface_get_size(destination);
+    ei_size_t size_dest = dst_rect ? dst_rect->size: hw_surface_get_size(destination);
 
     if(memcmp(&size_src, &size_dest, sizeof(ei_size_t)) != 0 )
         return 1; //tailles différentes on ne copie pas
@@ -44,8 +50,8 @@ int	ei_copy_surface		(ei_surface_t		destination,
     ei_point_t top_left_dest = dst_rect ? dst_rect->top_left : (ei_point_t){0, 0};
     ei_point_t top_left_src = src_rect ? src_rect->top_left : (ei_point_t){0, 0 };
 
-    uint32_t* buffer_dest = (uint32_t*)*hw_surface_get_buffer(destination);
-    uint32_t* buffer_src  = (uint32_t*)*hw_surface_get_buffer(source);
+    uint32_t* buffer_dest = (uint32_t*)hw_surface_get_buffer(destination);
+    uint32_t* buffer_src  = (uint32_t*)hw_surface_get_buffer(source);
 
 
 
@@ -78,9 +84,16 @@ int	ei_copy_surface		(ei_surface_t		destination,
                 dest_color[2] = (uint8_t)((dest_pixel >> 16) & 0xFF);
                 dest_color[3] = (uint8_t)((dest_pixel >> 24) & 0xFF);
 
+                /*
                 dest_color[ir] = (dest_color[ir]*(255-src_color[ia]) + src_color[ir]*src_color[ia])/255;
                 dest_color[ig] = (dest_color[ir]*(255-src_color[ia]) + src_color[ir]*src_color[ia])/255;
                 dest_color[ib] = (dest_color[ir]*(255-src_color[ia]) + src_color[ir]*src_color[ia])/255;
+                 */
+                unsigned int alpha_val = src_color[ia];
+                dest_color[ir] =  ((255-alpha_val) * dest_color[ir] + alpha_val * src_color[ir])/255;
+                dest_color[ig] =  ((255-alpha_val) * dest_color[ig] + alpha_val * src_color[ig])/255;
+                dest_color[ib] =  ((255-alpha_val) * dest_color[ib] + alpha_val * src_color[ib])/255;
+
 
                 uint32_t value = ((uint32_t)dest_color[0]) |
                                  ((uint32_t)dest_color[1] << 8) |

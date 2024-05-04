@@ -1,7 +1,8 @@
 #include "ei_frame.h"
-#include "../ei_implementation.h"
 #include <stdlib.h>
 #include <string.h>
+#include "../draw_utils/draw_utils.h"
+#include "ei_types.h"
 /*--------------------------------------------------------------------------------*/
 
 ei_widget_t frame_allocfunc()
@@ -51,28 +52,33 @@ void frame_drawfunc(ei_widget_t widget,
                     ei_surface_t pick_surface,
                     ei_rect_t* clipper)
 {
+    if(widget->geom_params)
+        widget->geom_params->manager->runfunc(widget);
     ei_frame_t frame = (ei_frame_t) widget;
 
     //Si requested size est bien géré
-    // uint32_t top_left_x = widget->screen_location.top_left.x;
-    // uint32_t top_left_y = widget->screen_location.top_left.y;
+    int top_left_x = widget->screen_location.top_left.x;
+    int top_left_y = widget->screen_location.top_left.y;
 
-    // ei_point_t* points = malloc(4*sizeof(ei_point_t));
-    // points[0] = (ei_point_t) {top_left_x, top_left_y };
-    // points[1] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y };
-    // points[2] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y+widget->requested_size.height };
-    // points[3] = (ei_point_t) {top_left_x, top_left_y+widget->requested_size.height };
 
-    // Toujours en haut a gauche
-    ei_point_t* points = malloc(4*sizeof(ei_point_t));
-    points[0] = (ei_point_t) {0, 0 };
-    points[1] = (ei_point_t) {widget->requested_size.width, 0 };
-    points[2] = (ei_point_t) {widget->requested_size.width, widget->requested_size.height };
-    points[3] = (ei_point_t) {0, widget->requested_size.height };
+     ei_point_t* points = malloc(4*sizeof(ei_point_t));
+     points[0] = (ei_point_t) {top_left_x, top_left_y };
+     points[1] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y };
+     points[2] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y+widget->requested_size.height };
+     points[3] = (ei_point_t) {top_left_x, top_left_y+widget->requested_size.height };
+    size_t nb_points = 4;
+
+    ei_point_t top_left = (ei_point_t){200,100};
+    ei_size_t size = (ei_size_t){200, 50};
+    ei_rect_t rect= (ei_rect_t){top_left, size};
 
     /* Afficher le cadre */
     hw_surface_lock(surface);
-    ei_draw_polygon(surface, points, 4, *frame->color, clipper);
+    ei_draw_polygon(surface, points, nb_points, *frame->color, clipper);
+    if(widget->geom_params){
+        draw_button(surface, rect, 10, *frame->color, ei_relief_raised, NULL) ;
+    }
+
     hw_surface_unlock(surface);
     hw_surface_update_rects(surface, NULL);
 

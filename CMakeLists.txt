@@ -84,6 +84,7 @@ set(LIB_EI_SOURCES
 		${SRC}/widgetclass/ei_frame.c
 		${SRC}/ei_implementation.c
 		${SRC}/widgetclass/ei_button.c
+        ${SRC}/draw_utils/draw_utils.c
 )
 
 add_library(ei STATIC			${LIB_EI_SOURCES})

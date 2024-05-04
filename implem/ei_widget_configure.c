@@ -5,7 +5,7 @@
 #include "widgetclass/ei_button.h"
 #include <string.h>
 
-#define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { memcpy((field), (value),sizeof(*(field)) );}
+#define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = malloc(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
 
 /*-------------------------------------------------------------------------------------------------------*/
 
@@ -58,21 +58,56 @@ void			ei_button_configure		(ei_widget_t		widget,
 							 ei_user_param_t*	user_param)
 {
 	if (requested_size)
-		widget->requested_size=*requested_size;
+		widget->requested_size=(ei_size_t )*requested_size;
     ei_button_t button = (ei_button_t) widget;
-    COPY_IF_NOT_NULL(button->color,(ei_color_t*) color);
+    if ((ei_color_t*) color != NULL) {
+        if (!button->color){
+            button->color=malloc(sizeof(*button->color));
+        }
+        memcpy(button->color, (ei_color_t*) color,sizeof(*button->color) );
+    }
     COPY_IF_NOT_NULL(button->border_width, border_width);
-	COPY_IF_NOT_NULL(button->corner_radius,corner_radius);
-    COPY_IF_NOT_NULL(button->relief , relief);
-    COPY_IF_NOT_NULL(button->text,text);
+    if (corner_radius != NULL) {
+        if (!button->corner_radius){
+            button->corner_radius=malloc(sizeof(*button->corner_radius));
+        }
+        memcpy(button->corner_radius, corner_radius,sizeof(*button->corner_radius) );
+    }
+    if (relief != NULL) {
+        if (!button->relief){
+            button->relief=malloc(sizeof(*button->relief));
+        }
+        *button->relief= *relief;
+    }
+    if (text != NULL) {
+        if (!button->text){
+            button->text=malloc(sizeof(*button->text));
+        }
+        memcpy(button->text, text,sizeof(*button->text));
+    }
     COPY_IF_NOT_NULL(button->text_font,text_font);
-    COPY_IF_NOT_NULL(button->text_color,text_color);
+    if (text_color != NULL) {
+        if (!button->text_color){
+            button->text_color=malloc(sizeof(*button->text_color));
+        }
+        memcpy(button->text_color, text_color,sizeof(*button->text_color) );
+    }
     COPY_IF_NOT_NULL(button->text_anchor,text_anchor);
     COPY_IF_NOT_NULL(button->img,img);
-    COPY_IF_NOT_NULL(button->img_rect,img_rect);
+    if (img_rect != NULL) {
+        if (!button->img_rect){
+            button->img_rect=malloc(sizeof(*button->img_rect));
+        }
+        memcpy(button->img_rect, img_rect,sizeof(*button->img_rect) );
+    }
     COPY_IF_NOT_NULL(button->img_anchor,img_anchor);
-	COPY_IF_NOT_NULL(button->callback,callback);
-	COPY_IF_NOT_NULL(button->user_param,user_param);
+    if (callback != NULL) {
+        if (!button->callback){
+            button->callback=malloc(sizeof(*button->callback));
+        }
+        memcpy(button->callback, callback,sizeof(*button->callback) );
+    }
+    COPY_IF_NOT_NULL(button->user_param,user_param);
 }
 
 /*-------------------------------------------------------------------------------------------------------*/

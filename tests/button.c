@@ -1,4 +1,4 @@
-#include <stdio.h>
+    #include <stdio.h>
 #include <stdlib.h>
 
 #include "ei_application.h"
@@ -54,16 +54,16 @@ int main(int argc, char** argv)
 					 	&(ei_callback_t){button_press}, NULL);
 	ei_place_xy			(button, 150, 200);
 
-	/* Register the default callback to events of interest. */
-	ei_bind(ei_ev_keydown,		NULL, "all", default_handler, NULL);
-	ei_bind(ei_ev_close,		NULL, "all", default_handler, NULL);
+//	/* Register the default callback to events of interest. */
+//	ei_bind(ei_ev_keydown,		NULL, "all", default_handler, NULL);
+//	ei_bind(ei_ev_close,		NULL, "all", default_handler, NULL);
 
 	/* Run the application's main loop. */
 	ei_app_run();
 
-	/* We just exited from the main loop. Terminate the application (cleanup). */
-	ei_unbind(ei_ev_keydown,	NULL, "all", default_handler, NULL);
-	ei_unbind(ei_ev_close,		NULL, "all", default_handler, NULL);
+//	/* We just exited from the main loop. Terminate the application (cleanup). */
+//	ei_unbind(ei_ev_keydown,	NULL, "all", default_handler, NULL);
+//	ei_unbind(ei_ev_close,		NULL, "all", default_handler, NULL);
 
 	ei_app_free();
 

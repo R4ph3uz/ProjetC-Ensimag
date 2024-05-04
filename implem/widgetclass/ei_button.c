@@ -1,12 +1,51 @@
 #include "ei_button.h"
+#include "../draw_utils/draw_utils.h"
+/*--------------------------------------------------------------------------------*/
 
 ei_widget_t button_allocfunc() {
-    return NULL;
+    ei_impl_button_t* button = malloc(sizeof(ei_impl_button_t));
+
+    button->requested_size = malloc(sizeof(ei_size_t));
+    button->color=malloc(sizeof(ei_color_t));
+
+    button->border_width=malloc(sizeof(int));
+    button->corner_radius = malloc(sizeof(int));
+    button->relief=malloc(sizeof(ei_relief_t));
+    button->text = malloc(sizeof(ei_string_t));
+    button->text_font = malloc(sizeof(ei_font_t));
+    button->text_color = malloc(sizeof(ei_color_t));
+    button->text_anchor = malloc(sizeof(ei_anchor_t));
+    button->img = malloc(sizeof(ei_surface_t));
+    button->img_rect = malloc(sizeof(ei_rect_ptr_t));
+    button->img_anchor = malloc(sizeof(ei_anchor_t));
+    // que mettre au callback ?
+    button->callback=malloc(sizeof(ei_callback_t));
+    button->user_param =malloc(sizeof(ei_user_param_t));
+    return (ei_widget_t) button;
 }
+
+/*--------------------------------------------------------------------------------*/
 
 void button_releasefunc(ei_widget_t widget) {
+    ei_impl_button_t* button = (ei_impl_button_t*) widget;
+    free(button->requested_size);
+    free(button->color);
+    free(button->border_width);
+    free(button->corner_radius);
+    free(button->relief);
+    free(button->text);
+    free(button->text_font);
+    free(button->text_color);
+    free(button->text_anchor);
+    free(button->img);
+    free(button->img_rect);
+    free(button->img_anchor);
 
+    free(button->callback);
+    free(button->user_param);
 }
+
+/*--------------------------------------------------------------------------------*/
 
 void button_setdefaultsfunc(ei_widget_t widget) {
     ei_button_t button = (ei_button_t) widget;
@@ -20,11 +59,14 @@ void button_setdefaultsfunc(ei_widget_t widget) {
 
     *button->border_width=1;
     *button->corner_radius = 1;
-    button->relief=ei_relief_none;
-    button->text=NULL;
-    button->text_font=NULL;
-    button->text_color=NULL;
-    button->text_anchor =NULL;
+    *button->relief=ei_relief_none;
+    char texte[]="";
+    strcpy((char *) button->text, texte);
+    ei_fontstyle_t style = ei_style_normal;
+    ei_const_string_t name = "misc/font.ttf";
+    *button->text_font = hw_text_font_create(name, style, 20);
+    *button->text_color= (ei_color_t) {0,0,0};
+    *button->text_anchor =ei_anc_northwest;
     button->img=NULL;
     button->img_rect=NULL;
     button->img_anchor=NULL;
@@ -33,16 +75,36 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     button->user_param =NULL;
 }
 
+/*--------------------------------------------------------------------------------*/
+
 void button_drawfunc(ei_widget_t widget,
                     ei_surface_t surface,
                     ei_surface_t pick_surface,
                     ei_rect_t* clipper) {
+    if(widget->geom_params)
+        widget->geom_params->manager->runfunc(widget);
+    ei_button_t button = (ei_button_t) widget;
+    hw_surface_lock(surface);
 
+
+    draw_button(surface,widget->screen_location,*button->corner_radius,*button->color,*button->relief,clipper);
+
+    if(button->text){
+        ei_point_t place = {widget->screen_location.top_left.x+50,+75};
+        ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
+
+    }
+    hw_surface_unlock(surface);
+    hw_surface_update_rects(surface,NULL);
 }
+
+/*--------------------------------------------------------------------------------*/
 
 void button_geomnotifyfunc(ei_widget_t widget) {
 
 }
+
+/*--------------------------------------------------------------------------------*/
 
 ei_widgetclass_t* create_button_widgetclass() {
     ei_widgetclass_t* res = malloc(sizeof(ei_widgetclass_t));
