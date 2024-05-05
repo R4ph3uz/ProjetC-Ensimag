@@ -29,6 +29,15 @@ void add_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t even
 list_callback* get_list_callback(void);
 
 /**
+ * @brief supprime un callback de la liste des callbacks
+ * @param callback
+ * @param tag
+ * @param eventtype
+ * @param user_param
+ */
+void remove_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t eventtype, void* user_param);
+
+/**
  * Free la liste globale des callbacks
  */
 void free_list_callback();

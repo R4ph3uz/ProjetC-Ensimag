@@ -19,7 +19,7 @@ void		ei_bind			(ei_eventtype_t		eventtype,
     }
     else {
         //assiger au widget le callback et l'eventtype
-        widget->callback = callback;
+        *widget->callback = callback;
     }
 }
 
@@ -31,6 +31,10 @@ void		ei_unbind		(ei_eventtype_t		eventtype,
                               ei_callback_t		callback,
                               void*			user_param)
 {
-
+    if(tag) {
+        remove_list_callback(callback, tag, eventtype, user_param);
+    }
+    else
+        widget->callback = NULL;
 }
 

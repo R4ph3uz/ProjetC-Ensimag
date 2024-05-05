@@ -11,6 +11,10 @@ bool toplevel_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_
 
 bool toplevel_mouse_mouve_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param);
 
+bool toplevel_move_up_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param);
+
+bool toplevel_move_mouse_mouve_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param);
+
 
 
 #endif //TOPLEVEL_CALLBACKS_H
