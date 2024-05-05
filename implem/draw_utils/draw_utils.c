@@ -217,6 +217,32 @@ ei_point_t* demi_rounded_frame(ei_rect_t* rectangle,
 
 }
 
+/*--------------------------------------------------------------------------------------------------------------------------*/
+
+ei_point_t* circle(ei_point_t centre, int radius, size_t* size_tableau)
+{
+    // Calculate the number of points based on the radius
+    double points_per_unit = 0.7; // Adjust this value to change the density of points
+    *size_tableau = (size_t)(2 * M_PI * radius * points_per_unit);
+
+    // Allocate memory for the points
+    ei_point_t* points = malloc(*size_tableau * sizeof(ei_point_t));
+    if (!points) {
+        return NULL;
+    }
+
+    // Calculate the angle between adjacent points
+    double angle_step = 2 * M_PI / *size_tableau;
+
+    // Generate the points
+    for (size_t i = 0; i < *size_tableau; i++) {
+        double angle = i * angle_step;
+        points[i].x = centre.x + radius * cos(angle);
+        points[i].y = centre.y + radius * sin(angle);
+    }
+
+    return points;
+}
 
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
@@ -257,15 +283,26 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
     carre_bas_droite[2] = (ei_point_t){nouveau_rect.top_left.x+ nouveau_rect.size.width-10, nouveau_rect.top_left.y + nouveau_rect.size.height-10};
     carre_bas_droite[3] = (ei_point_t){ nouveau_rect.top_left.x+ nouveau_rect.size.width,nouveau_rect.top_left.y + nouveau_rect.size.height-10 };
 
+    size_t nb_circle;
+    ei_point_t* circle_p = circle((ei_point_t) {rectangle.top_left.x+5, rectangle.top_left.y+5}, 6, &nb_circle);
+
+    ei_color_t red;
+    red.red = 230;
+    red.green = 40;
+    red.blue = 40;
+    red.alpha = 255;
+
     if (isPicking) {
         ei_draw_polygon(surface, conc2, 4, color, clipper);
         ei_draw_polygon(surface, conc3, nb_concat, color, clipper);
     }
     else {
         ei_draw_polygon(surface, conc3, nb_concat, color_plus_fonce, clipper);
+
         ei_draw_polygon(surface, conc2, 4, color, clipper);
         ei_draw_polyline(surface, conc2, 4, color_plus_fonce,clipper);
         ei_draw_polygon(surface, carre_bas_droite, 4, color_plus_fonce, clipper);
+        ei_draw_polygon(surface, circle_p, nb_circle, red, clipper);
     }
 
 
