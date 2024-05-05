@@ -86,8 +86,6 @@ void frame_drawfunc(ei_widget_t widget,
     }
     hw_surface_unlock(pick_surface);
     hw_surface_unlock(surface);
-    hw_surface_update_rects(surface, NULL);
-
 
     if (frame->text){
         // Si il a du texte a afficher (pour l'instant ignoré)

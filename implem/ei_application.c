@@ -95,18 +95,21 @@ void ei_app_run(void)
 {
     // draw func de root et ça se débrouille
     ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
+    hw_surface_update_rects(ROOT_SURFACE, NULL);
+
     // (*(ROOT_WIDGET->wclass->drawfunc))(ROOT_WIDGET, ei_app_root_surface(), NULL, NULL);
     IS_RUNNING = true;
     while(IS_RUNNING){
         ei_event_t *new_event = malloc(sizeof(ei_event_t));
         hw_event_wait_next(new_event);
         ei_widget_t widget = NULL;
-
+        ei_rect_t rect_before;
+        ei_rect_t rect_after;
         if(new_event->type == ei_ev_mouse_buttondown || new_event->type == ei_ev_mouse_buttonup || new_event->type == ei_ev_mouse_move) {
             widget = get_widget_by_pickid(get_pick_id(PICKING_SURFACE,new_event->param.mouse.where ));
+            memcpy(&rect_before, &widget->screen_location,sizeof(ei_rect_t));
         }
-        //parcourir la liste des callbacks et appeler si le bon type de widget et le bon type d'event
-        list_callback* list_call = get_list_callback();
+
         bool isModified = false;
 
         if(widget && widget->callback && new_event->type==ei_ev_mouse_buttonup ) {
@@ -115,6 +118,8 @@ void ei_app_run(void)
         }
 
 
+        //parcourir la liste des callbacks et appeler si le bon type de widget et le bon type d'event
+        list_callback* list_call = get_list_callback();
         while(list_call!=NULL) {
 
             if(widget && list_call->eventtype == new_event->type && strcmp(list_call->tag, widget->wclass->name)==0 ) {
@@ -125,8 +130,19 @@ void ei_app_run(void)
             }
             list_call = list_call->next;
         }
-        if(isModified)
+        if(isModified && widget) {
+            widget->geom_params->manager->runfunc(widget);
+            rect_after = widget->screen_location;
+            ei_linked_rect_t list_rect;
+            list_rect.rect = rect_after;
+            ei_linked_rect_t list;
+            list.rect = rect_before;
+            list.next = NULL;
+            list_rect.next = &list;
             ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
+            hw_surface_update_rects(ROOT_SURFACE,NULL);
+        }
+
     }
 
     hw_quit();

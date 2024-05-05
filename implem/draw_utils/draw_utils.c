@@ -221,7 +221,8 @@ ei_point_t* demi_rounded_frame(ei_rect_t* rectangle,
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
 void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color, ei_rect_t* clipper, bool isPicking) {
-    ei_point_t* conc2 = NULL;
+    ei_point_t* conc2 =  malloc(sizeof(ei_point_t)*4);
+;   ei_point_t* carre_bas_droite = malloc(sizeof(ei_point_t)*4);
     ei_point_t* conc3 = NULL;
 
     size_t nb_concat;
@@ -236,21 +237,37 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
 
     conc3 = demi_rounded_frame(&nouveau_rect, 20, true, &nb_concat);
 
-    nouveau_rect.top_left.x= rectangle.top_left.x+radius;
-    nouveau_rect.top_left.y= rectangle.top_left.y+radius+20;
-    nouveau_rect.size.height = rectangle.size.height-2*radius -20;
-    nouveau_rect.size.width = rectangle.size.width-2*radius;
+    nouveau_rect.top_left.x= rectangle.top_left.x-radius;
+    nouveau_rect.top_left.y= rectangle.top_left.y+20;
+    nouveau_rect.size.height = rectangle.size.height -20;
+    nouveau_rect.size.width = rectangle.size.width+ 2*radius;
 
-    conc2 = demi_rounded_frame(&nouveau_rect, 20, false, &nb_concat);
+    conc2[0] = nouveau_rect.top_left;
+    conc2[1]= (ei_point_t){nouveau_rect.top_left.x+ nouveau_rect.size.width, nouveau_rect.top_left.y };
+    conc2[2] = (ei_point_t){nouveau_rect.top_left.x+ nouveau_rect.size.width, nouveau_rect.top_left.y + nouveau_rect.size.height};
+    conc2[3]= (ei_point_t){nouveau_rect.top_left.x, nouveau_rect.top_left.y + nouveau_rect.size.height };
+
     color_plus_fonce.red = 40;
     color_plus_fonce.green = 40;
     color_plus_fonce.blue = 40;
     color_plus_fonce.alpha = 255;
 
-    if (isPicking)
+    carre_bas_droite[0] = (ei_point_t){ nouveau_rect.top_left.x+ nouveau_rect.size.width,nouveau_rect.top_left.y + nouveau_rect.size.height };
+    carre_bas_droite[1] = (ei_point_t){ nouveau_rect.top_left.x+ nouveau_rect.size.width-10,nouveau_rect.top_left.y + nouveau_rect.size.height };
+    carre_bas_droite[2] = (ei_point_t){nouveau_rect.top_left.x+ nouveau_rect.size.width-10, nouveau_rect.top_left.y + nouveau_rect.size.height-10};
+    carre_bas_droite[3] = (ei_point_t){ nouveau_rect.top_left.x+ nouveau_rect.size.width,nouveau_rect.top_left.y + nouveau_rect.size.height-10 };
+
+    if (isPicking) {
+        ei_draw_polygon(surface, conc2, 4, color, clipper);
         ei_draw_polygon(surface, conc3, nb_concat, color, clipper);
-    else
+    }
+    else {
         ei_draw_polygon(surface, conc3, nb_concat, color_plus_fonce, clipper);
-    ei_draw_polygon(surface, conc2, nb_concat, color, clipper);
+        ei_draw_polygon(surface, conc2, 4, color, clipper);
+        ei_draw_polyline(surface, conc2, 4, color_plus_fonce,clipper);
+        ei_draw_polygon(surface, carre_bas_droite, 4, color_plus_fonce, clipper);
+    }
+
+
 
 }
