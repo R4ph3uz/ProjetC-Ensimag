@@ -97,13 +97,16 @@ void button_drawfunc(ei_widget_t widget,
         ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
 
     }
-    // ei_surface_t surface_image = hw_image_load("misc/bomb.png",surface);
-    // ei_rect_t rect_surface_image = hw_surface_get_rect(surface_image);
 
     hw_surface_unlock(pick_surface);
-    // hw_surface_lock(surface_image);
-    // ei_copy_surface(surface, &rect_surface_image, surface_image, NULL, true);
-    // hw_surface_unlock(surface_image);
+    if(button->img){
+        // Si il y a un image a afficher (pour l'instant ignoré)
+        hw_surface_lock(surface);
+        hw_surface_lock(button->img);
+        ei_copy_surface(surface, *button->img_rect, button->img, NULL, true);
+        hw_surface_unlock(button->img);
+        hw_surface_unlock(surface);
+    }
 
     hw_surface_unlock(surface);
 

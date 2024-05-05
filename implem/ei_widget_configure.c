@@ -1,6 +1,5 @@
 #include "ei_geometrymanager.h"
 #include "ei_implementation.h"
-#include "ei_application.h"
 #include "widgetclass/ei_frame.h"
 #include "widgetclass/ei_button.h"
 #include "widgetclass/ei_top_level.h"
@@ -30,7 +29,13 @@ void			ei_frame_configure		(ei_widget_t		widget,
 	COPY_IF_NOT_NULL(frame->color,color);
     COPY_IF_NOT_NULL(frame->border_width, border_width);
     COPY_IF_NOT_NULL(frame->relief, relief);
-    COPY_IF_NOT_NULL(frame->text, text);
+    if (text != NULL) {
+        if(frame->text==NULL) {
+            frame->text =  malloc(sizeof(char)*20);
+        }
+        strcpy((char*) frame->text,(char*) text);
+    }
+
     COPY_IF_NOT_NULL(frame->text_font, text_font);
     COPY_IF_NOT_NULL(frame->text_color, text_color);
     COPY_IF_NOT_NULL(frame->text_anchor, text_anchor);

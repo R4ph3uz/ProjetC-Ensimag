@@ -89,9 +89,21 @@ void frame_drawfunc(ei_widget_t widget,
 
     if (frame->text){
         // Si il a du texte a afficher (pour l'instant ignoré)
+        uint32_t decal_x = widget->screen_location.size.width/10;
+        uint32_t decal_y = widget->screen_location.size.height/2;
+        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
+        hw_surface_lock(surface);
+        ei_draw_text(surface, &place, *frame->text, *frame->text_font, *frame->text_color, clipper);
+        hw_surface_unlock(surface);
+
     }
     if(frame->img){
         // Si il y a un image a afficher (pour l'instant ignoré)
+        hw_surface_lock(surface);
+        hw_surface_lock(frame->img);
+        ei_copy_surface(surface, *frame->img_rect, frame->img, NULL, true);
+        hw_surface_unlock(frame->img);
+        hw_surface_unlock(surface);
     }
 
 }
@@ -120,7 +132,10 @@ void frame_setdefaultsfunc(ei_widget_t widget)
 
     frame->text = NULL;
     frame->text_font = NULL;
-    frame->text_color = NULL;
+    frame->text_color->alpha =255;
+    frame->text_color->red = 0;
+    frame->text_color->green = 0;
+    frame->text_color->blue = 0;
     frame->text_anchor = NULL;
     frame->img = NULL;
     frame->img_rect = NULL;
