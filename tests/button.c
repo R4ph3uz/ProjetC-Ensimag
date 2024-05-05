@@ -55,8 +55,8 @@ int main(int argc, char** argv)
 	ei_place_xy			(button, 150, 200);
 
 //	/* Register the default callback to events of interest. */
-//	ei_bind(ei_ev_keydown,		NULL, "all", default_handler, NULL);
-//	ei_bind(ei_ev_close,		NULL, "all", default_handler, NULL);
+	ei_bind(ei_ev_keydown,		NULL, "all", default_handler, NULL);
+	ei_bind(ei_ev_close,		NULL, "all", default_handler, NULL);
 
 	/* Run the application's main loop. */
 	ei_app_run();

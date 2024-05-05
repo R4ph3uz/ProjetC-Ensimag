@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "ei_draw.h"
 
-/*----------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------------------------------------------------*/
 
 ei_point_t* polygon_arc(ei_point_t centre,
                         uint32_t rayon,
@@ -34,7 +34,7 @@ ei_point_t* polygon_arc(ei_point_t centre,
     return points;
 }
 
-/*----------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------------------------*/
 
 ei_point_t* rounded_frame(ei_rect_t* rectangle,
                             uint32_t rayon,
@@ -110,20 +110,13 @@ ei_point_t* rounded_frame(ei_rect_t* rectangle,
     }
 }
 
-/*---------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------------------------*/
 void draw_button(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color,ei_relief_t  relief, ei_rect_t* clipper){
-    size_t nb_points = 4;
-
-    ei_point_t* points1 = NULL;
-    ei_point_t* points2 = NULL;
-    ei_point_t* points3 = NULL;
     ei_point_t* conc1 = NULL;
     ei_point_t* conc2 = NULL;
     ei_point_t* conc3 = NULL;
 
     size_t nb_points1;
-    size_t nb_points2;
-    size_t nb_points3;
     size_t nb_concat;
     ei_color_t color_plus_fonce;
     ei_color_t color_plus_clair;
@@ -166,12 +159,115 @@ void draw_button(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_
     ei_draw_polygon(surface, conc1, nb_points1, color, clipper);
 }
 
-/*----------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------------------------------------------------*/
 
 ei_point_t* concatene_points(ei_point_t* points1, ei_point_t* points2, size_t size1, size_t size2){
     ei_point_t *res = malloc(sizeof(ei_point_t)*(size1+size2));
     memcpy(res, points1,sizeof(ei_point_t)*size1);
     memcpy(&res[size1], points2,sizeof(ei_point_t)*size2);
     return res;
+
+}
+
+/*--------------------------------------------------------------------------------------------------------------------------*/
+
+ei_point_t* demi_rounded_frame(ei_rect_t* rectangle,
+                            uint32_t rayon,
+                            bool top,
+                            size_t* nb_concat
+                            )
+{
+    ei_point_t* points, *points1 , *points2 ,*points3;
+
+    ei_point_t* conc1 , *conc2 , *conc3 ;
+
+    size_t nb_points1, nb_points2, nb_points3, nb_points;
+
+    ei_point_t top_left, top_right, bottom_right, bottom_left;
+    top_left= rectangle->top_left;
+    top_right = (ei_point_t){top_left.x+rectangle->size.width, top_left.y};
+    bottom_left = (ei_point_t){top_left.x, top_left.y+rectangle->size.height};
+    bottom_right= (ei_point_t){top_right.x, bottom_left.y};
+
+    ei_point_t top_left_corrected = {top_left.x -rayon, top_left.y-rayon};
+    ei_point_t top_right_corrected = (ei_point_t){top_left.x+rectangle->size.width+rayon, top_left.y-rayon};
+    ei_point_t bottom_left_corrected = (ei_point_t){top_left.x-rayon, top_left.y+rectangle->size.height+rayon};
+    ei_point_t bottom_right_corrected = (ei_point_t){top_right.x+rayon, bottom_left.y+rayon};
+
+
+    if(top) {
+        points1 = polygon_arc(top_left, rayon, 180, 270, &nb_points1);
+        points = polygon_arc(top_right, rayon, 270, 360, &nb_points);
+        conc1 = concatene_points(points1, points, nb_points1, nb_points);
+
+        conc2 = concatene_points(conc1, &bottom_right_corrected, nb_points1+nb_points, 1);
+        conc3 = concatene_points(conc2, &bottom_left_corrected, nb_points1+nb_points+ 1, 1);
+        *nb_concat = nb_points1+nb_points + 2;
+        return conc3;
+    }
+
+    points2 = polygon_arc(bottom_right, rayon, 0, 90, &nb_points2);
+    points3 = polygon_arc(bottom_left, rayon, 90, 180, &nb_points3);
+    conc1 = concatene_points(points2, points3, nb_points2, nb_points3);
+
+    conc2 = concatene_points(conc1, &top_left_corrected, nb_points2+nb_points3, 1);
+    conc3 = concatene_points(conc2, &top_right_corrected, nb_points2+nb_points3+ 1, 1);
+    *nb_concat = nb_points2+nb_points3 + 2;
+    return conc3;
+
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------------*/
+
+void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color, ei_rect_t* clipper, bool isPicking) {
+    ei_point_t* conc2 =  malloc(sizeof(ei_point_t)*4);
+;   ei_point_t* carre_bas_droite = malloc(sizeof(ei_point_t)*4);
+    ei_point_t* conc3 = NULL;
+
+    size_t nb_concat;
+    ei_color_t color_plus_fonce;
+
+    ei_rect_t nouveau_rect = rectangle;
+    nouveau_rect.top_left.x= rectangle.top_left.x+radius;
+    nouveau_rect.top_left.y= rectangle.top_left.y+radius;
+    nouveau_rect.size.height = 20;
+    nouveau_rect.size.width = rectangle.size.width-2*radius;
+
+
+    conc3 = demi_rounded_frame(&nouveau_rect, 20, true, &nb_concat);
+
+    nouveau_rect.top_left.x= rectangle.top_left.x-radius;
+    nouveau_rect.top_left.y= rectangle.top_left.y+20;
+    nouveau_rect.size.height = rectangle.size.height -20;
+    nouveau_rect.size.width = rectangle.size.width+ 2*radius;
+
+    conc2[0] = nouveau_rect.top_left;
+    conc2[1]= (ei_point_t){nouveau_rect.top_left.x+ nouveau_rect.size.width, nouveau_rect.top_left.y };
+    conc2[2] = (ei_point_t){nouveau_rect.top_left.x+ nouveau_rect.size.width, nouveau_rect.top_left.y + nouveau_rect.size.height};
+    conc2[3]= (ei_point_t){nouveau_rect.top_left.x, nouveau_rect.top_left.y + nouveau_rect.size.height };
+
+    color_plus_fonce.red = 40;
+    color_plus_fonce.green = 40;
+    color_plus_fonce.blue = 40;
+    color_plus_fonce.alpha = 255;
+
+    carre_bas_droite[0] = (ei_point_t){ nouveau_rect.top_left.x+ nouveau_rect.size.width,nouveau_rect.top_left.y + nouveau_rect.size.height };
+    carre_bas_droite[1] = (ei_point_t){ nouveau_rect.top_left.x+ nouveau_rect.size.width-10,nouveau_rect.top_left.y + nouveau_rect.size.height };
+    carre_bas_droite[2] = (ei_point_t){nouveau_rect.top_left.x+ nouveau_rect.size.width-10, nouveau_rect.top_left.y + nouveau_rect.size.height-10};
+    carre_bas_droite[3] = (ei_point_t){ nouveau_rect.top_left.x+ nouveau_rect.size.width,nouveau_rect.top_left.y + nouveau_rect.size.height-10 };
+
+    if (isPicking) {
+        ei_draw_polygon(surface, conc2, 4, color, clipper);
+        ei_draw_polygon(surface, conc3, nb_concat, color, clipper);
+    }
+    else {
+        ei_draw_polygon(surface, conc3, nb_concat, color_plus_fonce, clipper);
+        ei_draw_polygon(surface, conc2, 4, color, clipper);
+        ei_draw_polyline(surface, conc2, 4, color_plus_fonce,clipper);
+        ei_draw_polygon(surface, carre_bas_droite, 4, color_plus_fonce, clipper);
+    }
+
+
 
 }

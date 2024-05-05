@@ -38,6 +38,10 @@ typedef struct ei_impl_widget_t {
 	ei_size_t		requested_size;	///< See \ref ei_widget_get_requested_size.
 	ei_rect_t		screen_location;///< See \ref ei_widget_get_screen_location.
 	ei_rect_t*		content_rect;	///< See ei_widget_get_content_rect. By defaults, points to the screen_location.
+
+	/* Callback Management */
+	ei_callback_t* callback; ///< if the widget have a callback just for him
+
 } ei_impl_widget_t;
 
 
@@ -95,5 +99,9 @@ typedef struct ei_impl_geom_param_t {
 	float*			rel_height;
 } ei_impl_geom_param_t;
 
+/**
+ * \brief	Returns the pick surface
+ */
+ei_surface_t get_pick_surface(void);
 
 #endif

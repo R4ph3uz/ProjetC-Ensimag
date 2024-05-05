@@ -27,10 +27,7 @@ void	ei_fill			(ei_surface_t		surface,
                             const ei_color_t*	color,
                             const ei_rect_t*	clipper)
 {
-    hw_surface_lock(surface);
 
-    hw_surface_unlock(surface);
-    hw_surface_update_rects(surface, NULL);
 }
 
 /*------------------------------------------------------------------------------*/
