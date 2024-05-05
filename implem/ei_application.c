@@ -12,6 +12,7 @@
 #include "pick_event.h"
 #include "callbacks/button_callbacks.h"
 #include "widgetclass/ei_top_level.h"
+#include "callbacks/toplevel_callbacks.h"
 /* ----------------------------------------------------------------- */
 
 ei_impl_widget_t ARBRE_WIDGET;
@@ -36,6 +37,11 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 
     ei_bind(ei_ev_mouse_buttondown,NULL,  "button",down_click_handler, NULL );
     ei_bind(ei_ev_mouse_buttonup,NULL,  "button",up_click_handler,NULL );
+
+    ei_bind(ei_ev_mouse_buttondown, NULL, "toplevel", toplevel_down_click_handler, NULL);
+    ei_bind(ei_ev_mouse_buttonup, NULL, "toplevel", toplevel_up_click_handler, NULL);
+    ei_bind(ei_ev_mouse_move, NULL, "toplevel", toplevel_mouse_mouve_handler, NULL);
+
 
     //défini le geometry manager
     ei_geometrymanager_t* placer = malloc(sizeof(ei_geometrymanager_t));
@@ -101,22 +107,26 @@ void ei_app_run(void)
         }
         //parcourir la liste des callbacks et appeler si le bon type de widget et le bon type d'event
         list_callback* list_call = get_list_callback();
+        bool isModified = false;
+
         if(widget && widget->callback && new_event->type==ei_ev_mouse_buttonup ) {
             fprintf(stderr , "test");
-            (*widget->callback)(widget, new_event,widget->user_data);
+            isModified = isModified || (*widget->callback)(widget, new_event,widget->user_data);
         }
+
 
         while(list_call!=NULL) {
 
             if(widget && list_call->eventtype == new_event->type && strcmp(list_call->tag, widget->wclass->name)==0 ) {
-                (*list_call->callback)(widget,new_event,list_call->user_param);
+                isModified = isModified || (*list_call->callback)(widget,new_event,list_call->user_param);
             }
             if(strcmp(list_call->tag, "all")==0) {
-                (*list_call->callback)(widget, new_event, list_call->user_param);
+                isModified = isModified || (*list_call->callback)(widget, new_event, list_call->user_param);
             }
             list_call = list_call->next;
         }
-
+        if(isModified)
+            ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
     }
 
     hw_quit();

@@ -93,6 +93,8 @@ set(LIB_EI_SOURCES
 		${SRC}/list_event.h
 		${SRC}/widgetclass/ei_top_level.c
 		${SRC}/widgetclass/ei_top_level.h
+		${SRC}/callbacks/toplevel_callbacks.c
+		${SRC}/callbacks/toplevel_callbacks.h
 )
 
 add_library(ei STATIC			${LIB_EI_SOURCES})

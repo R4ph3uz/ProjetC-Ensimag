@@ -96,6 +96,6 @@ ei_point_t* demi_rounded_frame(ei_rect_t* rectangle,
  * @param radius rayon de l'arrondi
  * @param   clipper clipper
  */
-void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color, ei_rect_t* clipper);
+void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color, ei_rect_t* clipper, bool isPicking);
 
 #endif //DRAW_UTILS_H

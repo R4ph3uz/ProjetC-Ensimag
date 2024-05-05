@@ -103,7 +103,6 @@ void			ei_button_configure		(ei_widget_t		widget,
     }
     COPY_IF_NOT_NULL(button->img_anchor,img_anchor);
     if (callback != NULL) {
-    	fprintf(stderr,"yeah");
         button->widget.callback = callback;
     }
     COPY_IF_NOT_NULL(button->user_param,user_param);

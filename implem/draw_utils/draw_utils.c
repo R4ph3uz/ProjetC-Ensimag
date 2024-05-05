@@ -220,7 +220,7 @@ ei_point_t* demi_rounded_frame(ei_rect_t* rectangle,
 
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
-void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color, ei_rect_t* clipper) {
+void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color, ei_rect_t* clipper, bool isPicking) {
     ei_point_t* conc2 = NULL;
     ei_point_t* conc3 = NULL;
 
@@ -247,8 +247,10 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
     color_plus_fonce.blue = 40;
     color_plus_fonce.alpha = 255;
 
-
-    ei_draw_polygon(surface, conc3, nb_concat, color_plus_fonce, clipper);
+    if (isPicking)
+        ei_draw_polygon(surface, conc3, nb_concat, color, clipper);
+    else
+        ei_draw_polygon(surface, conc3, nb_concat, color_plus_fonce, clipper);
     ei_draw_polygon(surface, conc2, nb_concat, color, clipper);
 
 }

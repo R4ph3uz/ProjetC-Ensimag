@@ -35,7 +35,8 @@ void top_level_setdefaultsfunc(ei_widget_t widget) {
     *top_level->border_width= 1;
     *top_level->closable = true;
     *top_level->resizable = ei_axis_both;
-    strcpy(*top_level->title ,"title");
+    const char* title = "title";
+    strcpy((char*) top_level->title ,title);
     // memccpy(top_level->min_size ,&(ei_size_t){50,50}, sizeof(ei_size_t));
 }
 
@@ -51,8 +52,8 @@ void top_level_drawfunc(ei_widget_t widget,
     hw_surface_lock(surface);
     hw_surface_lock(pick_surface);
 
-    draw_toplevel(surface,widget->screen_location,10,*top_level->color,clipper);
-    draw_toplevel(pick_surface, widget->screen_location,10,*top_level->widget.pick_color, clipper );
+    draw_toplevel(surface,widget->screen_location,10,*top_level->color,clipper, false);
+    draw_toplevel(pick_surface, widget->screen_location,10,*top_level->widget.pick_color, clipper, true );
 
     hw_surface_unlock(pick_surface);
 
@@ -76,7 +77,7 @@ ei_widgetclass_t* create_top_level_widgetclass(){
     res->geomnotifyfunc= top_level_geomnotifyfunc;
     res->setdefaultsfunc = top_level_setdefaultsfunc;
 
-    const char name[] = "top_level";
+    const char name[] = "toplevel";
     strcpy(res->name, name);
 
     res->next = NULL;
