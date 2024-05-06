@@ -19,7 +19,6 @@ typedef struct{
     ei_size_ptr_t*		min_size;
 
     /*variable to move and resize*/
-    bool isButtonDownOnTop;
     ei_point_t whereButtonDown;
 
 } ei_impl_toplevel_t;

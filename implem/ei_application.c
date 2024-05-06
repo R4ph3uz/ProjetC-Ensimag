@@ -13,6 +13,7 @@
 #include "callbacks/button_callbacks.h"
 #include "widgetclass/ei_toplevel.h"
 #include "callbacks/toplevel_callbacks.h"
+#include "widgetclass/ei_entry.h"
 /* ----------------------------------------------------------------- */
 
 ei_impl_widget_t ARBRE_WIDGET;
@@ -31,9 +32,11 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ei_widgetclass_t* frame = create_frame_widgetclass();
     ei_widgetclass_t* button = create_button_widgetclass();
     ei_widgetclass_t* top_level = create_toplevel_widgetclass();
+    ei_widgetclass_t* entry = create_entry_widgetclass();
     ei_widgetclass_register(frame);
     ei_widgetclass_register(button);
     ei_widgetclass_register(top_level);
+    ei_widgetclass_register(entry);
 
     ei_bind(ei_ev_mouse_buttondown,NULL,  "button",down_click_handler, NULL );
     ei_bind(ei_ev_mouse_buttonup,NULL,  "button",up_click_handler,NULL );

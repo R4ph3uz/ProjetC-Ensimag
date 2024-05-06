@@ -28,6 +28,8 @@ void toplevel_releasefunc(ei_widget_t widget){
     free(top_level->closable);
     free(top_level->resizable);
     free(top_level->min_size);
+    // free trucs spécifique aux widgets ?
+    free(top_level);
 }
 
 /*-----------------------------------------------------------------------------------------------*/
