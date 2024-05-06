@@ -3,6 +3,7 @@
 #include "widgetclass/ei_frame.h"
 #include "widgetclass/ei_button.h"
 #include "widgetclass/ei_toplevel.h"
+#include "ei_event.h"
 #include <string.h>
 
 #define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = malloc(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
@@ -107,9 +108,7 @@ void			ei_button_configure		(ei_widget_t		widget,
         memcpy(button->img_rect, img_rect,sizeof(*button->img_rect) );
     }
     COPY_IF_NOT_NULL(button->img_anchor,img_anchor);
-    if (callback != NULL) {
-        button->widget.callback = callback;
-    }
+    ei_bind(ei_ev_mouse_buttonup,widget,NULL,*callback,user_param);
     COPY_IF_NOT_NULL(button->user_param,user_param);
 }
 

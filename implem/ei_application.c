@@ -39,9 +39,6 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ei_bind(ei_ev_mouse_buttonup,NULL,  "button",up_click_handler,NULL );
 
     ei_bind(ei_ev_mouse_buttondown, NULL, "toplevel", toplevel_down_click_handler, NULL);
-    // ei_bind(ei_ev_mouse_buttonup, NULL, "toplevel", toplevel_up_click_handler, NULL);
-    // ei_bind(ei_ev_mouse_move, NULL, "toplevel", toplevel_mouse_mouve_handler, NULL);
-
 
     //défini le geometry manager
     ei_geometrymanager_t* placer = malloc(sizeof(ei_geometrymanager_t));
@@ -113,7 +110,13 @@ void ei_app_run(void)
         bool isModified = false;
 
         if(widget && widget->callback && new_event->type==ei_ev_mouse_buttonup ) {
-            isModified = isModified || (*widget->callback)(widget, new_event,widget->user_data);
+            list_widget_callback* temp = widget->callback;
+            while(temp!=NULL){
+                if(temp->eventtype == new_event->type){
+                    isModified = isModified || (*temp->callback)(widget, new_event,widget->user_data);
+                }
+                temp=temp->next;
+            }
         }
 
 

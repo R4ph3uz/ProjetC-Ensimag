@@ -8,6 +8,7 @@
 #ifndef EI_IMPLEMENTATION_H
 #define EI_IMPLEMENTATION_H
 
+#include <ei_event.h>
 #include "hw_interface.h"
 #include "ei_types.h"
 #include "ei_widget.h"
@@ -15,6 +16,13 @@
 
 void ei_placer_releasefunc(ei_widget_t widget);
 void ei_placer_runfunc(ei_widget_t widget);
+
+typedef struct list_widget_callback {
+    ei_callback_t callback;
+    ei_eventtype_t eventtype;
+    void* user_param;
+    struct list_widget_callback* next;
+}list_widget_callback;
 
 /**
  * \brief	Fields common to all types of widget. Every widget classes specializes this base
@@ -40,7 +48,7 @@ typedef struct ei_impl_widget_t {
 	ei_rect_t*		content_rect;	///< See ei_widget_get_content_rect. By defaults, points to the screen_location.
 
 	/* Callback Management */
-	ei_callback_t* callback; ///< if the widget have a callback just for him
+    list_widget_callback* callback; ///< if the widget have a callback just for him
 
 } ei_impl_widget_t;
 
