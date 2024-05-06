@@ -49,7 +49,6 @@ bool toplevel_mouse_mouve_handler(ei_widget_t widget, ei_event_t* event, ei_user
     ei_toplevel_t toplevel = (ei_toplevel_t) user_param;
     *toplevel->widget.geom_params->width =(int) fmax((*toplevel->min_size)->width , *toplevel->widget.geom_params->width+ event->param.mouse.where.x - toplevel->whereButtonDown.x)  ;
     *toplevel->widget.geom_params->height =(int) fmax((*toplevel->min_size)->height , *toplevel->widget.geom_params->height+ event->param.mouse.where.y - toplevel->whereButtonDown.y)  ;
-    fprintf(stderr,"width %i , height %i\n",*toplevel->widget.geom_params->width,*toplevel->widget.geom_params->height);
     toplevel->whereButtonDown = event->param.mouse.where;
 
     return true;
