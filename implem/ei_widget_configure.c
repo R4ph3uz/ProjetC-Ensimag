@@ -32,9 +32,10 @@ void			ei_frame_configure		(ei_widget_t		widget,
     COPY_IF_NOT_NULL(frame->relief, relief);
     if (text != NULL) {
         if(frame->text==NULL) {
-            frame->text =  malloc(sizeof(char)*20);
+            frame->text = malloc(sizeof(ei_string_t ));
+            *frame->text =  malloc(sizeof(char)*30);
         }
-        strcpy((char*) frame->text,(char*) text);
+        strcpy(*frame->text,*text);
     }
 
     COPY_IF_NOT_NULL(frame->text_font, text_font);

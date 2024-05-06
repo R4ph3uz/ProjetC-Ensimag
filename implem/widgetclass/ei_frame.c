@@ -131,12 +131,11 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     *frame->relief = ei_relief_none;
 
     frame->text = NULL;
-    frame->text_font = NULL;
-    frame->text_color->alpha =255;
-    frame->text_color->red = 0;
-    frame->text_color->green = 0;
-    frame->text_color->blue = 0;
-    frame->text_anchor = NULL;
+    ei_const_string_t name = "misc/font.ttf";
+    ei_fontstyle_t style = ei_style_normal;
+    *frame->text_font = hw_text_font_create(name, style, 20);
+    *frame->text_color= (ei_color_t) {0,0,0};
+    *frame->text_anchor =ei_anc_northwest;
     frame->img = NULL;
     frame->img_rect = NULL;
     frame->img_anchor = NULL;

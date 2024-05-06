@@ -96,13 +96,14 @@ void ei_app_run(void)
 
     // (*(ROOT_WIDGET->wclass->drawfunc))(ROOT_WIDGET, ei_app_root_surface(), NULL, NULL);
     IS_RUNNING = true;
+    ei_widget_t widget = NULL;
     while(IS_RUNNING){
         ei_event_t *new_event = malloc(sizeof(ei_event_t));
         hw_event_wait_next(new_event);
-        ei_widget_t widget = NULL;
+
         ei_rect_t rect_before;
         ei_rect_t rect_after;
-        if(new_event->type == ei_ev_mouse_buttondown || new_event->type == ei_ev_mouse_buttonup || new_event->type == ei_ev_mouse_move) {
+        if(new_event->type == ei_ev_mouse_buttondown || new_event->type == ei_ev_mouse_buttonup ) {
             widget = get_widget_by_pickid(get_pick_id(PICKING_SURFACE,new_event->param.mouse.where ));
             memcpy(&rect_before, &widget->screen_location,sizeof(ei_rect_t));
         }
