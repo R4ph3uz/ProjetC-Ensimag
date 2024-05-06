@@ -56,7 +56,6 @@ void frame_drawfunc(ei_widget_t widget,
         widget->geom_params->manager->runfunc(widget);
     ei_frame_t frame = (ei_frame_t) widget;
 
-    //Si requested size est bien géré
     int top_left_x = widget->screen_location.top_left.x;
     int top_left_y = widget->screen_location.top_left.y;
 

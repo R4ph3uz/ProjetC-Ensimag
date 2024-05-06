@@ -12,7 +12,10 @@ ei_widget_t toplevel_allocfunc() {
     top_level->title = malloc(sizeof(ei_string_t));
     top_level->closable = malloc(sizeof(bool));
     top_level->resizable = malloc(sizeof(ei_axis_set_t));
-    top_level->min_size = malloc(sizeof(ei_size_t));
+    top_level->min_size = malloc(sizeof(ei_size_t*));
+    (*top_level->min_size)= malloc(sizeof(ei_size_t));
+    ei_widget_t widget = (ei_widget_t) top_level;
+    return widget;
 }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -37,7 +40,8 @@ void toplevel_setdefaultsfunc(ei_widget_t widget) {
     *top_level->resizable = ei_axis_both;
     const char* title = "title";
     strcpy((char*) top_level->title ,title);
-    // memccpy(top_level->min_size ,&(ei_size_t){50,50}, sizeof(ei_size_t));
+    (*top_level->min_size)->width = 100;
+    (*top_level->min_size)->height = 100;
 }
 
 /*-----------------------------------------------------------------------------------------------*/

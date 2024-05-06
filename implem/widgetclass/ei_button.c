@@ -70,7 +70,6 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     button->img=NULL;
     button->img_rect=NULL;
     button->img_anchor=NULL;
-    // que mettre au callback ?
     button->callback=NULL;
     button->user_param =NULL;
 }
