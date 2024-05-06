@@ -11,7 +11,7 @@
 #include "list_event.h"
 #include "pick_event.h"
 #include "callbacks/button_callbacks.h"
-#include "widgetclass/ei_top_level.h"
+#include "widgetclass/ei_toplevel.h"
 #include "callbacks/toplevel_callbacks.h"
 /* ----------------------------------------------------------------- */
 
@@ -30,7 +30,7 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     initialize_pickid_array(); // < init dynamic array to have the widget corresponding to an id
     ei_widgetclass_t* frame = create_frame_widgetclass();
     ei_widgetclass_t* button = create_button_widgetclass();
-    ei_widgetclass_t* top_level = create_top_level_widgetclass();
+    ei_widgetclass_t* top_level = create_toplevel_widgetclass();
     ei_widgetclass_register(frame);
     ei_widgetclass_register(button);
     ei_widgetclass_register(top_level);
@@ -120,12 +120,13 @@ void ei_app_run(void)
         //parcourir la liste des callbacks et appeler si le bon type de widget et le bon type d'event
         list_callback* list_call = get_list_callback();
         while(list_call!=NULL) {
+
             if(widget && list_call->eventtype == new_event->type && strcmp(list_call->tag, widget->wclass->name)==0 ) {
-                isModified = isModified || (*list_call->callback)(widget,new_event,list_call->user_param);
+                isModified = (*list_call->callback)(widget,new_event,list_call->user_param)|| isModified ;
 
             }
-            else if(list_call->tag && strcmp(list_call->tag, "all")==0 &&  list_call->eventtype == new_event->type) {
-                isModified = isModified || (*list_call->callback)(widget, new_event, list_call->user_param);
+            if(list_call->tag && strcmp(list_call->tag, "all")==0 &&  list_call->eventtype == new_event->type) {
+                isModified = (*list_call->callback)(widget, new_event, list_call->user_param) || isModified;
 
             }
             list_call = list_call->next;

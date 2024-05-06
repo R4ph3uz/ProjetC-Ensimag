@@ -1,11 +1,11 @@
-#include "ei_top_level.h"
+#include "ei_toplevel.h"
 #include "../draw_utils/draw_utils.h"
 #include "ei_types.h"
 
 /*-----------------------------------------------------------------------------------------------*/
 
-ei_widget_t top_level_allocfunc() {
-    ei_impl_top_level_t* top_level = malloc(sizeof(ei_impl_top_level_t));
+ei_widget_t toplevel_allocfunc() {
+    ei_impl_toplevel_t* top_level = malloc(sizeof(ei_impl_toplevel_t));
 
     top_level->color = malloc(sizeof(ei_color_t));
     top_level->border_width = malloc(sizeof(int));
@@ -17,8 +17,8 @@ ei_widget_t top_level_allocfunc() {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-void top_level_releasefunc(ei_widget_t widget){
-    ei_impl_top_level_t* top_level = (ei_impl_top_level_t*) widget;
+void toplevel_releasefunc(ei_widget_t widget){
+    ei_impl_toplevel_t* top_level = (ei_impl_toplevel_t*) widget;
     free(top_level->color);
     free(top_level->border_width);
     free(top_level->title);
@@ -29,8 +29,8 @@ void top_level_releasefunc(ei_widget_t widget){
 
 /*-----------------------------------------------------------------------------------------------*/
 
-void top_level_setdefaultsfunc(ei_widget_t widget) {
-    ei_top_level_t top_level = (ei_top_level_t) widget;
+void toplevel_setdefaultsfunc(ei_widget_t widget) {
+    ei_toplevel_t top_level = (ei_toplevel_t) widget;
 
     *top_level->border_width= 1;
     *top_level->closable = true;
@@ -42,13 +42,13 @@ void top_level_setdefaultsfunc(ei_widget_t widget) {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-void top_level_drawfunc(ei_widget_t widget,
-                    ei_surface_t surface,
-                    ei_surface_t pick_surface,
-                    ei_rect_t* clipper){
+void toplevel_drawfunc(ei_widget_t widget,
+                       ei_surface_t surface,
+                       ei_surface_t pick_surface,
+                       ei_rect_t* clipper){
     if(widget->geom_params)
         widget->geom_params->manager->runfunc(widget);
-    ei_top_level_t top_level = (ei_top_level_t) widget;
+    ei_toplevel_t top_level = (ei_toplevel_t) widget;
     hw_surface_lock(surface);
     hw_surface_lock(pick_surface);
 
@@ -62,19 +62,19 @@ void top_level_drawfunc(ei_widget_t widget,
 
 /*-----------------------------------------------------------------------------------------------*/
 
-void top_level_geomnotifyfunc(ei_widget_t widget) {
+void toplevel_geomnotifyfunc(ei_widget_t widget) {
 
 }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-ei_widgetclass_t* create_top_level_widgetclass(){
+ei_widgetclass_t* create_toplevel_widgetclass(){
     ei_widgetclass_t* res = malloc(sizeof(ei_widgetclass_t));
-    res->allocfunc = top_level_allocfunc;
-    res->releasefunc = top_level_releasefunc;
-    res->drawfunc = top_level_drawfunc;
-    res->geomnotifyfunc= top_level_geomnotifyfunc;
-    res->setdefaultsfunc = top_level_setdefaultsfunc;
+    res->allocfunc = toplevel_allocfunc;
+    res->releasefunc = toplevel_releasefunc;
+    res->drawfunc = toplevel_drawfunc;
+    res->geomnotifyfunc= toplevel_geomnotifyfunc;
+    res->setdefaultsfunc = toplevel_setdefaultsfunc;
 
     const char name[] = "toplevel";
     strcpy(res->name, name);
