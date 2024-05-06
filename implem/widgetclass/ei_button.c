@@ -100,11 +100,9 @@ void button_drawfunc(ei_widget_t widget,
     hw_surface_unlock(pick_surface);
     if(button->img){
         // Si il y a un image a afficher (pour l'instant ignoré)
-        hw_surface_lock(surface);
-        hw_surface_lock(button->img);
-        ei_copy_surface(surface, *button->img_rect, button->img, NULL, true);
-        hw_surface_unlock(button->img);
-        hw_surface_unlock(surface);
+        hw_surface_lock(*button->img);
+        ei_copy_surface(surface, *button->img_rect, *button->img, *button->img_rect, true);
+        hw_surface_unlock(*button->img);
     }
 
     hw_surface_unlock(surface);

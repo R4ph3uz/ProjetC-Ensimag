@@ -101,12 +101,18 @@ void			ei_button_configure		(ei_widget_t		widget,
         memcpy(button->text_color, text_color,sizeof(*button->text_color) );
     }
     COPY_IF_NOT_NULL(button->text_anchor,text_anchor);
-    COPY_IF_NOT_NULL(button->img,img);
+    if(img != NULL) {
+        if (button->img == NULL)
+            button->img = malloc(sizeof(ei_surface_t));
+        memcpy(button->img, img, sizeof(ei_surface_t));
+    }
     if (img_rect != NULL) {
-        if (!button->img_rect){
-            button->img_rect=malloc(sizeof(*button->img_rect));
+        if (button->img_rect==NULL){
+            button->img_rect=malloc(sizeof(ei_rect_ptr_t));
         }
-        memcpy(button->img_rect, img_rect,sizeof(*button->img_rect) );
+        *button->img_rect = malloc(sizeof(ei_rect_t));
+        memcpy(*button->img_rect, *img_rect, sizeof(ei_rect_t));
+
     }
     COPY_IF_NOT_NULL(button->img_anchor,img_anchor);
     ei_bind(ei_ev_mouse_buttonup,widget,NULL,*callback,user_param);
