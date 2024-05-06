@@ -104,4 +104,13 @@ typedef struct ei_impl_geom_param_t {
  */
 ei_surface_t get_pick_surface(void);
 
+/**
+ * @brief	Calcule le rectangle d'intersection de deux rectangles
+ *
+ * @param	rect1	Premier rectangle
+ * @param	rect2	Deuxième rectangle
+ */
+ei_rect_t* intersection_rectangle(ei_rect_t rect1 , ei_rect_t rect2);
+
+
 #endif
