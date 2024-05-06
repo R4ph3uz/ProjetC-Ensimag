@@ -2,7 +2,7 @@
 #include "ei_implementation.h"
 #include "widgetclass/ei_frame.h"
 #include "widgetclass/ei_button.h"
-#include "widgetclass/ei_top_level.h"
+#include "widgetclass/ei_toplevel.h"
 #include <string.h>
 
 #define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = malloc(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
@@ -126,7 +126,7 @@ void			ei_toplevel_configure		(ei_widget_t		widget,
 {
 	if (requested_size)
 		widget->requested_size=(ei_size_t )*requested_size;
-        ei_top_level_t toplevel = (ei_top_level_t) widget;
+        ei_toplevel_t toplevel = (ei_toplevel_t) widget;
         COPY_IF_NOT_NULL(toplevel->color,(ei_color_t*) color);
         COPY_IF_NOT_NULL(toplevel->border_width, border_width);
         COPY_IF_NOT_NULL(toplevel->title,title);
