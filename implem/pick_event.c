@@ -9,7 +9,7 @@ widget_array* PICK_DYNARRAY = NULL;
 void initialize_pickid_array(){
     PICK_DYNARRAY = malloc(sizeof(widget_array));
     PICK_DYNARRAY->number_element= 0;
-    PICK_DYNARRAY->size_malloced = 20;
+    PICK_DYNARRAY->size_malloced = 80;
     PICK_DYNARRAY->widgets = malloc(sizeof(ei_widget_t*)*PICK_DYNARRAY->size_malloced);
 }
 
