@@ -11,7 +11,7 @@ typedef struct{
 
     /* Suite spécifique à un top level*/
 
-    const ei_color_t*	color;
+    ei_color_t*	color;
     int*			border_width;
     ei_string_t*		title;
     bool*			closable;
