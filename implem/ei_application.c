@@ -100,14 +100,68 @@ void ei_app_run(void)
     // (*(ROOT_WIDGET->wclass->drawfunc))(ROOT_WIDGET, ei_app_root_surface(), NULL, NULL);
     IS_RUNNING = true;
     ei_widget_t widget = NULL;
+    ei_event_t *new_event = malloc(sizeof(ei_event_t));
     while(IS_RUNNING){
-        ei_event_t *new_event = malloc(sizeof(ei_event_t));
+
         hw_event_wait_next(new_event);
 
         ei_rect_t rect_before;
         ei_rect_t rect_after;
         if(new_event->type == ei_ev_mouse_buttondown || new_event->type == ei_ev_mouse_buttonup ) {
+            ei_widget_t precwid=widget;
             widget = get_widget_by_pickid(get_pick_id(PICKING_SURFACE,new_event->param.mouse.where ));
+            ei_widget_t widget2=widget;
+            if (widget2)
+            {
+                while (widget2->parent != ROOT_WIDGET) {
+                    widget2 = widget2->parent;
+                }
+            }
+            ei_widget_t widget2prec=precwid;
+            if (widget2prec)
+            {
+                while (widget2prec->parent != ROOT_WIDGET) {
+                    widget2prec = widget2prec->parent;
+                }
+            }
+            if (widget!=ROOT_WIDGET && widget!=precwid && widget2prec!=widget2)
+            {
+
+                if (widget2)
+                {
+
+                    ei_widget_t prec=widget2->parent;
+                    ei_widget_t suiv=widget2->next_sibling;
+
+                    if (prec->children_head!=widget2)
+                    {
+                        prec=prec->children_head;
+                        while (prec->next_sibling!=widget2)
+                        {
+                            prec=prec->next_sibling;
+                        }
+                        prec->next_sibling=suiv;
+                        if(suiv==NULL)
+                        {
+                            prec->parent->children_tail=prec;
+                        }
+                    }
+                    else
+                    {
+                        prec->children_head=suiv;
+                        if(suiv==NULL)
+                        {
+                            prec->children_tail=NULL;
+                        }
+                    }
+                    widget2->parent->children_tail->next_sibling=widget2;
+                    widget2->parent->children_tail=widget2;
+                    widget2->next_sibling=NULL;
+                }
+
+            }
+
+
             memcpy(&rect_before, &widget->screen_location,sizeof(ei_rect_t));
         }
 
@@ -159,7 +213,8 @@ void ei_app_run(void)
 
 /* ----------------------------------------------------------------- */
 
-void ei_app_invalidate_rect(const ei_rect_t* rect) {
+void ei_app_invalidate_rect(const ei_rect_t* rect)
+{
 
 }
 

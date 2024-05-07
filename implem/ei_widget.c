@@ -90,6 +90,10 @@ void			ei_widget_destroy		(ei_widget_t		widget)
     else
     {
         prec->children_head=suiv;
+        if(suiv==NULL)
+        {
+            prec->children_tail=NULL;
+        }
     }
     while(widget->children_head){
         ei_widget_t prochain = widget->children_head->next_sibling;
