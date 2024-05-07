@@ -73,7 +73,6 @@ void			ei_widget_destroy		(ei_widget_t		widget)
     //détruit les enfants
 
     ei_widget_t prec=widget->parent;
-    ei_widget_t prec2=widget->parent;
     ei_widget_t suiv=widget->next_sibling;
     if (prec->children_head!=widget)
     {
