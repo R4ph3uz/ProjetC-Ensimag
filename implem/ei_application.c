@@ -112,21 +112,16 @@ void ei_app_run(void)
             ei_widget_t precwid=widget;
             widget = get_widget_by_pickid(get_pick_id(PICKING_SURFACE,new_event->param.mouse.where ));
             ei_widget_t widget2=widget;
-            if (widget2 != NULL)
+
+
+            if (widget!=ROOT_WIDGET && widget!=precwid)
             {
-                while (widget2->parent != ROOT_WIDGET) {
-                    widget2 = widget2->parent;
+                if (widget2)
+                {
+                    while (widget2->parent != ROOT_WIDGET) {
+                        widget2 = widget2->parent;
+                    }
                 }
-            }
-            ei_widget_t widget2prec=precwid;
-            if (widget2prec)
-            {
-                while (widget2prec->parent != ROOT_WIDGET) {
-                    widget2prec = widget2prec->parent;
-                }
-            }
-            if (widget!=ROOT_WIDGET && widget!=precwid && widget2prec!=widget2)
-            {
 
                 if (widget2)
                 {
@@ -155,9 +150,17 @@ void ei_app_run(void)
                             prec->children_tail=NULL;
                         }
                     }
-                    widget2->parent->children_tail->next_sibling=widget2;
-                    widget2->parent->children_tail=widget2;
-                    widget2->next_sibling=NULL;
+                    if (widget2->parent->children_tail==NULL)
+                    {
+                        widget2->parent->children_tail=widget2;
+                        widget2->parent->children_head=widget2;
+                    }
+                    else
+                    {
+                        widget2->parent->children_tail->next_sibling = widget2;
+                        widget2->parent->children_tail = widget2;
+                        widget2->next_sibling = NULL;
+                    }
                 }
 
             }
