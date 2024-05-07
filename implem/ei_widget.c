@@ -100,31 +100,7 @@ void			ei_widget_destroy		(ei_widget_t		widget)
         ei_widget_destroy(widget->children_head);
         widget->children_head=prochain;
     }
-    if(widget->parent){
-        ei_widget_t parent = widget->parent;
-        ei_widget_t head = parent->children_head;
-        if(widget == head && widget==parent->children_tail){
-            parent->children_head = NULL;
-            parent->children_tail = NULL;
-            fprintf(stderr, "if\n");
-        }
-        else if(widget == head ) {
-            parent->children_head = head->next_sibling;
-            fprintf(stderr, "else if\n");
-        }
-        else{
-            fprintf(stderr, "else\n");
-            while(head->next_sibling){
-                if (head->next_sibling == widget){
-                    fprintf(stderr, "found widget");
-                    head->next_sibling = head->next_sibling->next_sibling;
-                    break;
-                }
-                head = head->next_sibling;
-            }
-        }
 
-    }
 
     ei_geometrymanager_unmap(widget);
 //    (*(widget->wclass->releasefunc))(widget); // ici libère la mémoire
