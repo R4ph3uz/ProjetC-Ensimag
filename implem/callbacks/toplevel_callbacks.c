@@ -8,13 +8,14 @@
 
 bool toplevel_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_toplevel_t toplevel = (ei_toplevel_t) widget;
-    if(event->param.mouse.where.y < widget->screen_location.top_left.y ) {
-        if(event->param.mouse.where.x> widget->screen_location.top_left.x && event->param.mouse.where.x< widget->screen_location.top_left.x+5
-        && event->param.mouse.where.y< widget->screen_location.top_left.y-15 && event->param.mouse.where.y> widget->screen_location.top_left.y){
-            fprintf(stderr,"je suis sur le rouge");
-            ei_widget_destroy(widget);
-            return true;
-        }
+    if (event->param.mouse.where.x>widget->screen_location.top_left.x-1  && event->param.mouse.where.x<widget->screen_location.top_left.x+11 && event->param.mouse.where.y>widget->screen_location.top_left.y-21  && event->param.mouse.where.y<widget->screen_location.top_left.y-9)
+    {
+        fprintf(stderr,"je suis sur le rouge");
+        ei_widget_destroy(widget);
+        return true;
+    }
+   if(event->param.mouse.where.y < widget->screen_location.top_left.y ) {
+
         toplevel->whereButtonDown = event->param.mouse.where;
         ei_bind(ei_ev_mouse_move, NULL, "all", toplevel_move_mouse_mouve_handler, toplevel);
         ei_bind(ei_ev_mouse_buttonup, NULL, "all", toplevel_move_up_click_handler, toplevel);
