@@ -4,14 +4,20 @@
 #include "ei_types.h"
 #include <math.h>
 
+#include "../list_event.h"
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 bool toplevel_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_toplevel_t toplevel = (ei_toplevel_t) widget;
     if(event->param.mouse.where.y < widget->screen_location.top_left.y +20 ) {
         if(event->param.mouse.where.x> widget->screen_location.top_left.x && event->param.mouse.where.x< widget->screen_location.top_left.x+11
-        && event->param.mouse.where.y< widget->screen_location.top_left.y+11 && event->param.mouse.where.y> widget->screen_location.top_left.y){
+        && event->param.mouse.where.y< widget->screen_location.top_left.y+11 && event->param.mouse.where.y> widget->screen_location.top_left.y) {
             fprintf(stderr,"je suis sur le rouge");
+            // list_callback listcb=get_list_callback();
+            // while(listcb.user_param != widget){
+            //
+            // }
             ei_widget_destroy(widget);
             return true;
         }

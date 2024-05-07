@@ -11,12 +11,13 @@
 #include "list_event.h"
 #include "pick_event.h"
 #include "callbacks/button_callbacks.h"
+#include "callbacks/entry_callbacks.h"
 #include "widgetclass/ei_toplevel.h"
 #include "callbacks/toplevel_callbacks.h"
 #include "widgetclass/ei_entry.h"
+#include "callbacks/entry_callbacks.h"
 /* ----------------------------------------------------------------- */
 
-ei_impl_widget_t ARBRE_WIDGET;
 
 static ei_surface_t ROOT_SURFACE;
 static ei_widget_t ROOT_WIDGET;
@@ -40,8 +41,8 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 
     ei_bind(ei_ev_mouse_buttondown,NULL,  "button",down_click_handler, NULL );
     ei_bind(ei_ev_mouse_buttonup,NULL,  "button",up_click_handler,NULL );
-
     ei_bind(ei_ev_mouse_buttondown, NULL, "toplevel", toplevel_down_click_handler, NULL);
+    ei_bind(ei_ev_mouse_buttondown,NULL,"entry",entry_down_click_handler,NULL);
 
     //défini le geometry manager
     ei_geometrymanager_t* placer = malloc(sizeof(ei_geometrymanager_t));
@@ -111,7 +112,7 @@ void ei_app_run(void)
             ei_widget_t precwid=widget;
             widget = get_widget_by_pickid(get_pick_id(PICKING_SURFACE,new_event->param.mouse.where ));
             ei_widget_t widget2=widget;
-            if (widget2)
+            if (widget2 != NULL)
             {
                 while (widget2->parent != ROOT_WIDGET) {
                     widget2 = widget2->parent;
