@@ -92,13 +92,13 @@ void button_drawfunc(ei_widget_t widget,
         draw_button(surface,widget->screen_location,*button->corner_radius,*button->color,*button->relief,clipper);
     draw_button(pick_surface, widget->screen_location,*button->corner_radius,*button->widget.pick_color,ei_relief_none, clipper );
 
-//    if(button->text){
-//        uint32_t decal_x = widget->screen_location.size.width/10;
-//        uint32_t decal_y = widget->screen_location.size.height/2;
-//        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
-//        ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
-//
-//    }
+    if(*button->text){
+        uint32_t decal_x = widget->screen_location.size.width/10;
+        uint32_t decal_y = widget->screen_location.size.height/2;
+        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
+        ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
+
+    }
 //    ei_surface_t img = hw_image_load("misc/klimt.jpg",ei_app_root_surface() );
 //    ei_rect_t test = hw_surface_get_rect(img);
 //
@@ -108,15 +108,29 @@ void button_drawfunc(ei_widget_t widget,
 //    hw_surface_unlock(img);
 
     hw_surface_unlock(pick_surface);
-    if(button->img){
+    if(button->img) {
         // Si il y a un image a afficher (pour l'instant ignoré)
-        ei_point_t place = {widget->screen_location.top_left.x,widget->screen_location.top_left.y};
-        ei_rect_t test = ei_rect(place,(*button->img_rect)->size);
-        hw_surface_lock(*button->img);
-        ei_copy_surface(surface, &test, *button->img, *button->img_rect, true);
-        hw_surface_unlock(*button->img);
-    }
+        ei_point_t place = {widget->screen_location.top_left.x, widget->screen_location.top_left.y};
+        ei_rect_t test = ei_rect(place, (*button->img_rect)->size);
+        ei_rect_t *intersection = intersection_rectangle(test, *clipper);
 
+        if (intersection) {
+            int point_debut_x = (intersection->top_left.x != clipper->top_left.x ? 0 : (*button->img_rect)->size.width -
+                                                                                      intersection->size.width)+
+                                                                                              (*button->img_rect)->top_left.x;
+            int point_debut_y = (intersection->top_left.y != clipper->top_left.y ? 0 : (*button->img_rect)->size.height -
+                                                                                      intersection->size.height)
+                                                                                              +(*button->img_rect)->top_left.y ;
+            ei_rect_t intersection_for_text = ei_rect(
+                    ei_point(point_debut_x,point_debut_y),
+                    intersection->size);
+
+
+            hw_surface_lock(*button->img);
+            ei_copy_surface(surface, intersection, *button->img, &intersection_for_text, true);
+            hw_surface_unlock(*button->img);
+        }
+    }
     hw_surface_unlock(surface);
 
 
