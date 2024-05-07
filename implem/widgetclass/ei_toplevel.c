@@ -58,19 +58,20 @@ void toplevel_drawfunc(ei_widget_t widget,
     hw_surface_lock(surface);
     hw_surface_lock(pick_surface);
 
-    draw_toplevel(surface,widget->screen_location,10,*top_level->color,clipper, false);
-    draw_toplevel(pick_surface, widget->screen_location,10,*top_level->widget.pick_color, clipper, true );
-    if(top_level->title)
-    {
-        uint32_t decal_x = 20;
-        uint32_t decal_y = -7;
-        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
-        ei_color_t	blanc	= { 0xdf, 0xdf, 0xdf, 0xff };
-        void* test= hw_text_font_create("misc/font.ttf",ei_style_normal,20);
-        ei_draw_text(surface, &place, *top_level->title, test, blanc, clipper);
-
-    }
+    draw_toplevel(surface,widget->screen_location,10,*top_level->color,clipper, false, top_level->resizable);
+    draw_toplevel(pick_surface, widget->screen_location,10,*top_level->widget.pick_color, clipper, true, top_level->resizable );
     hw_surface_unlock(pick_surface);
+//    if(top_level->title)
+//    {
+//        uint32_t decal_x = 20;
+//        uint32_t decal_y = -25;
+//        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
+//        ei_color_t	blanc	= { 0xdf, 0xdf, 0xdf, 0xff };
+//        void* test= hw_text_font_create("misc/font.ttf",ei_style_normal,20);
+//        ei_draw_text(surface, &place, *top_level->title, test, blanc, clipper);
+//
+//    }
+
 
     hw_surface_unlock(surface);
 }

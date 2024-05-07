@@ -95,8 +95,9 @@ ei_point_t* demi_rounded_frame(ei_rect_t* rectangle,
  * @param	color	    couleur du bouton
  * @param radius rayon de l'arrondi
  * @param   clipper clipper
+ * @param resizable resizable
  */
-void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color, ei_rect_t* clipper, bool isPicking);
+void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color, ei_rect_t* clipper, bool isPicking, ei_axis_set_t* resizable);
 
 /**
  * \brief Generates points lying on the circumference of a circle given its center coordinates and radius.

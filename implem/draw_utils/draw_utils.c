@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "ei_draw.h"
+#include "ei_types.h"
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 
@@ -246,7 +247,7 @@ ei_point_t* circle(ei_point_t centre, int radius, size_t* size_tableau)
 
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
-void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color, ei_rect_t* clipper, bool isPicking) {
+void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color, ei_rect_t* clipper, bool isPicking, ei_axis_set_t* resizable ) {
     ei_point_t* conc2 =  malloc(sizeof(ei_point_t)*4);
 ;   ei_point_t* carre_bas_droite = malloc(sizeof(ei_point_t)*4);
     ei_point_t* conc3 = NULL;
@@ -256,16 +257,16 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
 
     ei_rect_t nouveau_rect = rectangle;
     nouveau_rect.top_left.x= rectangle.top_left.x+radius;
-    nouveau_rect.top_left.y= rectangle.top_left.y+radius;
-    nouveau_rect.size.height = 20;
+    nouveau_rect.top_left.y= rectangle.top_left.y+radius-20;
+    nouveau_rect.size.height = -10;
     nouveau_rect.size.width = rectangle.size.width-2*radius;
 
 
     conc3 = demi_rounded_frame(&nouveau_rect, 20, true, &nb_concat);
 
     nouveau_rect.top_left.x= rectangle.top_left.x-radius;
-    nouveau_rect.top_left.y= rectangle.top_left.y+20;
-    nouveau_rect.size.height = rectangle.size.height -20;
+    nouveau_rect.top_left.y= rectangle.top_left.y;
+    nouveau_rect.size.height = rectangle.size.height ;
     nouveau_rect.size.width = rectangle.size.width+ 2*radius;
 
     conc2[0] = nouveau_rect.top_left;
@@ -284,7 +285,7 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
     carre_bas_droite[3] = (ei_point_t){ nouveau_rect.top_left.x+ nouveau_rect.size.width,nouveau_rect.top_left.y + nouveau_rect.size.height-10 };
 
     size_t nb_circle;
-    ei_point_t* circle_p = circle((ei_point_t) {rectangle.top_left.x+5, rectangle.top_left.y+5}, 6, &nb_circle);
+    ei_point_t* circle_p = circle((ei_point_t) {rectangle.top_left.x+5, rectangle.top_left.y-15}, 6, &nb_circle);
 
     ei_color_t red;
     red.red = 230;
@@ -292,16 +293,21 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
     red.blue = 40;
     red.alpha = 255;
 
+
+
     if (isPicking) {
         ei_draw_polygon(surface, conc2, 4, color, clipper);
         ei_draw_polygon(surface, conc3, nb_concat, color, clipper);
     }
     else {
         ei_draw_polygon(surface, conc3, nb_concat, color_plus_fonce, clipper);
-
+        if (resizable)
+        {
+//            <ei_draw_polygon(surface, carre_bas_droite, 4, color_plus_fonce, clipper);>
+        }
         ei_draw_polygon(surface, conc2, 4, color, clipper);
         ei_draw_polyline(surface, conc2, 4, color_plus_fonce,clipper);
-        ei_draw_polygon(surface, carre_bas_droite, 4, color_plus_fonce, clipper);
+
         ei_draw_polygon(surface, circle_p, nb_circle, red, clipper);
     }
 
