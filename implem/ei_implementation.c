@@ -82,50 +82,38 @@ void ei_placer_releasefunc(ei_widget_t widget)
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
-ei_rect_t* intersection_rectangle(ei_rect_t rect1 , ei_rect_t rect2)
-{
+ei_rect_t* intersection_rectangle(ei_rect_t rect1,ei_rect_t rect2) {
+    // Find the coordinates of the top-left corner of the intersection rectangle
+    int x_tl = rect1.top_left.x > rect2.top_left.x ? rect1.top_left.x : rect2.top_left.x;
+    int y_tl = rect1.top_left.y > rect2.top_left.y ? rect1.top_left.y : rect2.top_left.y;
 
-    ei_rect_t* intersect= malloc(sizeof (ei_rect_t));
-    ei_rect_t grandy;
-    ei_rect_t grandx;
-    ei_rect_t petity;
-    ei_rect_t petitx;
-    if (rect1.top_left.x<rect2.top_left.x)
-    {
-        petitx=rect1;
-        grandx=rect2;
-    }
-    else
-    {
-        petitx=rect2;
-        grandx=rect1;
-    }
-    if (rect1.top_left.y<rect2.top_left.y)
-    {
-        petity=rect1;
-        grandy=rect2;
-    }
-    else
-    {
-        petity=rect2;
-        grandy=rect1;
-    }
-    if ((grandx.top_left.x-petitx.top_left.x>petitx.size.width)||(grandy.top_left.y-petity.top_left.y>petitx.size.height))
-    {
-        intersect->top_left.x=0;
-        intersect->top_left.y=0;
-        intersect->size.height=0;
-        intersect->size.width=0;
-    }
-    else
-    {
+    // Find the coordinates of the bottom-right corner of the intersection rectangle
+    int x_br = (rect1.top_left.x + rect1.size.width) < (rect2.top_left.x + rect2.size.width) ?
+               (rect1.top_left.x + rect1.size.width) : (rect2.top_left.x + rect2.size.width);
+    int y_br = (rect1.top_left.y + rect1.size.height) < (rect2.top_left.y + rect2.size.height) ?
+               (rect1.top_left.y + rect1.size.height) : (rect2.top_left.y + rect2.size.height);
 
-        intersect->top_left.x=(int) fmax((double)rect1.top_left.x,(double)rect2.top_left.x);
-        intersect->top_left.y=(int) fmax((double)rect1.top_left.y,(double)rect2.top_left.y);
-        intersect->size.height=(int) fmin((double)grandy.size.height,petity.size.height-(grandy.top_left.y-petity.top_left.y));
-        intersect->size.width=(int) fmin((double)grandx.size.width,petitx.size.width-(grandx.top_left.x-petitx.top_left.x));
+    // Calculate the width and height of the intersection rectangle
+    int width = x_br - x_tl;
+    int height = y_br - y_tl;
+
+    // Check if the rectangles intersect
+    if (width <= 0 || height <= 0) {
+        // No intersection, return NULL
+        return NULL;
+    } else {
+        // Construct and return the intersection rectangle
+        ei_rect_t* intersection_rect = malloc(sizeof(ei_rect_t));
+        if (intersection_rect == NULL) {
+            // Allocation failed
+            return NULL;
+        }
+        intersection_rect->top_left.x = x_tl;
+        intersection_rect->top_left.y = y_tl;
+        intersection_rect->size.width = width;
+        intersection_rect->size.height = height;
+        return intersection_rect;
     }
-    return intersect;
 }
 
 /*------------------------------------------------------------------------------------*/

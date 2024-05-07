@@ -1,6 +1,12 @@
 #include "ei_draw.h"
 #include "ei_implementation.h"
 #include <string.h>
+#include "ei_utils.h"
+
+/*------------------------------------------------------------------------------*/
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
 /*------------------------------------------------------------------------------*/
 
 void	ei_draw_text		(ei_surface_t		surface,
@@ -13,11 +19,24 @@ void	ei_draw_text		(ei_surface_t		surface,
     ei_surface_t surface_text = hw_text_create_surface(text, font, color);
 
     ei_rect_t rect_surface_text = hw_surface_get_rect(surface_text);
+
+
     if (where)
         rect_surface_text.top_left = *where;
-    hw_surface_lock(surface_text);
-    ei_copy_surface(surface, &rect_surface_text, surface_text, NULL, true);
-    hw_surface_unlock(surface_text);
+
+    ei_rect_t* intersection = intersection_rectangle(rect_surface_text, *clipper);
+
+    if (intersection){
+        int point_debut_x = intersection->top_left.x != clipper->top_left.x ? 0: rect_surface_text.size.width-intersection->size.width;
+        int point_debut_y = intersection->top_left.y != clipper->top_left.y ? 0: rect_surface_text.size.height-intersection->size.height;
+        ei_rect_t intersection_for_text = ei_rect(
+                ei_point(point_debut_x,point_debut_y),
+                intersection->size);
+        hw_surface_lock(surface_text);
+        ei_copy_surface(surface, intersection, surface_text, &intersection_for_text, true);
+        hw_surface_unlock(surface_text);
+    }
+
 
 }
 
@@ -41,8 +60,10 @@ int	ei_copy_surface		(ei_surface_t		destination,
     ei_size_t size_src = src_rect ? src_rect->size : hw_surface_get_size(source);
     ei_size_t size_dest = dst_rect ? dst_rect->size: hw_surface_get_size(destination);
 
-    if(memcmp(&size_src, &size_dest, sizeof(ei_size_t)) != 0 )
+    if(memcmp(&size_src, &size_dest, sizeof(ei_size_t)) != 0 ){
         return 1; //tailles différentes on ne copie pas
+    }
+
 
     ei_point_t top_left_dest = dst_rect ? dst_rect->top_left : (ei_point_t){0, 0};
     ei_point_t top_left_src = src_rect ? src_rect->top_left : (ei_point_t){0, 0 };
