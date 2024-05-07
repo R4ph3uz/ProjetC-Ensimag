@@ -301,13 +301,13 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
     }
     else {
         ei_draw_polygon(surface, conc3, nb_concat, color_plus_fonce, clipper);
-        if (resizable)
+        if (*resizable!=ei_axis_none)
         {
-//            <ei_draw_polygon(surface, carre_bas_droite, 4, color_plus_fonce, clipper);>
+            fprintf(stderr,"?");
+            ei_draw_polygon(surface, carre_bas_droite, 4, color_plus_fonce, clipper);
         }
         ei_draw_polygon(surface, conc2, 4, color, clipper);
         ei_draw_polyline(surface, conc2, 4, color_plus_fonce,clipper);
-
         ei_draw_polygon(surface, circle_p, nb_circle, red, clipper);
     }
 
