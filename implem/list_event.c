@@ -22,7 +22,7 @@ void add_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t even
         temp->eventtype = eventtype;
         temp->tag= tag;
         temp->next = LIST_CALLBACK;
-        LIST_CALLBACK->user_param = user_param;
+        temp->user_param = user_param;
         LIST_CALLBACK = temp;
     }
 }
@@ -36,7 +36,6 @@ void remove_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t e
     if(strcmp(parcours->tag,tag)==0 && memcmp(&parcours->eventtype,&eventtype, sizeof(ei_eventtype_t))==0 ) {
         LIST_CALLBACK = LIST_CALLBACK->next;
         LIST_CALLBACK->tag ="zae";
-        fprintf(stderr, "delete succesful");
         return;
     }
 
@@ -45,12 +44,10 @@ void remove_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t e
             list_callback* temp = parcours->next;
             parcours->next = parcours->next->next;
             free(temp); // Besoin de free les sous structures (je pense pas)?
-            fprintf(stderr, "delete succesful");
             return;
         }
         parcours = parcours->next;
     }
-
     fprintf(stderr, "not found !");
 }
 

@@ -102,15 +102,15 @@ void		ei_place	(ei_widget_t		widget,
         *widget->geom_params->width=*width;
     }
     else {
-        if(requested_width) {
-            *widget->geom_params->width=requested_width;
+        if(rel_width) {
+            *widget->geom_params->width=0;
         }
         else {
-            if(rel_width == NULL) {
-                *widget->geom_params->width = default_width;
+            if(requested_width) {
+                *widget->geom_params->width = requested_width;
             }
             else {
-                *widget->geom_params->width=0;
+                *widget->geom_params->width=default_width;
             }
         }
     }
@@ -120,15 +120,15 @@ void		ei_place	(ei_widget_t		widget,
         *widget->geom_params->height=*height;
     }
     else {
-        if(requested_height) {
-            *widget->geom_params->height=requested_height;
+        if(rel_height) {
+            *widget->geom_params->height=0;
         }
         else {
-            if(rel_height == NULL) {
-                *widget->geom_params->height = default_height;
+            if(requested_height) {
+                *widget->geom_params->height = requested_height;
             }
             else {
-                *widget->geom_params->height=0;
+                *widget->geom_params->height=default_height;
             }
         }
     }

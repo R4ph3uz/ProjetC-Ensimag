@@ -1,9 +1,9 @@
 #include "ei_geometrymanager.h"
 #include "ei_implementation.h"
-#include "ei_application.h"
 #include "widgetclass/ei_frame.h"
 #include "widgetclass/ei_button.h"
-#include "widgetclass/ei_top_level.h"
+#include "widgetclass/ei_toplevel.h"
+#include "ei_event.h"
 #include <string.h>
 
 #define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = malloc(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
@@ -30,7 +30,14 @@ void			ei_frame_configure		(ei_widget_t		widget,
 	COPY_IF_NOT_NULL(frame->color,color);
     COPY_IF_NOT_NULL(frame->border_width, border_width);
     COPY_IF_NOT_NULL(frame->relief, relief);
-    COPY_IF_NOT_NULL(frame->text, text);
+    if (text != NULL) {
+        if(frame->text==NULL) {
+            frame->text = malloc(sizeof(ei_string_t ));
+            *frame->text =  malloc(sizeof(char)*30);
+        }
+        strcpy(*frame->text,*text);
+    }
+
     COPY_IF_NOT_NULL(frame->text_font, text_font);
     COPY_IF_NOT_NULL(frame->text_color, text_color);
     COPY_IF_NOT_NULL(frame->text_anchor, text_anchor);
@@ -94,17 +101,21 @@ void			ei_button_configure		(ei_widget_t		widget,
         memcpy(button->text_color, text_color,sizeof(*button->text_color) );
     }
     COPY_IF_NOT_NULL(button->text_anchor,text_anchor);
-    COPY_IF_NOT_NULL(button->img,img);
+    if(img != NULL) {
+        if (button->img == NULL)
+            button->img = malloc(sizeof(ei_surface_t));
+        memcpy(button->img, img, sizeof(ei_surface_t));
+    }
     if (img_rect != NULL) {
-        if (!button->img_rect){
-            button->img_rect=malloc(sizeof(*button->img_rect));
+        if (button->img_rect==NULL){
+            button->img_rect=malloc(sizeof(ei_rect_ptr_t));
         }
-        memcpy(button->img_rect, img_rect,sizeof(*button->img_rect) );
+        *button->img_rect = malloc(sizeof(ei_rect_t));
+        memcpy(*button->img_rect, *img_rect, sizeof(ei_rect_t));
+
     }
     COPY_IF_NOT_NULL(button->img_anchor,img_anchor);
-    if (callback != NULL) {
-        button->widget.callback = callback;
-    }
+    ei_bind(ei_ev_mouse_buttonup,widget,NULL,*callback,user_param);
     COPY_IF_NOT_NULL(button->user_param,user_param);
 }
 
@@ -121,7 +132,7 @@ void			ei_toplevel_configure		(ei_widget_t		widget,
 {
 	if (requested_size)
 		widget->requested_size=(ei_size_t )*requested_size;
-        ei_top_level_t toplevel = (ei_top_level_t) widget;
+        ei_toplevel_t toplevel = (ei_toplevel_t) widget;
         COPY_IF_NOT_NULL(toplevel->color,(ei_color_t*) color);
         COPY_IF_NOT_NULL(toplevel->border_width, border_width);
         COPY_IF_NOT_NULL(toplevel->title,title);

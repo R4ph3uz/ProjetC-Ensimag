@@ -42,6 +42,9 @@ int main(int argc, char** argv)
 	ei_app_create			((ei_size_t){600, 600}, false);
 	ei_frame_set_bg_color		(ei_app_root_widget(), (ei_color_t){0x52, 0x7f, 0xb4, 0xff});
 
+	ei_surface_t img = hw_image_load("misc/klimt.jpg",ei_app_root_surface());
+	ei_rect_t rect = hw_surface_get_rect(img);
+	ei_rect_ptr_t rect_ptr = &rect;
 	/* Create, configure and place the button on screen. */
 	button = ei_widget_create	("button", ei_app_root_widget(), NULL, NULL);
 	ei_button_configure		(button, &((ei_size_t){300, 200}),
@@ -50,7 +53,7 @@ int main(int argc, char** argv)
 					 	&(int){40},
 					 	&(ei_relief_t){ei_relief_raised},
 					 	&(ei_string_t){"Mon premier Bouton !"}, NULL,
-					 	&(ei_color_t){0x00, 0x00, 0x00, 0xff}, NULL, NULL, NULL, NULL,
+					 	&(ei_color_t){0x00, 0x00, 0x00, 0xff}, NULL, &img, &rect_ptr, NULL,
 					 	&(ei_callback_t){button_press}, NULL);
 	ei_place_xy			(button, 150, 200);
 

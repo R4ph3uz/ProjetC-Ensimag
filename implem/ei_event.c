@@ -19,7 +19,18 @@ void		ei_bind			(ei_eventtype_t		eventtype,
     }
     else {
         //assiger au widget le callback et l'eventtype
-        *widget->callback = callback;
+        list_widget_callback* list_cb= malloc(sizeof(list_widget_callback));
+        list_cb->callback = callback;
+        list_cb->eventtype = eventtype;
+        list_cb->user_param = user_param;
+        list_cb->next=NULL;
+        if(widget->callback == NULL){
+            widget->callback = list_cb;
+        }
+        else{
+           list_cb->next=widget->callback;
+           widget->callback=list_cb;
+        }
     }
 }
 

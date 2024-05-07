@@ -1,5 +1,5 @@
-#ifndef EI_TOP_LEVEL_H
-#define EI_TOP_LEVEL_H
+#ifndef EI_TOPLEVEL_H
+#define EI_TOPLEVEL_H
 
 #include "ei_widgetclass.h"
 #include "ei_types.h"
@@ -19,33 +19,31 @@ typedef struct{
     ei_size_ptr_t*		min_size;
 
     /*variable to move and resize*/
-    bool isButtonDownOnTop;
-    bool isButtonDownCarre;
     ei_point_t whereButtonDown;
 
-} ei_impl_top_level_t;
+} ei_impl_toplevel_t;
 
-typedef ei_impl_top_level_t* ei_top_level_t;
+typedef ei_impl_toplevel_t* ei_toplevel_t;
 
-ei_widget_t top_level_allocfunc();
+ei_widget_t toplevel_allocfunc();
 
-void top_level_releasefunc(ei_widget_t widget);
+void toplevel_releasefunc(ei_widget_t widget);
 
-void top_level_setdefaultsfunc(ei_widget_t widget);
+void toplevel_setdefaultsfunc(ei_widget_t widget);
 
-void top_level_drawfunc(ei_widget_t widget,
-                    ei_surface_t surface,
-                    ei_surface_t pick_surface,
-                    ei_rect_t* clipper);
+void toplevel_drawfunc(ei_widget_t widget,
+                       ei_surface_t surface,
+                       ei_surface_t pick_surface,
+                       ei_rect_t* clipper);
 
-void top_level_geomnotifyfunc(ei_widget_t widget);
+void toplevel_geomnotifyfunc(ei_widget_t widget);
 
 /**
  * @brief	Prend rien, crée une top_level, renvoie un ei_widgetclass_t* ; permet d'acceder aux fonctions 'drawfunc ...' de top_level
  *
  * @param	void
  */
-ei_widgetclass_t* create_top_level_widgetclass();
+ei_widgetclass_t* create_toplevel_widgetclass();
 
 
-#endif //EI_TOP_LEVEL_H
+#endif //EI_TOPLEVEL_H

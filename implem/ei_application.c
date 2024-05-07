@@ -11,8 +11,9 @@
 #include "list_event.h"
 #include "pick_event.h"
 #include "callbacks/button_callbacks.h"
-#include "widgetclass/ei_top_level.h"
+#include "widgetclass/ei_toplevel.h"
 #include "callbacks/toplevel_callbacks.h"
+#include "widgetclass/ei_entry.h"
 /* ----------------------------------------------------------------- */
 
 ei_impl_widget_t ARBRE_WIDGET;
@@ -30,18 +31,17 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     initialize_pickid_array(); // < init dynamic array to have the widget corresponding to an id
     ei_widgetclass_t* frame = create_frame_widgetclass();
     ei_widgetclass_t* button = create_button_widgetclass();
-    ei_widgetclass_t* top_level = create_top_level_widgetclass();
+    ei_widgetclass_t* top_level = create_toplevel_widgetclass();
+    ei_widgetclass_t* entry = create_entry_widgetclass();
     ei_widgetclass_register(frame);
     ei_widgetclass_register(button);
     ei_widgetclass_register(top_level);
+    ei_widgetclass_register(entry);
 
     ei_bind(ei_ev_mouse_buttondown,NULL,  "button",down_click_handler, NULL );
     ei_bind(ei_ev_mouse_buttonup,NULL,  "button",up_click_handler,NULL );
 
     ei_bind(ei_ev_mouse_buttondown, NULL, "toplevel", toplevel_down_click_handler, NULL);
-    // ei_bind(ei_ev_mouse_buttonup, NULL, "toplevel", toplevel_up_click_handler, NULL);
-    // ei_bind(ei_ev_mouse_move, NULL, "toplevel", toplevel_mouse_mouve_handler, NULL);
-
 
     //défini le geometry manager
     ei_geometrymanager_t* placer = malloc(sizeof(ei_geometrymanager_t));
@@ -99,33 +99,95 @@ void ei_app_run(void)
 
     // (*(ROOT_WIDGET->wclass->drawfunc))(ROOT_WIDGET, ei_app_root_surface(), NULL, NULL);
     IS_RUNNING = true;
+    ei_widget_t widget = NULL;
+    ei_event_t *new_event = malloc(sizeof(ei_event_t));
     while(IS_RUNNING){
-        ei_event_t *new_event = malloc(sizeof(ei_event_t));
+
         hw_event_wait_next(new_event);
-        ei_widget_t widget = NULL;
+
         ei_rect_t rect_before;
         ei_rect_t rect_after;
-        if(new_event->type == ei_ev_mouse_buttondown || new_event->type == ei_ev_mouse_buttonup || new_event->type == ei_ev_mouse_move) {
+        if(new_event->type == ei_ev_mouse_buttondown || new_event->type == ei_ev_mouse_buttonup ) {
+            ei_widget_t precwid=widget;
             widget = get_widget_by_pickid(get_pick_id(PICKING_SURFACE,new_event->param.mouse.where ));
+            ei_widget_t widget2=widget;
+            if (widget2)
+            {
+                while (widget2->parent != ROOT_WIDGET) {
+                    widget2 = widget2->parent;
+                }
+            }
+            ei_widget_t widget2prec=precwid;
+            if (widget2prec)
+            {
+                while (widget2prec->parent != ROOT_WIDGET) {
+                    widget2prec = widget2prec->parent;
+                }
+            }
+            if (widget!=ROOT_WIDGET && widget!=precwid && widget2prec!=widget2)
+            {
+
+                if (widget2)
+                {
+
+                    ei_widget_t prec=widget2->parent;
+                    ei_widget_t suiv=widget2->next_sibling;
+
+                    if (prec->children_head!=widget2)
+                    {
+                        prec=prec->children_head;
+                        while (prec->next_sibling!=widget2)
+                        {
+                            prec=prec->next_sibling;
+                        }
+                        prec->next_sibling=suiv;
+                        if(suiv==NULL)
+                        {
+                            prec->parent->children_tail=prec;
+                        }
+                    }
+                    else
+                    {
+                        prec->children_head=suiv;
+                        if(suiv==NULL)
+                        {
+                            prec->children_tail=NULL;
+                        }
+                    }
+                    widget2->parent->children_tail->next_sibling=widget2;
+                    widget2->parent->children_tail=widget2;
+                    widget2->next_sibling=NULL;
+                }
+
+            }
+
+
             memcpy(&rect_before, &widget->screen_location,sizeof(ei_rect_t));
         }
 
         bool isModified = false;
 
         if(widget && widget->callback && new_event->type==ei_ev_mouse_buttonup ) {
-            isModified = isModified || (*widget->callback)(widget, new_event,widget->user_data);
+            list_widget_callback* temp = widget->callback;
+            while(temp!=NULL){
+                if(temp->eventtype == new_event->type){
+                    isModified = isModified || (*temp->callback)(widget, new_event,widget->user_data);
+                }
+                temp=temp->next;
+            }
         }
 
 
         //parcourir la liste des callbacks et appeler si le bon type de widget et le bon type d'event
         list_callback* list_call = get_list_callback();
         while(list_call!=NULL) {
+
             if(widget && list_call->eventtype == new_event->type && strcmp(list_call->tag, widget->wclass->name)==0 ) {
-                isModified = isModified || (*list_call->callback)(widget,new_event,list_call->user_param);
+                isModified = (*list_call->callback)(widget,new_event,list_call->user_param)|| isModified ;
 
             }
-            else if(list_call->tag && strcmp(list_call->tag, "all")==0 &&  list_call->eventtype == new_event->type) {
-                isModified = isModified || (*list_call->callback)(widget, new_event, list_call->user_param);
+            if(list_call->tag && strcmp(list_call->tag, "all")==0 &&  list_call->eventtype == new_event->type) {
+                isModified = (*list_call->callback)(widget, new_event, list_call->user_param) || isModified;
 
             }
             list_call = list_call->next;
@@ -151,7 +213,8 @@ void ei_app_run(void)
 
 /* ----------------------------------------------------------------- */
 
-void ei_app_invalidate_rect(const ei_rect_t* rect) {
+void ei_app_invalidate_rect(const ei_rect_t* rect)
+{
 
 }
 
