@@ -1,5 +1,7 @@
 #include "ei_button.h"
 #include "../draw_utils/draw_utils.h"
+#include "ei_application.h"
+#include "ei_utils.h"
 /*--------------------------------------------------------------------------------*/
 
 ei_widget_t button_allocfunc() {
@@ -86,22 +88,32 @@ void button_drawfunc(ei_widget_t widget,
     hw_surface_lock(surface);
     hw_surface_lock(pick_surface);
 
-    draw_button(surface,widget->screen_location,*button->corner_radius,*button->color,*button->relief,clipper);
+    if(!button->img)
+        draw_button(surface,widget->screen_location,*button->corner_radius,*button->color,*button->relief,clipper);
     draw_button(pick_surface, widget->screen_location,*button->corner_radius,*button->widget.pick_color,ei_relief_none, clipper );
 
-    if(button->text){
-        uint32_t decal_x = widget->screen_location.size.width/10;
-        uint32_t decal_y = widget->screen_location.size.height/2;
-        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
-        ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
-
-    }
+//    if(button->text){
+//        uint32_t decal_x = widget->screen_location.size.width/10;
+//        uint32_t decal_y = widget->screen_location.size.height/2;
+//        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
+//        ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
+//
+//    }
+//    ei_surface_t img = hw_image_load("misc/klimt.jpg",ei_app_root_surface() );
+//    ei_rect_t test = hw_surface_get_rect(img);
+//
+//
+//    hw_surface_lock(img);
+//    ei_copy_surface(surface, &test, img, NULL, true);
+//    hw_surface_unlock(img);
 
     hw_surface_unlock(pick_surface);
     if(button->img){
         // Si il y a un image a afficher (pour l'instant ignoré)
+        ei_point_t place = {widget->screen_location.top_left.x,widget->screen_location.top_left.y};
+        ei_rect_t test = ei_rect(place,(*button->img_rect)->size);
         hw_surface_lock(*button->img);
-        ei_copy_surface(surface, *button->img_rect, *button->img, *button->img_rect, true);
+        ei_copy_surface(surface, &test, *button->img, *button->img_rect, true);
         hw_surface_unlock(*button->img);
     }
 

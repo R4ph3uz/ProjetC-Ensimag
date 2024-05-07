@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "ei_draw.h"
+#include "ei_utils.h"
 #include "ei_types.h"
 
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -50,10 +51,10 @@ ei_point_t* rounded_frame(ei_rect_t* rectangle,
     size_t nb_points1, nb_points2, nb_points3, nb_points;
 
     ei_point_t top_left, top_right, bottom_right, bottom_left;
-    top_left= rectangle->top_left;
-    top_right = (ei_point_t){top_left.x+rectangle->size.width, top_left.y};
-    bottom_left = (ei_point_t){top_left.x, top_left.y+rectangle->size.height};
-    bottom_right= (ei_point_t){top_right.x, bottom_left.y};
+    top_left= ei_point_add(rectangle->top_left, ei_point(rayon,rayon));
+    top_right = ei_point(rectangle->top_left.x+rectangle->size.width-rayon, rectangle->top_left.y+rayon);
+    bottom_left = ei_point(rectangle->top_left.x+rayon, rectangle->top_left.y+rectangle->size.height-rayon);
+    bottom_right= ei_point(rectangle->top_left.x+rectangle->size.width-rayon, rectangle->top_left.y+rectangle->size.height-rayon);
 
 
 
