@@ -91,6 +91,7 @@ set(LIB_EI_SOURCES
 		${SRC}/widgetclass/ei_toplevel.c
 		${SRC}/callbacks/toplevel_callbacks.c
 		${SRC}/widgetclass/ei_entry.c
+		${SRC}/callbacks/entry_callbacks.c
 )
 
 add_library(ei STATIC			${LIB_EI_SOURCES})
