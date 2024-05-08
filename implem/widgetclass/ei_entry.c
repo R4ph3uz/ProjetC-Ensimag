@@ -76,6 +76,14 @@ void entry_drawfunc(ei_widget_t widget,
         ei_const_string_t texte = (ei_const_string_t) entry->text;
         ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, clipper);
     }
+    // place un curseur
+    if(entry->focus) {
+        uint32_t decal_x =5;// widget->screen_location.size.width/10;
+        uint32_t decal_y = 0;//widget->screen_location.size.height/2;
+        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
+        ei_const_string_t texte = (ei_const_string_t) "|";
+        ei_draw_text(surface, &place, texte, *entry->text_font, *entry->text_color, clipper);
+    }
 
     hw_surface_unlock(pick_surface);
     hw_surface_unlock(surface);
