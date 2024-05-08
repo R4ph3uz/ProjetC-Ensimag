@@ -3,8 +3,6 @@
 #include "ei_geometrymanager.h"
 #include "widgetclass/ei_frame.h"
 #include "ei_implementation.h"
-#include "ei_widget_configure.h"
-#include "widgetclass/ei_frame.h"
 #include "widgetclass/ei_button.h"
 #include "ei_widget_attributes.h"
 #include "ei_event.h"
@@ -15,7 +13,7 @@
 #include "widgetclass/ei_toplevel.h"
 #include "callbacks/toplevel_callbacks.h"
 #include "widgetclass/ei_entry.h"
-#include "callbacks/entry_callbacks.h"
+
 /* ----------------------------------------------------------------- */
 
 
