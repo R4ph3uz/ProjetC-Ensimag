@@ -53,10 +53,6 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 
     widget->requested_size.height=100;///< See \ref ei_widget_get_requested_size.
     widget->requested_size.width=100;///< See \ref ei_widget_get_requested_size.
-    widget->screen_location.top_left.x=0;///< See \ref ei_widget_get_screen_location.
-    widget->screen_location.top_left.y=0;///< See \ref ei_widget_get_screen_location.
-    widget->screen_location.size.width=100;///< See \ref ei_widget_get_screen_location.
-    widget->screen_location.size.height=100;///< See \ref ei_widget_get_screen_location.
 
     widget->content_rect=NULL;	///< See ei_widget_get_content_rect. By defaults, points to the screen_location.
 
