@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 					 	&(int){40},
 					 	&(ei_relief_t){ei_relief_raised},
 					 	&(ei_string_t){"Mon premier Bouton !"}, NULL,
-					 	&(ei_color_t){0x00, 0x00, 0x00, 0xff}, NULL, &img, &rect_ptr, NULL,
+					 	&(ei_color_t){0x00, 0x00, 0x00, 0xff}, NULL, NULL, NULL, NULL,
 					 	&(ei_callback_t){button_press}, NULL);
 	ei_place_xy			(button, 150, 200);
 
