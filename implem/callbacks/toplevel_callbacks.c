@@ -10,7 +10,7 @@ bool toplevel_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_
     ei_toplevel_t toplevel = (ei_toplevel_t) widget;
     if (event->param.mouse.where.x>widget->screen_location.top_left.x-1  && event->param.mouse.where.x<widget->screen_location.top_left.x+11 && event->param.mouse.where.y>widget->screen_location.top_left.y-21  && event->param.mouse.where.y<widget->screen_location.top_left.y-9)
     {
-        fprintf(stderr,"je suis sur le rouge");
+        // sur la partie rouge
         ei_widget_destroy(widget);
         return true;
     }
