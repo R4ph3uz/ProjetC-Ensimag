@@ -23,6 +23,8 @@ bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_par
         ei_bind(ei_ev_keydown,NULL,"all",entry_write,entry); // keystroke
         ei_bind(ei_ev_text_input,NULL,"all",entry_write,entry); // texte collé ?
         ei_bind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors
+        hw_event_schedule_app(500,NULL);
+        ei_bind(ei_ev_app,NULL, "all", animation_cursor,entry);
         return true;
 
     }
@@ -50,6 +52,7 @@ bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user
     ei_unbind(ei_ev_keydown,NULL,"all",entry_write,entry); // keystroke
     ei_unbind(ei_ev_text_input,NULL,"all",entry_write,entry); // texte collé ?
     ei_unbind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors
+    ei_unbind(ei_ev_app,NULL, "all", animation_cursor,entry);
     entry->focus=false;
     return true;
 
@@ -92,6 +95,15 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
     }
 
     return true;
+}
+
+/*------------------------------------------------------------------------------------------------------------------*/
+
+bool animation_cursor(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
+    ei_entry_t entry = user_param;
+    entry->is_focus_visible = !entry->is_focus_visible ;
+    hw_event_schedule_app(500,NULL);
+
 }
 
 /*------------------------------------------------------------------------------------------------------------------*/

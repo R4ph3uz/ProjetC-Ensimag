@@ -21,6 +21,7 @@ typedef struct{
     char* text;
     bool focus;
     uint8_t position;   //>position du curseur (a partir de la fin du texte)
+    bool is_focus_visible; //> boolean for cursor animation
 } ei_impl_entry_t;
 
 typedef ei_impl_entry_t* ei_entry_t;

@@ -110,7 +110,8 @@ void entry_drawfunc(ei_widget_t widget,
 
         //draw cursor au bonne endroit
         ei_const_string_t cursor_text = "|";
-        ei_draw_text(surface,place_cursor, cursor_text, *entry->text_font,(ei_color_t){0,0,0,255} , clipper );
+        if (entry->is_focus_visible)
+            ei_draw_text(surface,place_cursor, cursor_text, *entry->text_font,(ei_color_t){0,0,0,255} , clipper );
 
     }
 

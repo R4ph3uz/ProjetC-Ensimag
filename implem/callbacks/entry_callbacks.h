@@ -32,4 +32,13 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
  */
 bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param);
 
+/**
+ * @brief  anime le curseur en l'affichant et le desaffichant a intervalle régulier
+ * @param widget entry
+ * @param event downclick
+ * @param user_param if needed
+ * @return
+ */
+bool animation_cursor(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param);
+
 #endif //ENTRY_CALLBACKS_H
