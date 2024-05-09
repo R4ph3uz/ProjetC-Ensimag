@@ -60,28 +60,22 @@ void frame_drawfunc(ei_widget_t widget,
     int top_left_y = widget->screen_location.top_left.y;
 
 
-     ei_point_t* points = malloc(4*sizeof(ei_point_t));
-     points[0] = (ei_point_t) {top_left_x, top_left_y };
-     points[1] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y };
-     points[2] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y+widget->requested_size.height };
-     points[3] = (ei_point_t) {top_left_x, top_left_y+widget->requested_size.height };
+    ei_point_t* points = malloc(4*sizeof(ei_point_t));
+    points[0] = (ei_point_t) {top_left_x, top_left_y };
+    points[1] = (ei_point_t) {top_left_x+widget->screen_location.size.width, top_left_y };
+    points[2] = (ei_point_t) {top_left_x+widget->screen_location.size.width, top_left_y+widget->screen_location.size.height };
+    points[3] = (ei_point_t) {top_left_x, top_left_y+widget->screen_location.size.height };
     size_t nb_points = 4;
 
-    ei_point_t top_left = (ei_point_t){20,100};
-    ei_size_t size = (ei_size_t){200, 200};
-    ei_rect_t rect= (ei_rect_t){top_left, size};
-
-    size_t nb_test_demi_frame;
-    ei_point_t* test_demi_frame = demi_rounded_frame(&rect, 30, true, &nb_test_demi_frame);
     /* Afficher le cadre */
     hw_surface_lock(surface);
     hw_surface_lock(pick_surface);
     if(frame->border_width!=NULL) { // doit etre fait avant de dessiner la frame (vu que en dessous
         ei_point_t* border = malloc(4*sizeof(ei_point_t));
         border[0] = (ei_point_t) {top_left_x-*frame->border_width, top_left_y -*frame->border_width};
-        border[1] = (ei_point_t) {top_left_x+widget->requested_size.width+*frame->border_width, top_left_y-*frame->border_width };
-        border[2] = (ei_point_t) {top_left_x+widget->requested_size.width+*frame->border_width, top_left_y+widget->requested_size.height+*frame->border_width };
-        border[3] = (ei_point_t) {top_left_x-*frame->border_width, top_left_y+widget->requested_size.height+*frame->border_width };
+        border[1] = (ei_point_t) {top_left_x+widget->screen_location.size.width+*frame->border_width, top_left_y-*frame->border_width };
+        border[2] = (ei_point_t) {top_left_x+widget->screen_location.size.width+*frame->border_width, top_left_y+widget->screen_location.size.height+*frame->border_width };
+        border[3] = (ei_point_t) {top_left_x-*frame->border_width, top_left_y+widget->screen_location.size.height+*frame->border_width };
         ei_color_t color = (ei_color_t) {0,0,0, 255};
         ei_draw_polygon(surface, border, nb_points, color, clipper);
     }

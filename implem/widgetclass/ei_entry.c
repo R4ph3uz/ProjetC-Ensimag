@@ -58,9 +58,9 @@ void entry_drawfunc(ei_widget_t widget,
 
     ei_point_t* points = malloc(4*sizeof(ei_point_t));
     points[0] = (ei_point_t) {top_left_x, top_left_y };
-    points[1] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y };
-    points[2] = (ei_point_t) {top_left_x+widget->requested_size.width, top_left_y+widget->requested_size.height };
-    points[3] = (ei_point_t) {top_left_x, top_left_y+widget->requested_size.height };
+    points[1] = (ei_point_t) {top_left_x+widget->screen_location.size.width, top_left_y };
+    points[2] = (ei_point_t) {top_left_x+widget->screen_location.size.width, top_left_y+widget->screen_location.size.height };
+    points[3] = (ei_point_t) {top_left_x, top_left_y+widget->screen_location.size.height };
     size_t nb_points = 4;
 
     hw_surface_lock(surface);
@@ -81,8 +81,9 @@ void entry_drawfunc(ei_widget_t widget,
         uint32_t decal_x =5;// widget->screen_location.size.width/10;
         uint32_t decal_y = 0;//widget->screen_location.size.height/2;
         ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
-        ei_const_string_t texte = (ei_const_string_t) "|";
+        ei_const_string_t texte = "|";
         ei_draw_text(surface, &place, texte, *entry->text_font, *entry->text_color, clipper);
+        ei_draw_polyline(surface, points, nb_points,(ei_color_t){40,40,40,255}, NULL);
     }
 
     hw_surface_unlock(pick_surface);
