@@ -50,12 +50,12 @@ void button_releasefunc(ei_widget_t widget) {
 void button_setdefaultsfunc(ei_widget_t widget) {
     ei_button_t button = (ei_button_t) widget;
 
-    button->requested_size->width = 30;
-    button->requested_size->height =30;
-    // button->color->alpha=255;
-    // button->color->red= 180;
-    // button->color->blue= 180;
-    // button->color->green= 180;
+    button->widget.requested_size.width = 100;
+    button->widget.requested_size.height =10;
+    button->color->alpha=255;
+    button->color->red= 180;
+    button->color->blue= 180;
+    button->color->green= 180;
 
     *button->border_width=1;
     *button->corner_radius = 1;

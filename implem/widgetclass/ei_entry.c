@@ -71,6 +71,8 @@ void entry_drawfunc(ei_widget_t widget,
     ei_draw_polygon(surface, points, nb_points, *entry->color, clipper);
     ei_draw_polygon(pick_surface, points, nb_points, *entry->widget.pick_color, clipper);
 
+    ei_const_string_t texte ;
+
     if(entry->text){
         uint32_t decal_x =0;// widget->screen_location.size.width/10;
         uint32_t decal_y = 0;//widget->screen_location.size.height/2;
@@ -79,13 +81,13 @@ void entry_drawfunc(ei_widget_t widget,
         ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, clipper);
     }
     // place une border autour de l'entry
-    ei_draw_polyline(surface, points, nb_points,(ei_color_t){40,40,40,255}, NULL);
     if(entry->focus) {
         //mets un curseur si focus
-        char t[2] = {"|",'\0'};
-        char* text = (char*) ei_entry_get_text(widget);
-        strcat(text,t);
-        ei_entry_set_text(entry,text);
+        uint32_t decal_x =5;// widget->screen_location.size.width/10;
+        uint32_t decal_y = 0;//widget->screen_location.size.height/2;
+        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
+        ei_draw_polyline(surface, points, nb_points,(ei_color_t){40,40,40,255}, NULL);
+
     }
 
     hw_surface_unlock(pick_surface);
