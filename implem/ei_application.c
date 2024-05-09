@@ -58,10 +58,13 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ei_geometrymanager_register(placer);
     ROOT_SURFACE =  hw_create_window(main_window_size, fullscreen);
     PICKING_SURFACE = hw_surface_create(ROOT_SURFACE, main_window_size, false);
+
+
     ROOT_WIDGET =  ei_widget_create("frame",NULL,NULL,NULL);
-    ei_widget_set_requested_size(ROOT_WIDGET,(ei_size_t) main_window_size);
-    ROOT_WIDGET->screen_location.size=main_window_size;
+    ei_widget_set_requested_size(ROOT_WIDGET,main_window_size);
     ROOT_WIDGET->screen_location.top_left = ei_point_zero();
+    ROOT_WIDGET->screen_location.size = main_window_size;
+
 
 }
 

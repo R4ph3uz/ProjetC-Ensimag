@@ -5,6 +5,7 @@
 #include "widgetclass/ei_toplevel.h"
 #include "ei_event.h"
 #include <string.h>
+#include "ei_utils.h"
 
 #define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = malloc(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
 
@@ -26,6 +27,8 @@ void			ei_frame_configure		(ei_widget_t		widget,
 
     if (requested_size)
         widget->requested_size= *requested_size;
+    else
+        widget->requested_size = ei_size(100, 50);
     ei_frame_t frame = (ei_frame_t) widget;
 	COPY_IF_NOT_NULL(frame->color,color);
     COPY_IF_NOT_NULL(frame->border_width, border_width);
@@ -66,7 +69,10 @@ void			ei_button_configure		(ei_widget_t		widget,
 							 ei_user_param_t*	user_param)
 {
 	if (requested_size)
-		widget->requested_size=(ei_size_t )*requested_size;
+		widget->requested_size=*requested_size;
+	else
+	    widget->requested_size = ei_size(100, 25);
+
     ei_button_t button = (ei_button_t) widget;
     if ((ei_color_t*) color != NULL) {
         if (!button->color){
@@ -141,13 +147,15 @@ void			ei_toplevel_configure		(ei_widget_t		widget,
 						 	 ei_size_ptr_t*		min_size)
 {
 	if (requested_size)
-		widget->requested_size=(ei_size_t )*requested_size;
-        ei_toplevel_t toplevel = (ei_toplevel_t) widget;
-        COPY_IF_NOT_NULL(toplevel->color,(ei_color_t*) color);
-        COPY_IF_NOT_NULL(toplevel->border_width, border_width);
-        COPY_IF_NOT_NULL(toplevel->title,title);
-        COPY_IF_NOT_NULL(toplevel->closable,closable);
-        COPY_IF_NOT_NULL(toplevel->resizable,resizable);
-        COPY_IF_NOT_NULL(toplevel->min_size,min_size);
+		widget->requested_size=*requested_size;
+	else
+	    widget->requested_size = ei_size(200, 200);
+    ei_toplevel_t toplevel = (ei_toplevel_t) widget;
+    COPY_IF_NOT_NULL(toplevel->color,(ei_color_t*) color);
+    COPY_IF_NOT_NULL(toplevel->border_width, border_width);
+    COPY_IF_NOT_NULL(toplevel->title,title);
+    COPY_IF_NOT_NULL(toplevel->closable,closable);
+    COPY_IF_NOT_NULL(toplevel->resizable,resizable);
+    COPY_IF_NOT_NULL(toplevel->min_size,min_size);
 }
 

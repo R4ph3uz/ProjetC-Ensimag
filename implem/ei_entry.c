@@ -4,7 +4,9 @@
 #include "ei_application.h"
 
 /*------------------------------------------------------------------------------*/
+
 #define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = malloc(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
+
 /*------------------------------------------------------------------------------*/
 
 

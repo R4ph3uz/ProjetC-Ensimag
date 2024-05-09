@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     ei_entry_configure	(entries, &(int){30}, &(ei_color_t){0xff, 0xff, 0xff, 0xff}, NULL, NULL, NULL);
     ei_entry_set_text(entries, "OUUUAAAIIISSS");
     ei_place		(entries, &(ei_anchor_t){ei_anc_northwest}, &(int){200}, &(int){200},
-                                 &(int){200}, &(int){10}, NULL, NULL, NULL, NULL);
+                                 &(int){200}, &(int){30}, NULL, NULL, NULL, NULL);
 
 
     /* Run the application's main loop. */
