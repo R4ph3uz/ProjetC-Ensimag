@@ -4,6 +4,9 @@
 #include "ei_entry.h"
 
 #include <ei_entry.h>
+#include "../draw_utils/draw_utils.h"
+
+/*---------------------------------------------------------------------------------------------------------------------*/
 
 ei_widget_t entry_allocfunc(){
     ei_impl_entry_t* entry = malloc(sizeof(ei_impl_entry_t));
@@ -15,6 +18,9 @@ ei_widget_t entry_allocfunc(){
     entry->focus=malloc(sizeof(bool));
     return (ei_widget_t) entry;
 }
+
+/*---------------------------------------------------------------------------------------------------------------------*/
+
 
 void entry_releasefunc(ei_widget_t widget){
     ei_impl_entry_t* entry = (ei_impl_entry_t*) widget;
@@ -28,6 +34,9 @@ void entry_releasefunc(ei_widget_t widget){
 
     free(entry);
 }
+
+/*---------------------------------------------------------------------------------------------------------------------*/
+
 
 void entry_setdefaultsfunc(ei_widget_t widget){
     ei_entry_t entry = (ei_entry_t) widget;
@@ -45,7 +54,11 @@ void entry_setdefaultsfunc(ei_widget_t widget){
     *entry->text_color= (ei_color_t) {0,0,0};
     *entry->requested_char_size= 100;
     entry->focus=false;
+    entry->position= 0 ;
 }
+
+/*---------------------------------------------------------------------------------------------------------------------*/
+
 
 void entry_drawfunc(ei_widget_t widget,
                     ei_surface_t surface,
@@ -80,7 +93,7 @@ void entry_drawfunc(ei_widget_t widget,
         ei_const_string_t texte = (ei_const_string_t) entry->text;
         ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, clipper);
     }
-    // place une border autour de l'entry
+    // place une border autour de l'entryei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
     if(entry->focus) {
         //mets un curseur si focus
         uint32_t decal_x =5;// widget->screen_location.size.width/10;
@@ -88,11 +101,25 @@ void entry_drawfunc(ei_widget_t widget,
         ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
         ei_draw_polyline(surface, points, nb_points,(ei_color_t){40,40,40,255}, NULL);
 
+        //calcul de la place du curseur |
+        char* entry_text_restreint = restrict_text(entry->text, entry->position);
+        fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
+        ei_surface_t texte_surface = hw_text_create_surface(entry_text_restreint, *entry->text_font, *entry->text_color);
+        uint32_t longueur_text_restreint = hw_surface_get_rect(texte_surface).size.width;
+        ei_point_t* place_cursor = &(ei_point_t){widget->screen_location.top_left.x+decal_x+longueur_text_restreint-10,widget->screen_location.top_left.y+decal_y-5};
+
+        //draw cursor au bonne endroit
+        ei_const_string_t cursor_text = "|";
+        ei_draw_text(surface,place_cursor, cursor_text, *entry->text_font,(ei_color_t){0,0,0,255} , clipper );
+
     }
 
     hw_surface_unlock(pick_surface);
     hw_surface_unlock(surface);
 }
+
+/*---------------------------------------------------------------------------------------------------------------------*/
+
 
 void entry_geomnotifyfunc(ei_widget_t widget){
 

@@ -109,4 +109,30 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
  */
 ei_point_t* circle(ei_point_t centre, int radius, size_t* size_tableau);
 
+
+/**
+ * @brief Coupe la fin d'un texte
+ * @param text texte a restreindre
+ * @param taille taille a restreindre, doit être supérieur a 0 et inférieur a la taille (0 renvoie text)
+ * @return
+ */
+char* restrict_text(char* text, uint8_t taille);
+
+/**
+ * @brief
+ * @param text texte auquel on ajoute le charactère, malloc un nouveau text de la bonne taille
+ * @param character charactere à insérer dans le texte
+ * @param where indice (en partant du debut ou ajouter le caractère
+ * @return
+ */
+char* insert_char(char* text, char character, uint8_t where);
+
+/**
+ * @brief
+ * @param text texte auquel supprimer le caractère
+ * @param where index du caractère à supprimer
+ * @return
+ */
+char* delete_char(char* text, uint8_t where);
+
 #endif //DRAW_UTILS_H

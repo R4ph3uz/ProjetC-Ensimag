@@ -3,6 +3,7 @@
 #include <ei_entry.h>
 #include "../widgetclass/ei_entry.h"
 #include "ei_event.h"
+#include "../draw_utils/draw_utils.h"
 
 /*------------------------------------------------------------------------------------------------------------------*/
 
@@ -62,7 +63,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
         char t[2] = {event->param.text,'\0'};
         char* text = (char*) ei_entry_get_text(widget);
         if(text) {
-            strcat(text,t);
+            text = insert_char(text, event->param.text, strlen(text)-entry->position ); //fuite de mémoire here
             ei_entry_set_text((ei_widget_t)entry,text);
         }
         else
@@ -74,8 +75,19 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
         if(event->param.key_code==SDLK_DELETE || event->param.key_code==SDLK_BACKSPACE) {
             fprintf(stderr, "yeah i want do delete\n");
             char* text = (char*) ei_entry_get_text(widget);
-            text[strlen(text)-1] = '\0';
-            ei_entry_set_text((ei_widget_t)entry,text);
+            char* new = delete_char(text, strlen(text)-entry->position);
+            ei_entry_set_text((ei_widget_t)entry,new);
+        }
+        else if(event->param.key_code==SDLK_LEFT) {
+
+            if (entry->position < strlen(entry->text))
+                entry->position += 1;
+            fprintf(stderr, "%d\n", entry->position);
+        }
+        else if(event->param.key_code==SDLK_RIGHT ) {
+            if(entry->position >0 )
+                entry->position -=1 ;
+            fprintf(stderr, "%d\n", entry->position);
         }
     }
 

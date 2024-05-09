@@ -20,6 +20,7 @@ typedef struct{
     /*variable text */
     char* text;
     bool focus;
+    uint8_t position;   //>position du curseur (a partir de la fin du texte)
 } ei_impl_entry_t;
 
 typedef ei_impl_entry_t* ei_entry_t;
