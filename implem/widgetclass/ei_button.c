@@ -7,7 +7,6 @@
 ei_widget_t button_allocfunc() {
     ei_impl_button_t* button = malloc(sizeof(ei_impl_button_t));
 
-    button->requested_size = malloc(sizeof(ei_size_t));
     button->color=malloc(sizeof(ei_color_t));
 
     button->border_width=malloc(sizeof(int));
@@ -30,7 +29,6 @@ ei_widget_t button_allocfunc() {
 
 void button_releasefunc(ei_widget_t widget) {
     ei_impl_button_t* button = (ei_impl_button_t*) widget;
-    free(button->requested_size);
     free(button->color);
     free(button->border_width);
     free(button->corner_radius);
@@ -61,13 +59,13 @@ void button_setdefaultsfunc(ei_widget_t widget) {
 
     *button->border_width=1;
     *button->corner_radius = 1;
-    *button->relief=ei_relief_none;
+    *button->relief=ei_relief_raised;
     char texte[]="";
     strcpy((char *) button->text, texte);
     ei_fontstyle_t style = ei_style_normal;
     ei_const_string_t name = "misc/font.ttf";
     *button->text_font = hw_text_font_create(name, style, 20);
-    *button->text_color= (ei_color_t) {0,0,0};
+    *button->text_color= (ei_color_t) {10,10,10, 255};
     *button->text_anchor =ei_anc_northwest;
     button->img=NULL;
     button->img_rect=NULL;
@@ -92,13 +90,16 @@ void button_drawfunc(ei_widget_t widget,
         draw_button(surface,widget->screen_location,*button->corner_radius,*button->color,*button->relief,clipper);
     draw_button(pick_surface, widget->screen_location,*button->corner_radius,*button->widget.pick_color,ei_relief_none, clipper );
 
-//    if(button->text){
-//        uint32_t decal_x = widget->screen_location.size.width/10;
-//        uint32_t decal_y = widget->screen_location.size.height/2;
-//        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
-//        ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
-//
-//    }
+    // if(button->text){
+    //     ei_surface_t surface_text = hw_text_create_surface(*button->text_font, *button->text_font, *button->text_color);
+    //     ei_rect_t rect_surface_text = hw_surface_get_rect(surface_text);
+    //
+    //     uint32_t decal_x = widget->screen_location.size.width/2 - rect_surface_text.size.width/2;
+    //     uint32_t decal_y = widget->screen_location.size.height/2 - rect_surface_text.size.height/2;
+    //     ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
+    //     ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
+    //
+    // }
 //    ei_surface_t img = hw_image_load("misc/klimt.jpg",ei_app_root_surface() );
 //    ei_rect_t test = hw_surface_get_rect(img);
 //
@@ -111,6 +112,12 @@ void button_drawfunc(ei_widget_t widget,
     if(button->img){
         // Si il y a un image a afficher (pour l'instant ignoré)
         ei_point_t place = {widget->screen_location.top_left.x,widget->screen_location.top_left.y};
+        if(button->img_rect == NULL) {
+            button->img_rect = malloc(sizeof(ei_rect_ptr_t));
+            *button->img_rect = malloc(sizeof(ei_rect_t));
+            **button->img_rect = hw_surface_get_rect(*button->img);
+        }
+
         ei_rect_t test = ei_rect(place,(*button->img_rect)->size);
         hw_surface_lock(*button->img);
         ei_copy_surface(surface, &test, *button->img, *button->img_rect, true);

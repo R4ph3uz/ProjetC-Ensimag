@@ -61,8 +61,13 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
     if (event->type == ei_ev_text_input) {
         char t[2] = {event->param.text,'\0'};
         char* text = (char*) ei_entry_get_text(widget);
-        strcat(text,t);
-        ei_entry_set_text((ei_widget_t)entry,text);
+        if(text) {
+            strcat(text,t);
+            ei_entry_set_text((ei_widget_t)entry,text);
+        }
+        else
+            ei_entry_set_text((ei_widget_t)entry,t);
+
     }
     else if(event->type == ei_ev_keydown) {
         fprintf(stderr, "aie\n");

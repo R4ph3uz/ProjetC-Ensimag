@@ -10,8 +10,7 @@ typedef struct{
     ei_impl_widget_t widget;
 
     /* Suite spécifique à un button */
-    ei_size_t*		requested_size;
-    const ei_color_t*	color;
+    ei_color_t*	color;
     int*			border_width;
     int*			corner_radius;
     ei_relief_t*		relief;

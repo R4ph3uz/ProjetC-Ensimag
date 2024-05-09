@@ -44,6 +44,11 @@ void toplevel_setdefaultsfunc(ei_widget_t widget) {
     strcpy((char*) top_level->title ,title);
     (*top_level->min_size)->width = 100;
     (*top_level->min_size)->height = 100;
+    top_level->color->alpha = 200;
+    top_level->color->red = 200;
+    top_level->color->green = 200;
+    top_level->color->blue = 200;
+
 }
 
 /*-----------------------------------------------------------------------------------------------*/

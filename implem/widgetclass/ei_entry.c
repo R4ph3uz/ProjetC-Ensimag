@@ -3,6 +3,8 @@
 #include "../ei_implementation.h"
 #include "ei_entry.h"
 
+/*-------------------------------------------------------------------------------------------------------------------------------*/
+
 ei_widget_t entry_allocfunc(){
     ei_impl_entry_t* entry = malloc(sizeof(ei_impl_entry_t));
     entry->color = malloc(sizeof(ei_color_t));
@@ -13,6 +15,8 @@ ei_widget_t entry_allocfunc(){
     entry->focus=malloc(sizeof(bool));
     return (ei_widget_t) entry;
 }
+
+/*-------------------------------------------------------------------------------------------------------------------------------*/
 
 void entry_releasefunc(ei_widget_t widget){
     ei_impl_entry_t* entry = (ei_impl_entry_t*) widget;
@@ -26,6 +30,9 @@ void entry_releasefunc(ei_widget_t widget){
 
     free(entry);
 }
+
+/*-------------------------------------------------------------------------------------------------------------------------------*/
+
 
 void entry_setdefaultsfunc(ei_widget_t widget){
     ei_entry_t entry = (ei_entry_t) widget;
@@ -44,6 +51,8 @@ void entry_setdefaultsfunc(ei_widget_t widget){
     *entry->requested_char_size= 100;
     entry->focus=false;
 }
+
+/*-------------------------------------------------------------------------------------------------------------------------------*/
 
 void entry_drawfunc(ei_widget_t widget,
                     ei_surface_t surface,
@@ -90,9 +99,13 @@ void entry_drawfunc(ei_widget_t widget,
     hw_surface_unlock(surface);
 }
 
+/*-------------------------------------------------------------------------------------------------------------------------------*/
+
 void entry_geomnotifyfunc(ei_widget_t widget){
 
 }
+
+/*-------------------------------------------------------------------------------------------------------------------------------*/
 
 /**
  * @brief	Prend rien, crée une entry, renvoie un ei_widgetclass_t* ; permet d'acceder aux fonctions 'drawfunc ...' de top_level

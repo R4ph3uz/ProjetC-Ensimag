@@ -3,6 +3,7 @@
 #include <string.h>
 #include "../draw_utils/draw_utils.h"
 #include "ei_types.h"
+#include "ei_utils.h"
 /*--------------------------------------------------------------------------------*/
 
 ei_widget_t frame_allocfunc()
@@ -101,10 +102,21 @@ void frame_drawfunc(ei_widget_t widget,
     }
     if(frame->img){
         // Si il y a un image a afficher (pour l'instant ignoré)
+
+            // Si il y a un image a afficher (pour l'instant ignoré)
+        ei_point_t place = {widget->screen_location.top_left.x,widget->screen_location.top_left.y};
+        if(frame->img_rect == NULL) {
+            frame->img_rect = malloc(sizeof(ei_rect_ptr_t));
+            *frame->img_rect = malloc(sizeof(ei_rect_t));
+            **frame->img_rect = hw_surface_get_rect(*frame->img);
+        }
+
+        ei_rect_t test = ei_rect(place,(*frame->img_rect)->size);
         hw_surface_lock(surface);
-        hw_surface_lock(frame->img);
-        ei_copy_surface(surface, *frame->img_rect, frame->img, NULL, true);
-        hw_surface_unlock(frame->img);
+        hw_surface_lock(*frame->img);
+        ei_copy_surface(surface, &test, *frame->img, *frame->img_rect, true);
+        hw_surface_unlock(*frame->img);
+
         hw_surface_unlock(surface);
     }
 

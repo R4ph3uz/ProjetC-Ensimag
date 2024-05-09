@@ -28,7 +28,7 @@ void			ei_frame_configure		(ei_widget_t		widget,
     if (requested_size)
         widget->requested_size= *requested_size;
     else
-        widget->requested_size = ei_size(100, 50);
+        widget->requested_size = ei_size(50, 30);
     ei_frame_t frame = (ei_frame_t) widget;
 	COPY_IF_NOT_NULL(frame->color,color);
     COPY_IF_NOT_NULL(frame->border_width, border_width);
@@ -44,9 +44,27 @@ void			ei_frame_configure		(ei_widget_t		widget,
     COPY_IF_NOT_NULL(frame->text_font, text_font);
     COPY_IF_NOT_NULL(frame->text_color, text_color);
     COPY_IF_NOT_NULL(frame->text_anchor, text_anchor);
-    COPY_IF_NOT_NULL(frame->img, img);
-    COPY_IF_NOT_NULL(frame->img_rect, img_rect);
     COPY_IF_NOT_NULL(frame->img_anchor, img_anchor);
+
+    if(img != NULL) {
+        if(frame->img == NULL)
+            frame->img = malloc(sizeof(ei_surface_t));
+
+        *frame->img = hw_surface_create(*img, hw_surface_get_rect(*img).size,true  );
+        hw_surface_lock(*img);
+        hw_surface_lock(*frame->img );
+        ei_copy_surface(*frame->img, NULL,*img,NULL,false);
+        hw_surface_unlock(*img);
+        hw_surface_unlock(*frame->img );
+    }
+    if (img_rect != NULL) {
+        if (frame->img_rect==NULL){
+            frame->img_rect=malloc(sizeof(ei_rect_ptr_t));
+        }
+        *frame->img_rect = malloc(sizeof(ei_rect_t));
+        memcpy(*frame->img_rect, *img_rect, sizeof(ei_rect_t));
+
+    }
 
 }
 
@@ -71,7 +89,7 @@ void			ei_button_configure		(ei_widget_t		widget,
 	if (requested_size)
 		widget->requested_size=*requested_size;
 	else
-	    widget->requested_size = ei_size(100, 25);
+	    widget->requested_size = ei_size(100, 40);
 
     ei_button_t button = (ei_button_t) widget;
     if ((ei_color_t*) color != NULL) {

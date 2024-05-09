@@ -1,5 +1,7 @@
 #include "ei_entry.h"
 #include "widgetclass/ei_entry.h"
+#include <ei_utils.h>
+
 #include "ei_draw.h"
 #include "ei_application.h"
 
@@ -19,6 +21,7 @@ void			ei_entry_configure		(ei_widget_t		widget,
                                            ei_color_t*		text_color)
 {
     ei_entry_t entry = (ei_entry_t) widget;
+    widget->requested_size =ei_size(150,20);
     COPY_IF_NOT_NULL(entry->requested_char_size,requested_char_size);
     COPY_IF_NOT_NULL(entry->color,color);
     COPY_IF_NOT_NULL(entry->border_width,border_width);
