@@ -47,7 +47,7 @@ void entry_setdefaultsfunc(ei_widget_t widget){
     entry->color->blue = 255;
     entry->color->green = 100;
     entry->color->red= 0;
-    *entry->border_width = 2;
+    *entry->border_width = 1;
     ei_const_string_t name = "misc/font.ttf";
     ei_fontstyle_t style = ei_style_normal;
     *entry->text_font = hw_text_font_create(name, style, 20);
@@ -90,7 +90,6 @@ void entry_drawfunc(ei_widget_t widget,
         uint32_t decal_x =0;// widget->screen_location.size.width/10;
         uint32_t decal_y = 0;//widget->screen_location.size.height/2;
         ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
-        ei_const_string_t texte = (ei_const_string_t) entry->text;
         ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, clipper);
     }
     // place une border autour de l'entryei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};

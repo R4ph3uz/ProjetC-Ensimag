@@ -21,7 +21,16 @@ void			ei_entry_configure		(ei_widget_t		widget,
                                            ei_color_t*		text_color)
 {
     ei_entry_t entry = (ei_entry_t) widget;
-    widget->requested_size =ei_size(150,20);
+    // mets la width a "a"*requested_char_size
+    char* falsestring=(char*) malloc((*requested_char_size+1)*sizeof(char));
+    memset(falsestring,97,*requested_char_size);
+    falsestring[*requested_char_size]='\0';
+    fprintf(stderr,"%s\n",falsestring);
+    ei_surface_t surfaceee=hw_text_create_surface(falsestring,*entry->text_font,*entry->text_color);
+    int width= hw_surface_get_rect(surfaceee).size.width;
+    widget->requested_size =ei_size(width,20);
+    free(falsestring);
+    // sinon classique
     COPY_IF_NOT_NULL(entry->requested_char_size,requested_char_size);
     COPY_IF_NOT_NULL(entry->color,color);
     COPY_IF_NOT_NULL(entry->border_width,border_width);
