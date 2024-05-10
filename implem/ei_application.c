@@ -71,6 +71,7 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 
 /* ----------------------------------------------------------------- */
 
+// fonction inutilisée car une fonction est deja ecrite pour ça (ei_widget_pick() )
 uint32_t get_pick_id(ei_surface_t pick_surface, ei_point_t point) {
     hw_surface_lock(pick_surface);
     uint32_t* buffer = (uint32_t*)hw_surface_get_buffer(pick_surface);
@@ -116,7 +117,8 @@ void ei_app_run(void)
         ei_rect_t rect_after;
         if(new_event->type == ei_ev_mouse_buttondown || new_event->type == ei_ev_mouse_buttonup ) {
             ei_widget_t precwid=widget;
-            widget = get_widget_by_pickid(get_pick_id(PICKING_SURFACE,new_event->param.mouse.where ));
+            widget= ei_widget_pick(&(new_event->param.mouse.where)); // fonction faites pour ça
+            // widget = get_widget_by_pickid(get_pick_id(PICKING_SURFACE,new_event->param.mouse.where ));
             ei_widget_t widget2=widget;
 
 

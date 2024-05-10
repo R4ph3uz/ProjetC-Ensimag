@@ -28,6 +28,13 @@ void add_widget_pickid_array(ei_widget_t widget){
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+widget_array* get_pick_PICK_DYNARRAY() {
+    return PICK_DYNARRAY;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+
 ei_widget_t get_widget_by_pickid(uint32_t index) {
     if (index <= PICK_DYNARRAY->number_element) {
         return PICK_DYNARRAY->widgets[index];
