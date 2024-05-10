@@ -326,7 +326,7 @@ char* restrict_text(char* text, uint8_t taille) {
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------*/
-char* insert_char(char* text, char character, uint8_t where) {
+char*  insert_char(char* text, char character, uint8_t where) {
     int taille = strlen(text)+1;
     char* res = malloc(sizeof(char)*(taille+1));
 
