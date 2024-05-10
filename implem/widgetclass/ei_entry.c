@@ -102,11 +102,20 @@ void entry_drawfunc(ei_widget_t widget,
         ei_draw_polyline(surface, points, nb_points,(ei_color_t){40,40,40,255}, NULL);
 
         //calcul de la place du curseur |
-        char* entry_text_restreint = restrict_text(entry->text, entry->position);
-        fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
-        ei_surface_t texte_surface = hw_text_create_surface(entry_text_restreint, *entry->text_font, *entry->text_color);
-        uint32_t longueur_text_restreint = hw_surface_get_rect(texte_surface).size.width;
-        ei_point_t* place_cursor = &(ei_point_t){widget->screen_location.top_left.x+decal_x+longueur_text_restreint-10,widget->screen_location.top_left.y+decal_y-5};
+        ei_point_t* place_cursor ;
+        if (entry->text) {
+            char* entry_text_restreint = restrict_text(entry->text, entry->position);
+            fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
+            ei_surface_t texte_surface = hw_text_create_surface(entry_text_restreint, *entry->text_font, *entry->text_color);
+            uint32_t longueur_text_restreint = hw_surface_get_rect(texte_surface).size.width;
+            place_cursor = &(ei_point_t){widget->screen_location.top_left.x+decal_x+longueur_text_restreint-10,widget->screen_location.top_left.y+decal_y-5};
+        }
+        else {
+            //No text
+            place_cursor = &(ei_point_t){widget->screen_location.top_left.x+decal_x-10,widget->screen_location.top_left.y+decal_y-5};
+        }
+
+
 
         //draw cursor au bonne endroit
         ei_const_string_t cursor_text = "|";

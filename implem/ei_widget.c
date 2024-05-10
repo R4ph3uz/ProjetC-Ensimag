@@ -51,8 +51,8 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 //  /* Geometry Management */
     widget->geom_params = NULL;///< Pointer to the geometry management parameters for this widget. If NULL, the widget is not currently managed and thus, is not displayed on the screen.
 
-    widget->requested_size.height=100;///< See \ref ei_widget_get_requested_size.
-    widget->requested_size.width=100;///< See \ref ei_widget_get_requested_size.
+    widget->requested_size.height=10;///< See \ref ei_widget_get_requested_size.
+    widget->requested_size.width=10;///< See \ref ei_widget_get_requested_size.
 
     widget->content_rect=NULL;	///< See ei_widget_get_content_rect. By defaults, points to the screen_location.
 

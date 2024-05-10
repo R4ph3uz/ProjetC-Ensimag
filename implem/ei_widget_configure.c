@@ -126,15 +126,19 @@ void			ei_button_configure		(ei_widget_t		widget,
     }
     COPY_IF_NOT_NULL(button->text_anchor,text_anchor);
     if(img != NULL) {
-        if(button->img == NULL)
-            button->img = malloc(sizeof(ei_surface_t));
 
-        *button->img = hw_surface_create(*img, hw_surface_get_rect(*img).size,true  );
-        hw_surface_lock(*img);
-        hw_surface_lock(*button->img );
-        ei_copy_surface(*button->img, NULL,*img,NULL,false);
-        hw_surface_unlock(*img);
-        hw_surface_unlock(*button->img );
+        if(*img==NULL)
+            button->img=NULL;
+        else {
+            button->img = malloc(sizeof(ei_surface_t));
+            *button->img = hw_surface_create(*img, hw_surface_get_rect(*img).size,true  );
+            hw_surface_lock(*img);
+            hw_surface_lock(*button->img );
+            ei_copy_surface(*button->img, NULL,*img,NULL,false);
+            hw_surface_unlock(*img);
+            hw_surface_unlock(*button->img );
+        }
+
     }
     if (img_rect != NULL) {
         if (button->img_rect==NULL){
