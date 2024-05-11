@@ -65,14 +65,17 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
     if (event->type == ei_ev_text_input) {
         char symbole[2] = {event->param.text,'\0'};
         char* text = (char*) ei_entry_get_text(widget);
-        if(text && strlen(text)+1<*entry->requested_char_size) {
+        if(text && strlen(text)+1<=*entry->requested_char_size)
+            {
             //segfault avant le resquested size
                 text = insert_char(text, event->param.text, strlen(text)-entry->position ); //fuite de mémoire here
                 ei_entry_set_text((ei_widget_t)entry,text);
             }
+        else{
              //on laisse le texte comme ceci
-        else
-            ei_entry_set_text((ei_widget_t)entry, symbole);
+        }
+    // else
+    //     ei_entry_set_text((ei_widget_t)entry, symbole);
 
     }
     else if(event->type == ei_ev_keydown) {
