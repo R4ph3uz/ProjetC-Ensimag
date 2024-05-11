@@ -36,6 +36,9 @@ void	ei_draw_text		(ei_surface_t		surface,
         ei_copy_surface(surface, intersection, surface_text, &intersection_for_text, true);
         hw_surface_unlock(surface_text);
     }
+    free(surface_text);
+    free(intersection);
+
 
 
 }

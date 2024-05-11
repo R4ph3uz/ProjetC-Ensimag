@@ -68,6 +68,12 @@ ei_point_t* rounded_frame(ei_rect_t* rectangle,
         conc2 = concatene_points(conc1, points2, nb_points1+nb_points, nb_points2);
         conc3 = concatene_points(conc2, points3, nb_points1+nb_points+ nb_points2, nb_points3);
         *nb_concat = nb_points1+nb_points+ nb_points2 + nb_points3;
+        free(points1);
+        free(points2);
+        free(points3);
+        free(points);
+        free(conc1);
+        free(conc2);
         return conc3;
     }
     else if(part==high){
@@ -86,7 +92,12 @@ ei_point_t* rounded_frame(ei_rect_t* rectangle,
 
 
         conc3 = concatene_points(conc2,intermediare, nb_points1+nb_points+nb_points2, 2);
-
+        free(points1);
+        free(points2);
+        free(points);
+        free(conc1);
+        free(conc2);
+        free(intermediare);
         return conc3;
     }
     else{
@@ -101,13 +112,16 @@ ei_point_t* rounded_frame(ei_rect_t* rectangle,
 
         h= (rectangle->size.width > rectangle->size.height ) ? rectangle->size.height /2 : rectangle->size.width/2;
 
-        ei_point_t* intermediare = malloc(sizeof(ei_point_t)*2);
-        intermediare[0] = (ei_point_t){rectangle->top_left.x+h,rectangle->top_left.y+h};
-        intermediare[1] = (ei_point_t){rectangle->top_left.x-h +rectangle->size.width ,rectangle->top_left.y-h+rectangle->size.height};
-
-
-        conc3 = concatene_points(conc2,intermediare, nb_points1+nb_points3+nb_points2, 2);
-
+        ei_point_t* intermediaire = malloc(sizeof(ei_point_t)*2);
+        intermediaire[0] = (ei_point_t){rectangle->top_left.x+h,rectangle->top_left.y+h};
+        intermediaire[1] = (ei_point_t){rectangle->top_left.x-h +rectangle->size.width ,rectangle->top_left.y-h+rectangle->size.height};
+        conc3 = concatene_points(conc2,intermediaire, nb_points1+nb_points3+nb_points2, 2);
+        free(points1);
+        free(points2);
+        free(points3);
+        free(conc1);
+        free(conc2);
+        free(intermediaire);
         return conc3;
     }
 }
@@ -159,6 +173,9 @@ void draw_button(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_
 
 
     ei_draw_polygon(surface, conc1, nb_points1, color, clipper);
+    free(conc1);
+    free(conc2);
+    free(conc3);
 }
 
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -201,10 +218,13 @@ ei_point_t* demi_rounded_frame(ei_rect_t* rectangle,
         points1 = polygon_arc(top_left, rayon, 180, 270, &nb_points1);
         points = polygon_arc(top_right, rayon, 270, 360, &nb_points);
         conc1 = concatene_points(points1, points, nb_points1, nb_points);
-
         conc2 = concatene_points(conc1, &bottom_right_corrected, nb_points1+nb_points, 1);
         conc3 = concatene_points(conc2, &bottom_left_corrected, nb_points1+nb_points+ 1, 1);
         *nb_concat = nb_points1+nb_points + 2;
+        free(conc1);
+        free(conc2);
+        free(points1);
+        free(points);
         return conc3;
     }
 
@@ -215,6 +235,8 @@ ei_point_t* demi_rounded_frame(ei_rect_t* rectangle,
     conc2 = concatene_points(conc1, &top_left_corrected, nb_points2+nb_points3, 1);
     conc3 = concatene_points(conc2, &top_right_corrected, nb_points2+nb_points3+ 1, 1);
     *nb_concat = nb_points2+nb_points3 + 2;
+    free(conc1);
+    free(conc2);
     return conc3;
 
 }
@@ -311,8 +333,10 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
         }
     }
 
-
-
+    free(circle_p);
+    free(conc2);
+    free(carre_bas_droite);
+    free(conc3);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------*/

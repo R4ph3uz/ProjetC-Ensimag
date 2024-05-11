@@ -108,7 +108,7 @@ void ei_app_run(void)
     // (*(ROOT_WIDGET->wclass->drawfunc))(ROOT_WIDGET, ei_app_root_surface(), NULL, NULL);
     IS_RUNNING = true;
     ei_widget_t widget = NULL;
-    ei_event_t *new_event = malloc(sizeof(ei_event_t));
+    ei_event_t* new_event = malloc(sizeof(ei_event_t));
     while(IS_RUNNING){
 
         hw_event_wait_next(new_event);
@@ -218,7 +218,7 @@ void ei_app_run(void)
         }
 
     }
-
+    //free(new_event);
     hw_quit();
 }
 
@@ -234,7 +234,9 @@ void ei_app_invalidate_rect(const ei_rect_t* rect)
 
 void ei_app_free(void)
 {
-
+    free(ROOT_WIDGET);
+    free(ROOT_SURFACE);
+    free(PICKING_SURFACE);
 }
 
 /* ----------------------------------------------------------------- */
