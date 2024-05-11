@@ -90,16 +90,16 @@ void button_drawfunc(ei_widget_t widget,
         draw_button(surface,widget->screen_location,*button->corner_radius,*button->color,*button->relief,clipper);
     draw_button(pick_surface, widget->screen_location,*button->corner_radius,*button->widget.pick_color,ei_relief_none, clipper );
 
-    if(button->text){
-        ei_surface_t surface_text = hw_text_create_surface(*button->text_font, *button->text_font, *button->text_color);
-        ei_rect_t rect_surface_text = hw_surface_get_rect(surface_text);
-
-        uint32_t decal_x = widget->screen_location.size.width/2 - rect_surface_text.size.width/2;
-        uint32_t decal_y = widget->screen_location.size.height/2 - rect_surface_text.size.height/2;
-        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
-        ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
-
-    }
+    // if(button->text){
+    //     ei_surface_t surface_text = hw_text_create_surface(*button->text_font, *button->text_font, *button->text_color);
+    //     ei_rect_t rect_surface_text = hw_surface_get_rect(surface_text);
+    //
+    //     uint32_t decal_x = widget->screen_location.size.width/2 - rect_surface_text.size.width/2;
+    //     uint32_t decal_y = widget->screen_location.size.height/2 - rect_surface_text.size.height/2;
+    //     ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
+    //     ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
+    //
+    // }
 
     hw_surface_unlock(pick_surface);
     if(button->img){
