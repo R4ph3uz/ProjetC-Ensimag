@@ -235,6 +235,8 @@ ei_point_t* demi_rounded_frame(ei_rect_t* rectangle,
     conc2 = concatene_points(conc1, &top_left_corrected, nb_points2+nb_points3, 1);
     conc3 = concatene_points(conc2, &top_right_corrected, nb_points2+nb_points3+ 1, 1);
     *nb_concat = nb_points2+nb_points3 + 2;
+    free(points2);
+    free(points3);
     free(conc1);
     free(conc2);
     return conc3;
