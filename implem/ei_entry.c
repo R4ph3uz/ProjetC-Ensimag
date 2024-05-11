@@ -44,7 +44,7 @@ void			ei_entry_set_text		(ei_widget_t		widget,
                                           ei_const_string_t 	text)
 {
     ei_entry_t entry = (ei_entry_t) widget;
-    entry->text= malloc(sizeof(char)* strlen(text));
+    entry->text= malloc(sizeof(char)* (strlen(text)+1));
     strcpy( entry->text,text);
 }
 

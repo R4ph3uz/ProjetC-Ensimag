@@ -318,7 +318,7 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
 char* restrict_text(char* text, uint8_t taille) {
-    char* res = malloc(sizeof(char)*(strlen(text)-taille) ) ;
+    char* res = malloc(sizeof(char)*(strlen(text)-taille+1) ) ;
     for(int i = 0 ; i< strlen(text)-taille ; i++)
         res[i] = text[i];
     res[strlen(text)-taille] = '\0';

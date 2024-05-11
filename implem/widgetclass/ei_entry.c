@@ -5,7 +5,7 @@
 
 #include <ei_entry.h>
 #include <stdlib.h>
-
+#include "../draw_utils/draw_utils.h"
 /*---------------------------------------------------------------------------------------------------------------------*/
 
 ei_widget_t entry_allocfunc(){
@@ -107,11 +107,10 @@ void entry_drawfunc(ei_widget_t widget,
         if (entry->text) {
             const char* entry_text_restreint = restrict_text(entry->text, entry->position);
             fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
-            ei_surface_t texte_surface = hw_text_create_surface(entry_text_restreint, *entry->text_font,
-                                                                *entry->text_color);
-            uint32_t longueur_text_restreint = hw_surface_get_rect(texte_surface).size.width;
+            int width, height;
+            hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
             place_cursor = &(ei_point_t){
-                widget->screen_location.top_left.x + decal_x + longueur_text_restreint - 10,
+                widget->screen_location.top_left.x + decal_x + width - 10,
                 widget->screen_location.top_left.y + decal_y - 5
             };
         }
