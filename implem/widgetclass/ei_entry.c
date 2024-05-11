@@ -30,6 +30,7 @@ void entry_releasefunc(ei_widget_t widget){
     free(entry->text_font);
     free(entry->text_color);
     free(entry->requested_char_size);
+    free(entry->text);
 //    free(entry->focus);
     // free trucs spécifique aux widgets ?
 
@@ -44,15 +45,15 @@ void entry_setdefaultsfunc(ei_widget_t widget){
 
     /* Suite spécifique à une  entry*/
 
-    entry->color->alpha = 100;
+    entry->color->alpha = 255;
     entry->color->blue = 255;
-    entry->color->green = 100;
-    entry->color->red= 0;
+    entry->color->green = 255;
+    entry->color->red= 255;
     *entry->border_width = 1;
     ei_const_string_t name = "misc/font.ttf";
     ei_fontstyle_t style = ei_style_normal;
     *entry->text_font = hw_text_font_create(name, style, 20);
-    *entry->text_color= (ei_color_t) {0,0,0};
+    *entry->text_color= (ei_color_t) {0,0,0,255};
     *entry->requested_char_size= 100;
     entry->focus=false;
     entry->position= 0 ;
@@ -115,6 +116,7 @@ void entry_drawfunc(ei_widget_t widget,
                 widget->screen_location.top_left.x + decal_x + width - 10,
                 widget->screen_location.top_left.y + decal_y - 5
             };
+            free((char*)entry_text_restreint);
         }
         else
         //No text
