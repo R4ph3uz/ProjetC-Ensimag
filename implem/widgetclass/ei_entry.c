@@ -90,8 +90,8 @@ void entry_drawfunc(ei_widget_t widget,
         uint32_t decal_x =0;// widget->screen_location.size.width/10;
         uint32_t decal_y = 0;//widget->screen_location.size.height/2;
         ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
-        clipper->size.height = clipper->size.height +50;
-        clipper->size.width = clipper->size.width +50;
+        clipper->size.height = clipper->size.height ;
+        clipper->size.width = clipper->size.width ;
         ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, clipper);
     }
     // place une border autour de l'entryei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
