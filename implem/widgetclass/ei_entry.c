@@ -16,6 +16,7 @@ ei_widget_t entry_allocfunc(){
     entry->text_color = malloc(sizeof(ei_color_t));
     entry->border_width = malloc(sizeof(int));
     entry->focus=malloc(sizeof(bool));
+    entry->text= malloc(sizeof(char));
     return (ei_widget_t) entry;
 }
 
@@ -55,6 +56,7 @@ void entry_setdefaultsfunc(ei_widget_t widget){
     *entry->requested_char_size= 100;
     entry->focus=false;
     entry->position= 0 ;
+    *entry->text = '\0';
 }
 
 /*---------------------------------------------------------------------------------------------------------------------*/
