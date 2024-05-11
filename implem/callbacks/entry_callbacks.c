@@ -9,6 +9,7 @@
 
 bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_entry_t entry = (ei_entry_t) widget;
+    entry->position = find_position_cursor_entry(entry, event->param.mouse.where);
     if(event->param.mouse.where.x> widget->screen_location.top_left.x
         && event->param.mouse.where.x< widget->screen_location.top_left.x+widget->screen_location.size.width
         && event->param.mouse.where.y> widget->screen_location.top_left.y
