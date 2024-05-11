@@ -25,7 +25,7 @@ void			ei_entry_configure		(ei_widget_t		widget,
     char* falsestring=(char*) malloc((*requested_char_size+1)*sizeof(char));
     memset(falsestring,97,*requested_char_size);
     falsestring[*requested_char_size]='\0';
-    fprintf(stderr,"%s\n",falsestring);
+    // fprintf(stderr,"%s\n",falsestring);
     ei_surface_t surfaceee=hw_text_create_surface(falsestring,*entry->text_font,*entry->text_color);
     int width= hw_surface_get_rect(surfaceee).size.width;
     widget->requested_size =ei_size(width,20);

@@ -64,7 +64,8 @@ void toplevel_drawfunc(ei_widget_t widget,
     hw_surface_lock(pick_surface);
 
     draw_toplevel(surface,widget->screen_location,10,*top_level->color,clipper, false, top_level->resizable);
-    draw_toplevel(pick_surface, widget->screen_location,10,*top_level->widget.pick_color, clipper, true, top_level->resizable );
+    draw_toplevel(pick_surface, widget->screen_location, 10, *top_level->widget.pick_color, clipper, true,
+                  top_level->resizable);
     hw_surface_unlock(pick_surface);
     if(top_level->title)
     {
