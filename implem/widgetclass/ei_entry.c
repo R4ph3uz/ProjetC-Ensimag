@@ -4,7 +4,7 @@
 #include "ei_entry.h"
 
 #include <ei_entry.h>
-#include "../draw_utils/draw_utils.h"
+#include <stdlib.h>
 
 /*---------------------------------------------------------------------------------------------------------------------*/
 
@@ -90,6 +90,8 @@ void entry_drawfunc(ei_widget_t widget,
         uint32_t decal_x =0;// widget->screen_location.size.width/10;
         uint32_t decal_y = 0;//widget->screen_location.size.height/2;
         ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
+        clipper->size.height = clipper->size.height +50;
+        clipper->size.width = clipper->size.width +50;
         ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, clipper);
     }
     // place une border autour de l'entryei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
@@ -103,17 +105,22 @@ void entry_drawfunc(ei_widget_t widget,
         //calcul de la place du curseur |
         ei_point_t* place_cursor ;
         if (entry->text) {
-            char* entry_text_restreint = restrict_text(entry->text, entry->position);
+            const char* entry_text_restreint = restrict_text(entry->text, entry->position);
             fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
-            ei_surface_t texte_surface = hw_text_create_surface(entry_text_restreint, *entry->text_font, *entry->text_color);
+            ei_surface_t texte_surface = hw_text_create_surface(entry_text_restreint, *entry->text_font,
+                                                                *entry->text_color);
             uint32_t longueur_text_restreint = hw_surface_get_rect(texte_surface).size.width;
-            place_cursor = &(ei_point_t){widget->screen_location.top_left.x+decal_x+longueur_text_restreint-10,widget->screen_location.top_left.y+decal_y-5};
+            place_cursor = &(ei_point_t){
+                widget->screen_location.top_left.x + decal_x + longueur_text_restreint - 10,
+                widget->screen_location.top_left.y + decal_y - 5
+            };
         }
-        else {
-            //No text
-            place_cursor = &(ei_point_t){widget->screen_location.top_left.x+decal_x-10,widget->screen_location.top_left.y+decal_y-5};
-        }
-
+        else
+        //No text
+            place_cursor = &(ei_point_t){
+                widget->screen_location.top_left.x + decal_x - 10,
+                widget->screen_location.top_left.y + decal_y - 5
+            };
 
 
         //draw cursor au bonne endroit
