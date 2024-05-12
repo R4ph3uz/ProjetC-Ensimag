@@ -132,7 +132,7 @@ void		ei_place	(ei_widget_t		widget,
             }
         }
     }
-
+    fprintf(stderr, "requested height %d vs height %d \n",widget->requested_size.height, *widget->geom_params->height);
 }
 
 
