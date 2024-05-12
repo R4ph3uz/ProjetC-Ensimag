@@ -218,7 +218,6 @@ ei_point_t* demi_rounded_frame(ei_rect_t* rectangle,
         points1 = polygon_arc(top_left, rayon, 180, 270, &nb_points1);
         points = polygon_arc(top_right, rayon, 270, 360, &nb_points);
         conc1 = concatene_points(points1, points, nb_points1, nb_points);
-
         conc2 = concatene_points(conc1, &bottom_right_corrected, nb_points1+nb_points, 1);
         conc3 = concatene_points(conc2, &bottom_left_corrected, nb_points1+nb_points+ 1, 1);
         *nb_concat = nb_points1+nb_points + 2;
@@ -240,7 +239,6 @@ ei_point_t* demi_rounded_frame(ei_rect_t* rectangle,
     free(points3);
     free(conc1);
     free(conc2);
-
     return conc3;
 
 }
@@ -385,25 +383,6 @@ char * delete_char(char *text, uint8_t where) {
     }
     return text;
 
-
-}
-
-/*--------------------------------------------------------------------------------------------------------------------------*/
-
-int find_position_cursor_entry(ei_entry_t entry, ei_point_t position) {
-    char* temp = malloc(sizeof(char)*(strlen(entry->text)+1));
-    int width,height;
-    for(int i = 0 ; i < strlen(entry->text); i++) {
-        temp[i] = entry->text[i];
-        temp[i+1] = '\0';
-        hw_text_compute_size(temp, *entry->text_font, &width, &height);
-        if(position.x < entry->widget.screen_location.top_left.x + width +entry->decal_x ) {
-            free(temp);
-            return strlen(entry->text)-i;
-        }
-    }
-    free(temp);
-    return 0;
 
 }
 

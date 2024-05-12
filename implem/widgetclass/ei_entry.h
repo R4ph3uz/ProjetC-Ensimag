@@ -22,9 +22,6 @@ typedef struct{
     bool focus;
     uint8_t position;   //>position du curseur (a partir de la fin du texte)
     bool is_focus_visible; //> boolean for cursor animation
-
-    int decal_x;
-
 } ei_impl_entry_t;
 
 typedef ei_impl_entry_t* ei_entry_t;
