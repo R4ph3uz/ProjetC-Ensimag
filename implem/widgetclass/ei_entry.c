@@ -4,6 +4,7 @@
 #include "ei_entry.h"
 
 #include <ei_entry.h>
+#include <ei_utils.h>
 #include <stdlib.h>
 #include "../draw_utils/draw_utils.h"
 /*---------------------------------------------------------------------------------------------------------------------*/
