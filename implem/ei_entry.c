@@ -22,14 +22,18 @@ void			ei_entry_configure		(ei_widget_t		widget,
 {
     ei_entry_t entry = (ei_entry_t) widget;
     // mets la width a "a"*requested_char_size
-    char* falsestring=(char*) malloc((*requested_char_size+1)*sizeof(char));
-    memset(falsestring,97,*requested_char_size);
-    falsestring[*requested_char_size]='\0';
-    // fprintf(stderr,"%s\n",falsestring);
-    ei_surface_t surfaceee=hw_text_create_surface(falsestring,*entry->text_font,*entry->text_color);
-    int width= hw_surface_get_rect(surfaceee).size.width;
-    ei_widget_set_requested_size(widget,ei_size(width,20));
-    free(falsestring);
+    if(requested_char_size){
+        char* falsestring=(char*) malloc((*requested_char_size+1)*sizeof(char));
+        memset(falsestring,97,*requested_char_size);
+        falsestring[*requested_char_size]='\0';
+        // fprintf(stderr,"%s\n",falsestring);
+        ei_surface_t surfaceee=hw_text_create_surface(falsestring,*entry->text_font,*entry->text_color);
+        int width= hw_surface_get_rect(surfaceee).size.width;
+        ei_widget_set_requested_size(widget,ei_size(width,20));
+        free(falsestring);
+    }
+    else if (!widget->geom_params)
+        ei_widget_set_requested_size(widget,ei_size(50,20));
     // sinon classique
     COPY_IF_NOT_NULL(entry->requested_char_size,requested_char_size);
     COPY_IF_NOT_NULL(entry->color,color);
