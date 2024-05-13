@@ -408,3 +408,55 @@ int find_position_cursor_entry(ei_entry_t entry, ei_point_t position) {
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------*/
+int find_selection_entry(ei_entry_t entry, ei_point_t position) {
+    char* temp = malloc(sizeof(char)*(strlen(entry->text)+1));
+    int width,height;
+    int i;
+    for(i = 0 ; i < strlen(entry->text); i++) {
+        temp[i] = entry->text[i];
+        temp[i+1] = '\0';
+        hw_text_compute_size(temp, *entry->text_font, &width, &height);
+        if(position.x < entry->widget.screen_location.top_left.x + width +entry->decal_x ) {
+            temp[i] = '\0';
+            hw_text_compute_size(temp, *entry->text_font, &width, &height);
+            free(temp);
+
+            return entry->widget.screen_location.top_left.x + width +entry->decal_x;
+        }
+    }
+
+    free(temp);
+    return entry->widget.screen_location.top_left.x + width +entry->decal_x;
+
+}
+/*--------------------------------------------------------------------------------------------------------------------------*/
+char* cut_text(char* text, uint8_t debut, uint8_t fin) {
+    int taille_cut = fin-debut;
+    char* res = malloc(sizeof(char)*(strlen(text)-taille_cut+1) ) ;
+    for(int i = 0 ; i< debut ; i++)
+        res[i] = text[i];
+    for(int i = fin; i < strlen(text); i++)
+        res[i-taille_cut] = text[i];
+
+    res[strlen(text)-taille_cut] = '\0';
+    return res;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------------*/
+
+int find_position_cursor_selection_entry(ei_entry_t entry, ei_point_t position) {
+    char* temp = malloc(sizeof(char)*(strlen(entry->text)+1));
+    int width,height;
+    for(int i = 0 ; i < strlen(entry->text); i++) {
+        temp[i] = entry->text[i];
+        temp[i+1] = '\0';
+        hw_text_compute_size(temp, *entry->text_font, &width, &height);
+        if(position.x < entry->widget.screen_location.top_left.x + width +entry->decal_x ) {
+            free(temp);
+            return i;
+        }
+    }
+    free(temp);
+    return strlen(entry->text);
+
+}

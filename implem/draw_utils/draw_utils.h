@@ -143,4 +143,24 @@ char* delete_char(char* text, uint8_t where);
  */
 int find_position_cursor_entry(ei_entry_t entry,ei_point_t position );
 
+/**
+ * @brief prend une entrée et une largeur pour dessiner le selection
+ * @param entry widget entry ou a eu lieu le click pour changer la position du curseur
+ * @param position point ou le click a eu lieu
+ * @return
+ */
+int find_selection_entry(ei_entry_t entry, ei_point_t position);
+
+/**
+ * @brief coupe une partie du  texte de debut a fin non inclus (prend des indices en paramatres)
+ * @param text texte a couper
+ * @param debut point ou le click a eu lieu
+ * @param fin fin non inclus
+ * @return
+ */
+char* cut_text(char* text, uint8_t debut, uint8_t fin);
+
+
+int find_position_cursor_selection_entry(ei_entry_t entry, ei_point_t position);
+
 #endif //DRAW_UTILS_H

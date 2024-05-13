@@ -139,9 +139,19 @@ void entry_drawfunc(ei_widget_t widget,
 
         //draw cursor au bonne endroit
         ei_const_string_t cursor_text = "|";
-        if (entry->is_focus_visible)
+        if (entry->is_focus_visible && !entry->is_in_selection)
             ei_draw_text(surface,place_cursor, cursor_text, *entry->text_font,(ei_color_t){0,0,0,255} , clipper );
 
+        if(entry->is_in_selection){
+            ei_point_t* rect = malloc(sizeof(ei_point_t)* 4);
+            rect[0] = ei_point(find_selection_entry(entry,entry->debut_selection) , entry->widget.screen_location.top_left.y);
+            rect[1] = ei_point(find_selection_entry(entry,entry->debut_selection), entry->widget.screen_location.top_left.y + entry->widget.screen_location.size.height);
+            rect[2] = ei_point(find_selection_entry(entry,entry->fin_selection), entry->widget.screen_location.top_left.y + entry->widget.screen_location.size.height);
+            rect[3] = ei_point(find_selection_entry(entry,entry->fin_selection), entry->widget.screen_location.top_left.y);
+
+            ei_color_t select_color = (ei_color_t) {25, 25, 200, 100};
+            ei_draw_polygon(surface, rect ,4, select_color, &entry->widget.screen_location);
+        }
     }
 
     hw_surface_unlock(pick_surface);

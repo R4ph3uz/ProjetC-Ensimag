@@ -25,6 +25,11 @@ typedef struct{
 
     int decal_x;
 
+    bool is_in_selection;
+    ei_point_t debut_selection;
+    ei_point_t fin_selection;
+
+
 } ei_impl_entry_t;
 
 typedef ei_impl_entry_t* ei_entry_t;

@@ -19,6 +19,7 @@
 
 /* ----------------------------------------------------------------- */
 
+ei_impl_widget_t ARBRE_WIDGET;
 
 static ei_surface_t ROOT_SURFACE;
 static ei_widget_t ROOT_WIDGET;
@@ -42,6 +43,7 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 
     ei_bind(ei_ev_mouse_buttondown,NULL,  "button",down_click_handler, NULL );
     ei_bind(ei_ev_mouse_buttonup,NULL,  "button",up_click_handler,NULL );
+
     ei_bind(ei_ev_mouse_buttondown, NULL, "toplevel", toplevel_down_click_handler, NULL);
     ei_bind(ei_ev_mouse_buttondown,NULL,"entry",entry_down_click_handler,NULL);
 

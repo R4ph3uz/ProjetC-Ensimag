@@ -41,4 +41,8 @@ bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user
  */
 bool animation_cursor(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param);
 
+bool entry_selection_mouse_move(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param);
+
+bool entry_up_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param);
+
 #endif //ENTRY_CALLBACKS_H
