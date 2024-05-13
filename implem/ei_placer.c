@@ -122,6 +122,7 @@ void		ei_place	(ei_widget_t		widget,
                 *widget->geom_params->height);
         fprintf(stderr, "requested w %d vs wt %d \n", widget->requested_size.width,
                 *widget->geom_params->width);
+        widget->geom_params->manager->runfunc(widget);
     }
     else
     {
