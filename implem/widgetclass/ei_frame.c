@@ -93,8 +93,10 @@ void frame_drawfunc(ei_widget_t widget,
 
     if (frame->text){
         // Si il a du texte a afficher (pour l'instant ignoré)
-        uint32_t decal_x = widget->screen_location.size.width/10;
-        uint32_t decal_y = widget->screen_location.size.height/2;
+        int width, height;
+        hw_text_compute_size(*frame->text, *frame->text_font, &width,&height);
+        uint32_t decal_x = widget->screen_location.size.width/2-width/2;
+        uint32_t decal_y = widget->screen_location.size.height/2-height/2;
         ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
         hw_surface_lock(surface);
         ei_draw_text(surface, &place, *frame->text, *frame->text_font, *frame->text_color, clipper);
@@ -143,7 +145,7 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     frame->color->blue = 100;
     frame->color->green = 100;
     frame->color->red= 0;
-    *frame->border_width = 2;
+    *frame->border_width =0;
     *frame->relief = ei_relief_none;
 
     frame->text = NULL;

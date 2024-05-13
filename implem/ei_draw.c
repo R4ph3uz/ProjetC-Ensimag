@@ -24,20 +24,28 @@ void	ei_draw_text		(ei_surface_t		surface,
     if (where)
         rect_surface_text.top_left = *where;
 
-    ei_rect_t* intersection = intersection_rectangle(rect_surface_text, *clipper);
+    if(clipper){
+        ei_rect_t* intersection = intersection_rectangle(rect_surface_text, *clipper);
 
-    if (intersection){
-        int point_debut_x = intersection->top_left.x != clipper->top_left.x ? 0: rect_surface_text.size.width-intersection->size.width;
-        int point_debut_y = intersection->top_left.y != clipper->top_left.y ? 0: rect_surface_text.size.height-intersection->size.height;
-        ei_rect_t intersection_for_text = ei_rect(
-                ei_point(point_debut_x,point_debut_y),
-                intersection->size);
+        if (intersection){
+            int point_debut_x = intersection->top_left.x != clipper->top_left.x ? 0: rect_surface_text.size.width-intersection->size.width;
+            int point_debut_y = intersection->top_left.y != clipper->top_left.y ? 0: rect_surface_text.size.height-intersection->size.height;
+            ei_rect_t intersection_for_text = ei_rect(
+                    ei_point(point_debut_x,point_debut_y),
+                    intersection->size);
+            hw_surface_lock(surface_text);
+            ei_copy_surface(surface, intersection, surface_text, &intersection_for_text, true);
+            hw_surface_unlock(surface_text);
+        }
+        free(surface_text);
+        free(intersection);
+    }
+    else{
         hw_surface_lock(surface_text);
-        ei_copy_surface(surface, intersection, surface_text, &intersection_for_text, true);
+        ei_copy_surface(surface, &rect_surface_text, surface_text, NULL, true);
         hw_surface_unlock(surface_text);
     }
-    free(surface_text);
-    free(intersection);
+
 
 
 
