@@ -25,9 +25,6 @@ void			ei_frame_configure		(ei_widget_t		widget,
                                            ei_rect_ptr_t*		img_rect,
                                            ei_anchor_t*		img_anchor)
 {
-
-
-
     ei_frame_t frame = (ei_frame_t) widget;
     if (requested_size)
         ei_widget_set_requested_size(widget,*requested_size);

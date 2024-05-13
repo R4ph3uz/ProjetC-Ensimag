@@ -3,6 +3,7 @@
 
 #include "ei_types.h"
 #include "hw_interface.h"
+#include "../widgetclass/ei_entry.h"
 
 
 typedef enum rounded_frame_part {
