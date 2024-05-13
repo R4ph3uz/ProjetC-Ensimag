@@ -117,10 +117,10 @@ void		ei_place	(ei_widget_t		widget,
                 }
             }
         }
-        fprintf(stderr, "requested height %d vs height %d \n", widget->requested_size.height,
-                *widget->geom_params->height);
-        fprintf(stderr, "requested w %d vs wt %d \n", widget->requested_size.width,
-                *widget->geom_params->width);
+        // fprintf(stderr, "requested height %d vs height %d \n", widget->requested_size.height,
+        //         *widget->geom_params->height);
+        // fprintf(stderr, "requested w %d vs wt %d \n", widget->requested_size.width,
+        //         *widget->geom_params->width);
     }
     else
     {

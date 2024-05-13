@@ -110,7 +110,7 @@ void entry_drawfunc(ei_widget_t widget,
         ei_point_t* place_cursor ;
         if (entry->text) {
             const char* entry_text_restreint = restrict_text(entry->text, entry->position);
-            fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
+            // fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
             int width, height;
             hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
             place_cursor = &(ei_point_t){
