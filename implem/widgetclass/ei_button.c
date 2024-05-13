@@ -51,7 +51,7 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     ei_button_t button = (ei_button_t) widget;
 
     button->widget.requested_size.width = 100;
-    button->widget.requested_size.height =10;
+    button->widget.requested_size.height =100;
     button->color->alpha=255;
     button->color->red= 180;
     button->color->blue= 180;

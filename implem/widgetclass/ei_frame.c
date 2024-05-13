@@ -139,8 +139,8 @@ void frame_setdefaultsfunc(ei_widget_t widget)
 
     /* Suite spécifique à une  frame*/
 
-    frame->color->alpha = 100;
-    frame->color->blue = 255;
+    frame->color->alpha = 250;
+    frame->color->blue = 100;
     frame->color->green = 100;
     frame->color->red= 0;
     *frame->border_width = 2;

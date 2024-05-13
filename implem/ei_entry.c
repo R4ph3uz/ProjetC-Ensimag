@@ -1,7 +1,7 @@
 #include "ei_entry.h"
 #include "widgetclass/ei_entry.h"
 #include <ei_utils.h>
-
+#include "ei_widget_attributes.h"
 #include "ei_draw.h"
 #include "ei_application.h"
 
@@ -28,7 +28,7 @@ void			ei_entry_configure		(ei_widget_t		widget,
     // fprintf(stderr,"%s\n",falsestring);
     ei_surface_t surfaceee=hw_text_create_surface(falsestring,*entry->text_font,*entry->text_color);
     int width= hw_surface_get_rect(surfaceee).size.width;
-    widget->requested_size =ei_size(width,20);
+    ei_widget_set_requested_size(widget,ei_size(width,20));
     free(falsestring);
     // sinon classique
     COPY_IF_NOT_NULL(entry->requested_char_size,requested_char_size);
@@ -36,6 +36,9 @@ void			ei_entry_configure		(ei_widget_t		widget,
     COPY_IF_NOT_NULL(entry->border_width,border_width);
     COPY_IF_NOT_NULL(entry->text_font,text_font);
     COPY_IF_NOT_NULL(entry->text_color,text_color);
+
+
+
 }
 
 /*------------------------------------------------------------------------------*/
