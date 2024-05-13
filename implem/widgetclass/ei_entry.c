@@ -92,11 +92,32 @@ void entry_drawfunc(ei_widget_t widget,
 
     if(entry->text){
         uint32_t decal_x =0;// widget->screen_location.size.width/10;
-        uint32_t decal_y = 0;//widget->screen_location.size.height/2;
-        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
-        clipper->size.height = clipper->size.height ;
-        clipper->size.width = clipper->size.width ;
-        ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, clipper);
+
+        // decal_x =0;// widget->screen_location.size.width/10;
+        /* test place cursor pour voir s'il est en dehors de l'entry */
+        const char* entry_text_restreint = restrict_text(entry->text, entry->position);
+        int width, height;
+        hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
+        if(width > entry->widget.screen_location.size.width - decal_x) { // si dépasse a droite
+            fprintf(stderr, "AIAIIAI\n");
+            decal_x = -width+entry->widget.screen_location.size.width;
+        }
+        if (width < - decal_x) { //si dépasse a gauche
+            fprintf(stderr, "WTFF %d", width);
+            decal_x = width;
+            fprintf(stderr, "WTFF %d", decal_x);
+        }
+        fprintf(stderr, "Pourquoi ?%d " ,decal_x);
+        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y};
+        ei_rect_t clipper_text = entry->widget.screen_location;
+        ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, &clipper_text);
+
+
+        // uint32_t decal_y = 0;//widget->screen_location.size.height/2;
+        // ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
+        // clipper->size.height = clipper->size.height ;
+        // clipper->size.width = clipper->size.width ;
+        // ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, clipper);
     }
     // place une border autour de l'entryei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
     if(entry->focus) {
@@ -110,14 +131,24 @@ void entry_drawfunc(ei_widget_t widget,
         ei_point_t* place_cursor ;
         if (entry->text) {
             const char* entry_text_restreint = restrict_text(entry->text, entry->position);
-            // fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
+            fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
             int width, height;
             hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
             place_cursor = &(ei_point_t){
                 widget->screen_location.top_left.x + decal_x + width - 10,
-                widget->screen_location.top_left.y + decal_y - 5
+                widget->screen_location.top_left.y - 5,
             };
             free((char*)entry_text_restreint);
+
+            // const char* entry_text_restreint = restrict_text(entry->text, entry->position);
+            // // fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
+            // int width, height;
+            // hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
+            // place_cursor = &(ei_point_t){
+            //     widget->screen_location.top_left.x + decal_x + width - 10,
+            //     widget->screen_location.top_left.y + decal_y - 5
+            // };
+            // free((char*)entry_text_restreint);
         }
         else
         //No text
