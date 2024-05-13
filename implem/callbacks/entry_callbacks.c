@@ -150,8 +150,8 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
 
                 if(pos1 <pos2){
 
-                    char* new= cut_text(text, pos1,pos2 );
-                    fprintf(stderr, "%d, %d test delete selection 1 avant : %s, apres %s\n",pos1,pos2, text, new);
+                    char* new= cut_text(text, pos1-1,pos2-1 );
+                    fprintf(stderr, "%d, %d test delete selection 1 avant : %s, apres %s\n",pos1-1,pos2-1, text, new);
                     ei_entry_set_text((ei_widget_t)entry,new);
 
                 }
