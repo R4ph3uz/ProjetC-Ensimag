@@ -370,7 +370,7 @@ char*  insert_char(char* text, char character, uint8_t where) {
 
 char * delete_char(char *text, uint8_t where) {
     int taille = strlen(text)-1;
-    if(where >0) {
+    if(0<where && where <=taille+1 ) {
         char* res =malloc(sizeof(char)*(taille+1));
 
         for(int i = 0 ; i <where-1; i++)
