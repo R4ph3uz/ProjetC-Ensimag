@@ -74,22 +74,33 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
 
     }
     else if(event->type == ei_ev_keydown) {
-        if(event->param.key_code==SDLK_DELETE || event->param.key_code==SDLK_BACKSPACE) {
-            fprintf(stderr, "yeah i want do delete\n");
+        if(event->param.key_code==SDLK_DELETE) {
+            //touche suppr
+            // fprintf(stderr, "yeah i want do delete\n");
+            char* text = (char*) ei_entry_get_text(widget);
+            char* new = delete_char(text, strlen(text)-entry->position+1);
+            if (strcmp(text, new)!=0)
+                entry->position-=1;
+            ei_entry_set_text((ei_widget_t)entry,new);
+        }
+        else if(event->param.key_code==SDLK_BACKSPACE) {
+            //<- touche
+            // fprintf(stderr, "yeah i want do delete\n");
             char* text = (char*) ei_entry_get_text(widget);
             char* new = delete_char(text, strlen(text)-entry->position);
             ei_entry_set_text((ei_widget_t)entry,new);
         }
+
         else if(event->param.key_code==SDLK_LEFT) {
 
             if (entry->position < strlen(entry->text))
                 entry->position += 1;
-            fprintf(stderr, "%d\n", entry->position);
+            // fprintf(stderr, "%d\n", entry->position);
         }
         else if(event->param.key_code==SDLK_RIGHT ) {
             if(entry->position >0 )
                 entry->position -=1 ;
-            fprintf(stderr, "%d\n", entry->position);
+            // fprintf(stderr, "%d\n", entry->position);
         }
     }
 
