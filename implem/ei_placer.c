@@ -26,7 +26,8 @@ void		ei_place	(ei_widget_t		widget,
         widget->geom_params->manager->next = NULL;
         const char naame[] = "placer";
         strcpy(widget->geom_params->manager->name, naame);
-        widget->geom_params->is_reconfigurable=true;
+        widget->geom_params->is_reconfigurable = malloc(sizeof(bool));
+        *widget->geom_params->is_reconfigurable=true;
         widget->geom_params->anchor = malloc(sizeof(ei_anchor_t));
         if (anchor) {
             *widget->geom_params->anchor = *anchor;
@@ -87,11 +88,11 @@ void		ei_place	(ei_widget_t		widget,
         widget->geom_params->width = malloc(sizeof(int));
         if (width) {
             *widget->geom_params->width = *width;
-            widget->geom_params->is_reconfigurable=false;
+            *widget->geom_params->is_reconfigurable=false;
         } else {
             if (rel_width) {
                 *widget->geom_params->width = 0;
-                widget->geom_params->is_reconfigurable=false;
+                *widget->geom_params->is_reconfigurable=false;
             } else {
                 if (requested_width) {
                     *widget->geom_params->width = requested_width;
@@ -104,11 +105,11 @@ void		ei_place	(ei_widget_t		widget,
         widget->geom_params->height = malloc(sizeof(int));
         if (height) {
             *widget->geom_params->height = *height;
-            widget->geom_params->is_reconfigurable=false;
+            *widget->geom_params->is_reconfigurable=false;
         } else {
             if (rel_height) {
                 *widget->geom_params->height = 0;
-                widget->geom_params->is_reconfigurable=false;
+                *widget->geom_params->is_reconfigurable=false;
             } else {
                 if (requested_height) {
                     *widget->geom_params->height = requested_height;
@@ -121,7 +122,6 @@ void		ei_place	(ei_widget_t		widget,
                 *widget->geom_params->height);
         fprintf(stderr, "requested w %d vs wt %d \n", widget->requested_size.width,
                 *widget->geom_params->width);
-        widget->geom_params->manager->runfunc(widget);
     }
     else
     {
@@ -141,25 +141,24 @@ void		ei_place	(ei_widget_t		widget,
             *widget->geom_params->rel_x = *rel_x;
         }
         if (rel_width) {
-            widget->geom_params->is_reconfigurable=false;
-
+            *widget->geom_params->is_reconfigurable=false;
+            *widget->geom_params->rel_width = *rel_width;
         }
         if (rel_height) {
-            widget->geom_params->is_reconfigurable=false;
+            *widget->geom_params->is_reconfigurable=false;
             *widget->geom_params->rel_height = *rel_height;
         }
         if (width) {
-            widget->geom_params->is_reconfigurable=false;
+            *widget->geom_params->is_reconfigurable=false;
             *widget->geom_params->width = *width;
         }
         if (height) {
-            widget->geom_params->is_reconfigurable=false;
+            *widget->geom_params->is_reconfigurable=false;
             *widget->geom_params->height = *height;
         }
         fprintf(stderr, "requested height %d vs height %d \n", widget->requested_size.height,
                 *widget->geom_params->height);
     }
-
 }
 
 
