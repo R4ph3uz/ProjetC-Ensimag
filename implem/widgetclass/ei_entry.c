@@ -145,11 +145,8 @@ void entry_geomnotifyfunc(ei_widget_t widget){
 
 }
 
-/**
- * @brief	Prend rien, crée une entry, renvoie un ei_widgetclass_t* ; permet d'acceder aux fonctions 'drawfunc ...' de top_level
- *
- * @param	void
- */
+/*---------------------------------------------------------------------------------------------------------------------*/
+
 ei_widgetclass_t* create_entry_widgetclass(){
     ei_widgetclass_t* res = malloc(sizeof(ei_widgetclass_t));
     res->allocfunc = entry_allocfunc;

@@ -245,7 +245,7 @@ void ei_app_free(void)
 void ei_app_quit_request(void)
 {
     IS_RUNNING = false;
-    ei_app_free();
+
 }
 
 /* ----------------------------------------------------------------- */

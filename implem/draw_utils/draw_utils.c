@@ -13,6 +13,12 @@ ei_point_t* polygon_arc(ei_point_t centre,
                         uint32_t angle_fin,
                         size_t* size_tableau)
 {
+    if(rayon == 0){
+        *size_tableau = 1;
+        ei_point_t* points = malloc(sizeof(ei_point_t ));
+        points[0] = centre;
+        return points;
+    }
     // Convert angles to radians
     double start_rad = angle_debut * M_PI / 180.0;
     double end_rad = angle_fin * M_PI / 180.0;

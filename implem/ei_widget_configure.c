@@ -26,12 +26,18 @@ void			ei_frame_configure		(ei_widget_t		widget,
                                            ei_anchor_t*		img_anchor)
 {
 
-    if (requested_size)
-        ei_widget_set_requested_size(widget,*requested_size);
-    else if (!widget->geom_params)
-        ei_widget_set_requested_size(widget, ei_size(40,30));
+
 
     ei_frame_t frame = (ei_frame_t) widget;
+    if (requested_size)
+        ei_widget_set_requested_size(widget,*requested_size);
+    else if (!widget->geom_params && !text)
+        ei_widget_set_requested_size(widget, ei_size(40,30));
+    else if (!widget->geom_params ){
+        int width, height;
+        hw_text_compute_size(*text, *frame->text_font, &width, &height);
+        ei_widget_set_requested_size(widget, ei_size(width,height));
+    }
 	COPY_IF_NOT_NULL(frame->color,color);
     COPY_IF_NOT_NULL(frame->border_width, border_width);
     COPY_IF_NOT_NULL(frame->relief, relief);
