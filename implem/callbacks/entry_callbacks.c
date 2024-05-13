@@ -17,7 +17,6 @@ bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_par
     {
         // je suis dans l'entry
         entry->focus=true;
-        // que mettre dans user param ? ou entry ?
         ei_bind(ei_ev_keydown,NULL,"all",entry_write,entry); // keystroke
         ei_bind(ei_ev_text_input,NULL,"all",entry_write,entry); // texte collé ?
         ei_bind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors
