@@ -121,6 +121,7 @@ void		ei_place	(ei_widget_t		widget,
                 *widget->geom_params->height);
         fprintf(stderr, "requested w %d vs wt %d \n", widget->requested_size.width,
                 *widget->geom_params->width);
+        widget->geom_params->manager->runfunc(widget);
     }
     else
     {
@@ -141,7 +142,7 @@ void		ei_place	(ei_widget_t		widget,
         }
         if (rel_width) {
             widget->geom_params->is_reconfigurable=false;
-            *widget->geom_params->rel_width = *rel_width;
+
         }
         if (rel_height) {
             widget->geom_params->is_reconfigurable=false;
@@ -158,6 +159,7 @@ void		ei_place	(ei_widget_t		widget,
         fprintf(stderr, "requested height %d vs height %d \n", widget->requested_size.height,
                 *widget->geom_params->height);
     }
+
 }
 
 
