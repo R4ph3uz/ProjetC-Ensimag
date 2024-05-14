@@ -33,7 +33,7 @@ ei_point_t* polygon_arc(ei_point_t centre,
 /**
  * \brief	crée un tableau de points définissant un cadre aux bords arrondis
  *
- * @param	rectangle	Centre de l'arc
+ * @param	rectangle	rectangle comprenant le truc a dessiner
  * @param	rayon		rayon de l'arrondi
  * @param	part	    génère uniquement la partie haute, ou basse, ou bien la totalité de la forme
  * @param nb_concat met a *nb_concat la taille du tableau renvoyé

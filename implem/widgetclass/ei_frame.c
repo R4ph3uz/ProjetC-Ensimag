@@ -74,10 +74,7 @@ void frame_drawfunc(ei_widget_t widget,
     if(frame->border_width!=NULL) { // doit etre fait avant de dessiner la frame (vu que en dessous)
         if (frame->relief!=NULL){
             //dessine le relief
-            ei_point_t* border;
-            size_t*number= malloc(sizeof(ei_size_t));
-            border= rounded_frame((ei_point_t) {top_left_x-*frame->border_width, top_left_y -*frame->border_width},0,(rounded_frame_part) full,number);
-            ei_draw_polygon(surface, border, nb_points, color, clipper);
+            draw_button(surface, frame->widget.screen_location, 0, *frame->color, *frame->relief, clipper);
         }
         else{
             ei_point_t* border = malloc(4*sizeof(ei_point_t));
@@ -87,16 +84,13 @@ void frame_drawfunc(ei_widget_t widget,
             border[3] = (ei_point_t) {top_left_x-*frame->border_width, top_left_y+widget->screen_location.size.height+*frame->border_width };
             ei_color_t color = (ei_color_t) {0,0,0, 255};
             ei_draw_polygon(surface, border, nb_points, color, clipper);
+            ei_draw_polygon(surface, points, nb_points, *frame->color, clipper);
             free(border);
         }
     }
-    ei_draw_polygon(surface, points, nb_points, *frame->color, clipper);
+
     ei_draw_polygon(pick_surface, points, nb_points, *frame->widget.pick_color, clipper);
-    if(widget->geom_params){
-        // draw_button(surface, rect, 10, *frame->color, ei_relief_raised, NULL) ;
-        // ei_draw_polygon(surface, test_demi_frame, nb_test_demi_frame, *frame->color, NULL);
-        // draw_toplevel(surface, rect, 20, *frame->color, NULL, false);
-    }
+
     hw_surface_unlock(pick_surface);
     hw_surface_unlock(surface);
 
