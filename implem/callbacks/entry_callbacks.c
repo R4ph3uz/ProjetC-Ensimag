@@ -20,14 +20,13 @@ bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_par
         && event->param.mouse.where.y< widget->screen_location.top_left.y+ widget->screen_location.size.height
         && entry->focus == false)
         ei_entry_give_focus((ei_widget_t) entry );
-
     return false;
-
 }
 
 /*------------------------------------------------------------------------------------------------------------------*/
 
 bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
+    // quand on clique n'importe ou sur la page
     ei_entry_t entry = (ei_entry_t) user_param;
     if(event->param.mouse.where.x> entry->widget.screen_location.top_left.x
         && event->param.mouse.where.x< entry->widget.screen_location.top_left.x+entry->widget.screen_location.size.width
@@ -52,118 +51,82 @@ bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user
 
 bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_entry_t entry = (ei_entry_t) user_param;
-    if (event->type == ei_ev_text_input && entry->is_in_selection== false) {
-        char symbole[2] = {event->param.text,'\0'};
-        char* text = (char*) ei_entry_get_text(widget);
-        if(text && strlen(text)+1<=*entry->requested_char_size)
-            {
-            //segfault avant le resquested size
-                text = insert_char(text, event->param.text, entry->position ); //fuite de mémoire here
+    char* text = (char*) ei_entry_get_text(widget);
+    if(entry->is_in_selection == false){ // on n'est pas en selection
+        if(event->type==ei_ev_text_input){
+            char symbole[2] = {event->param.text,'\0'};
+            if(text && strlen(text)+1<=*entry->requested_char_size){
+                text = insert_char(text, event->param.text, entry->position );
                 ei_entry_set_text((ei_widget_t)entry,text);
                 entry->position+=1;
             }
-        else{
-             //on laisse le texte comme ceci
+            else{
+                //on laisse le texte comme ceci
+            }
         }
-
-    }
-    else if (event->type == ei_ev_text_input && entry->is_in_selection){
-        char symbole[2] = {event->param.text,'\0'};
-        char* text = (char*) ei_entry_get_text(widget);
-        int pos1 = find_position_cursor_selection_entry(entry, entry->debut_selection)+1;
-        int pos2 = find_position_cursor_selection_entry(entry, entry->fin_selection)+1;
-
-        if(pos1 <pos2){
-
-            char* new= cut_text(text, pos1,pos2 );
-            fprintf(stderr, "%d, %d test delete selection 1 avant : %s, apres %s\n",pos1,pos2, text, new);
-            text = insert_char(new, event->param.text, entry->position ); //fuite de mémoire here
-            ei_entry_set_text((ei_widget_t)entry,text);
-
-        }
-        else{
-            char* new = cut_text(text,pos2, pos1 );
-            fprintf(stderr, "%d, %d test delete selection 1 avant : %s, apres %s\n",pos1,pos2, text, new);
-            text = insert_char(new, event->param.text, entry->position ); //fuite de mémoire here
-            ei_entry_set_text((ei_widget_t)entry,text);
-        }
-        entry->position += 1;
-        entry->is_in_selection = false;
-
-    }
-    else if(event->type == ei_ev_keydown) {
-        if(event->param.key_code==SDLK_DELETE) {
+        if(event->type == ei_ev_keydown && event->param.key_code==SDLK_DELETE) {
             //touche suppr
-            if (!entry->is_in_selection){
-                // fprintf(stderr, "yeah i want do delete\n");
-                char* text = (char*) ei_entry_get_text(widget);
-                char* new = delete_char(text, entry->position);
-                if (strcmp(text, new)!=0)
-                    entry->position-=1;
-                ei_entry_set_text((ei_widget_t)entry,new);
-            }
-            else {
-                fprintf(stderr, "yeah i want do delete\n");
-                char* text = (char*) ei_entry_get_text(widget);
-                int pos1 = find_position_cursor_selection_entry(entry, entry->debut_selection)+1;
-                int pos2 = find_position_cursor_selection_entry(entry, entry->fin_selection)+1;
-
-                if(pos1 <pos2){
-
-                    char* new= cut_text(text, pos1,pos2 );
-                    fprintf(stderr, "%d, %d test delete selection 1 avant : %s, apres %s\n",pos1,pos2, text, new);
-                    ei_entry_set_text((ei_widget_t)entry,new);
-
-                }
-                else{
-                    char* new = cut_text(text,pos2, pos1 );
-                    fprintf(stderr, "%d, %d test delete selection 1 avant : %s, apres %s\n",pos1,pos2, text, new);
-                    ei_entry_set_text((ei_widget_t)entry,new);
-                }
-                entry->is_in_selection = false;
-            }
+            char* new = delete_char(text, entry->position+1);
+            ei_entry_set_text((ei_widget_t)entry,new);
         }
-        else if(event->param.key_code==SDLK_BACKSPACE) {
-            //<- touche
-            if (!entry->is_in_selection) {
-                // fprintf(stderr, "yeah i want do delete\n");
-                char* text = (char*) ei_entry_get_text(widget);
-                char* new = delete_char(text, entry->position);
-                ei_entry_set_text((ei_widget_t)entry,new);
-                if (strcmp(text, new)!=0)
-                    entry->position-=1;
-            }
-            else {
-                fprintf(stderr, "yeah i want do delete\n");
-                char* text = (char*) ei_entry_get_text(widget);
-                int pos1 = find_position_cursor_selection_entry(entry, entry->debut_selection)+1;
-                int pos2 = find_position_cursor_selection_entry(entry, entry->fin_selection)+1;
-
-                if(pos1 <pos2){
-
-                    char* new= cut_text(text, pos1,pos2 );
-                    fprintf(stderr, "%d, %d test delete selection 1 avant : %s, apres %s\n",pos1,pos2, text, new);
-                    ei_entry_set_text((ei_widget_t)entry,new);
-
-                }
-                else{
-                    char* new = cut_text(text,pos2, pos1 );
-                    fprintf(stderr, "%d, %d test delete selection 1 avant : %s, apres %s\n",pos1,pos2, text, new);
-                    ei_entry_set_text((ei_widget_t)entry,new);
-                }
-                entry->is_in_selection = false;
-            }
+        if (event->type == ei_ev_keydown && event->param.key_code==SDLK_BACKSPACE) {
+            // touche backspace pas en selection
+            char* new = delete_char(text, entry->position);
+            ei_entry_set_text((ei_widget_t)entry,new);
+            if (strcmp(text, new)!=0)
+                entry->position-=1;
         }
-        else if(event->param.key_code==SDLK_LEFT) {
+        if(event->type == ei_ev_keydown && event->param.key_code==SDLK_LEFT) {
 
             if (entry->position <= strlen(entry->text) && entry->position > 0)
                 entry->position -= 1;
-            // fprintf(stderr, "%d\n", entry->position);
         }
-        else if(event->param.key_code==SDLK_RIGHT ) {
+        if(event->type == ei_ev_keydown && event->param.key_code==SDLK_RIGHT ) {
             if(entry->position >=0 && entry->position <strlen(entry->text))
-                entry->position +=1 ;
-            // fprintf(stderr, "%d\n", entry->position);
+                entry->position +=1;
+        }
+    }
+    else{
+        //min entre debut selection et fin selection
+        int pos1 = (uint8_t) fminf((float) find_position_cursor_selection_entry(entry, entry->debut_selection),
+                                   (float)find_position_cursor_selection_entry(entry, entry->fin_selection));
+        int pos2 = (uint8_t) fmaxf((float) find_position_cursor_selection_entry(entry, entry->debut_selection),
+                                   (float)find_position_cursor_selection_entry(entry, entry->fin_selection));
+        if (event->type == ei_ev_text_input){
+            char symbole[2] = {event->param.text,'\0'};
+            char* new= cut_text(text, pos1,pos2);
+            text = insert_char(new, event->param.text, entry->position );
+            ei_entry_set_text((ei_widget_t)entry,text);
+            entry->position += 1;
+            entry->is_in_selection = false;
+        }
+        if(event->type == ei_ev_keydown && event->param.key_code==SDLK_DELETE) {
+            // touche suppr si en selection
+            char* new= cut_text(text, pos1,pos2 );
+            ei_entry_set_text((ei_widget_t)entry,new);
+            entry->position = pos1;
+            entry->is_in_selection = false;
+        }
+        if(event->type == ei_ev_keydown && event->param.key_code==SDLK_BACKSPACE) {
+            // touche backspace
+            char* new= cut_text(text, pos1,pos2 );
+            ei_entry_set_text((ei_widget_t)entry,new);
+            entry->position = pos1;
+            entry->is_in_selection = false;
+        }
+        if(event->type == ei_ev_keydown && event->param.key_code==SDLK_LEFT) {
+
+            if (pos1 <= strlen(entry->text) && pos1 > 0){
+                entry->position = pos1;
+                entry->is_in_selection=false;
+            }
+
+        }
+        if(event->type == ei_ev_keydown && event->param.key_code==SDLK_RIGHT ) {
+            if (pos2 <= strlen(entry->text) && pos2 > 0){
+                entry->position = pos2;
+                entry->is_in_selection=false;
+            }
         }
     }
 
@@ -184,7 +147,6 @@ bool entry_selection_mouse_move(ei_widget_t widget, ei_event_t* event, ei_user_p
     ei_entry_t entry = user_param;
     entry->is_in_selection = true;
     entry->fin_selection = event->param.mouse.where;
-    fprintf(stderr,"debut:%i fin:%i",entry->debut_selection,entry->fin_selection);
     return true;
 }
 
