@@ -307,9 +307,9 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
     conc2[2] = (ei_point_t){nouveau_rect.top_left.x+ nouveau_rect.size.width, nouveau_rect.top_left.y + nouveau_rect.size.height};
     conc2[3]= (ei_point_t){nouveau_rect.top_left.x, nouveau_rect.top_left.y + nouveau_rect.size.height };
 
-    color_plus_fonce.red = 40;
-    color_plus_fonce.green = 40;
-    color_plus_fonce.blue = 40;
+    color_plus_fonce.red = 87;
+    color_plus_fonce.green = 93;
+    color_plus_fonce.blue = 100;
     color_plus_fonce.alpha = 255;
 
     carre_bas_droite[0] = (ei_point_t){ nouveau_rect.top_left.x+ nouveau_rect.size.width,nouveau_rect.top_left.y + nouveau_rect.size.height };
@@ -464,5 +464,4 @@ int find_position_cursor_selection_entry(ei_entry_t entry, ei_point_t position) 
     }
     free(temp);
     return strlen(entry->text);
-
 }

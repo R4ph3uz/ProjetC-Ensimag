@@ -32,24 +32,6 @@ void toplevel_releasefunc(ei_widget_t widget){
     free(top_level);
 }
 
-/*-----------------------------------------------------------------------------------------------*/
-
-void toplevel_setdefaultsfunc(ei_widget_t widget) {
-    ei_toplevel_t top_level = (ei_toplevel_t) widget;
-
-    *top_level->border_width= 1;
-    *top_level->closable = true;
-    *top_level->resizable = ei_axis_both;
-    const char* title = "title";
-    strcpy((char*) top_level->title ,title);
-    (*top_level->min_size)->width = 100;
-    (*top_level->min_size)->height = 100;
-    top_level->color->alpha = 200;
-    top_level->color->red = 200;
-    top_level->color->green = 200;
-    top_level->color->blue = 200;
-
-}
 
 /*-----------------------------------------------------------------------------------------------*/
 
@@ -88,6 +70,24 @@ void toplevel_geomnotifyfunc(ei_widget_t widget) {
 
 }
 
+/*-----------------------------------------------------------------------------------------------*/
+
+void toplevel_setdefaultsfunc(ei_widget_t widget) {
+    ei_toplevel_t top_level = (ei_toplevel_t) widget;
+
+    *top_level->border_width= 1;
+    *top_level->closable = true;
+    *top_level->resizable = ei_axis_both;
+    const char* title = "title";
+    strcpy((char*) top_level->title ,title);
+    (*top_level->min_size)->width = 100;
+    (*top_level->min_size)->height = 100;
+    top_level->color->alpha = 255;
+    top_level->color->red = 149;
+    top_level->color->green = 149;
+    top_level->color->blue = 149;
+
+}
 /*-----------------------------------------------------------------------------------------------*/
 
 ei_widgetclass_t* create_toplevel_widgetclass(){
