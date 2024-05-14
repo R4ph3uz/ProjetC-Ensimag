@@ -87,18 +87,20 @@ void entry_drawfunc(ei_widget_t widget,
     hw_surface_lock(pick_surface);
     if(entry->border_width!=NULL) { // doit etre fait avant de dessiner la entry (vu que en dessous
         ei_point_t* border = malloc(4*sizeof(ei_point_t));
-        border[0] = (ei_point_t) {top_left_x-*entry->border_width, top_left_y -*entry->border_width};
-        border[1] = (ei_point_t) {top_left_x+widget->screen_location.size.width+*entry->border_width, top_left_y-*entry->border_width };
-        border[2] = (ei_point_t) {top_left_x+widget->screen_location.size.width+*entry->border_width, top_left_y+widget->screen_location.size.height+*entry->border_width };
-        border[3] = (ei_point_t) {top_left_x-*entry->border_width, top_left_y+widget->screen_location.size.height+*entry->border_width };
+        if (entry->focus)
+            *entry->border_width = 2;
+        else
+            *entry->border_width= 1;
+        border[0] = (ei_point_t) {top_left_x - (*entry->border_width), top_left_y - *entry->border_width};
+        border[1] = (ei_point_t) {top_left_x + widget->screen_location.size.width + *entry->border_width, top_left_y - *entry->border_width };
+        border[2] = (ei_point_t) {top_left_x + widget->screen_location.size.width + *entry->border_width, top_left_y + widget->screen_location.size.height + *entry->border_width };
+        border[3] = (ei_point_t) {top_left_x - (*entry->border_width), top_left_y + widget->screen_location.size.height + *entry->border_width };
         ei_color_t color = (ei_color_t) {0,0,0, 255};
-        ei_draw_polygon(surface, border, nb_points, color, clipper);
+        ei_draw_polygon(surface, border, 4, color, clipper);
         free(border);
     }
     ei_draw_polygon(surface, points, nb_points, *entry->color, clipper);
     ei_draw_polygon(pick_surface, points, nb_points, *entry->widget.pick_color, clipper);
-
-    ei_const_string_t texte ;
 
     if(entry->text){
         /* test place cursor pour voir s'il est en dehors de l'entry */
@@ -122,8 +124,6 @@ void entry_drawfunc(ei_widget_t widget,
     if(entry->focus) {
         //mets un curseur si focus
         uint32_t decal_y = 0;//widget->screen_location.size.height/2;
-        ei_point_t place = {widget->screen_location.top_left.x+entry->decal_x,widget->screen_location.top_left.y+decal_y};
-        ei_draw_polyline(surface, points, nb_points,(ei_color_t){40,40,40,255}, NULL);
 
         //calcul de la place du curseur |
         ei_point_t* place_cursor ;
