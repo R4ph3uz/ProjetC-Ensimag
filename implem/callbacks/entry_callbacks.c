@@ -9,7 +9,7 @@
 
 bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_entry_t entry = (ei_entry_t) widget;
-    entry->position = find_position_cursor_entry(entry, event->param.mouse.where);
+    entry->position = find_position_cursor_selection_entry(entry, event->param.mouse.where);
     entry->debut_selection = event->param.mouse.where;
     ei_bind(ei_ev_mouse_move, NULL, "all", entry_selection_mouse_move, entry);
     ei_bind(ei_ev_mouse_buttonup, NULL, "all", entry_up_click_handler, entry);
@@ -19,18 +19,7 @@ bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_par
         && event->param.mouse.where.y> widget->screen_location.top_left.y
         && event->param.mouse.where.y< widget->screen_location.top_left.y+ widget->screen_location.size.height
         && entry->focus == false)
-    {
-        // je suis dans l'entry
-        entry->focus=true;
-        // que mettre dans user param ? ou entry ?
-        ei_bind(ei_ev_keydown,NULL,"all",entry_write,entry); // keystroke
-        ei_bind(ei_ev_text_input,NULL,"all",entry_write,entry); // texte collé ?
-        ei_bind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors
-        hw_event_schedule_app(500,NULL);
-        ei_bind(ei_ev_app,NULL, "all", animation_cursor,entry);
-        return true;
-
-    }
+        ei_entry_give_focus((ei_widget_t) entry );
 
     return false;
 
@@ -69,8 +58,9 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
         if(text && strlen(text)+1<=*entry->requested_char_size)
             {
             //segfault avant le resquested size
-                text = insert_char(text, event->param.text, strlen(text)-entry->position ); //fuite de mémoire here
+                text = insert_char(text, event->param.text, entry->position ); //fuite de mémoire here
                 ei_entry_set_text((ei_widget_t)entry,text);
+                entry->position+=1;
             }
         else{
              //on laisse le texte comme ceci
@@ -87,17 +77,17 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
 
             char* new= cut_text(text, pos1,pos2 );
             fprintf(stderr, "%d, %d test delete selection 1 avant : %s, apres %s\n",pos1,pos2, text, new);
-            text = insert_char(new, event->param.text, strlen(text)-entry->position ); //fuite de mémoire here
+            text = insert_char(new, event->param.text, entry->position ); //fuite de mémoire here
             ei_entry_set_text((ei_widget_t)entry,text);
 
         }
         else{
             char* new = cut_text(text,pos2, pos1 );
             fprintf(stderr, "%d, %d test delete selection 1 avant : %s, apres %s\n",pos1,pos2, text, new);
-            text = insert_char(new, event->param.text, strlen(text)-entry->position ); //fuite de mémoire here
+            text = insert_char(new, event->param.text, entry->position ); //fuite de mémoire here
             ei_entry_set_text((ei_widget_t)entry,text);
         }
-        entry->position = 0;
+        entry->position += 1;
         entry->is_in_selection = false;
 
     }
@@ -107,7 +97,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             if (!entry->is_in_selection){
                 // fprintf(stderr, "yeah i want do delete\n");
                 char* text = (char*) ei_entry_get_text(widget);
-                char* new = delete_char(text, strlen(text)-entry->position+1);
+                char* new = delete_char(text, entry->position);
                 if (strcmp(text, new)!=0)
                     entry->position-=1;
                 ei_entry_set_text((ei_widget_t)entry,new);
@@ -130,7 +120,6 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                     fprintf(stderr, "%d, %d test delete selection 1 avant : %s, apres %s\n",pos1,pos2, text, new);
                     ei_entry_set_text((ei_widget_t)entry,new);
                 }
-                entry->position = 0;
                 entry->is_in_selection = false;
             }
         }
@@ -139,8 +128,10 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             if (!entry->is_in_selection) {
                 // fprintf(stderr, "yeah i want do delete\n");
                 char* text = (char*) ei_entry_get_text(widget);
-                char* new = delete_char(text, strlen(text)-entry->position);
+                char* new = delete_char(text, entry->position);
                 ei_entry_set_text((ei_widget_t)entry,new);
+                if (strcmp(text, new)!=0)
+                    entry->position-=1;
             }
             else {
                 fprintf(stderr, "yeah i want do delete\n");
@@ -160,19 +151,18 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                     fprintf(stderr, "%d, %d test delete selection 1 avant : %s, apres %s\n",pos1,pos2, text, new);
                     ei_entry_set_text((ei_widget_t)entry,new);
                 }
-                entry->position = 0;
                 entry->is_in_selection = false;
             }
         }
         else if(event->param.key_code==SDLK_LEFT) {
 
-            if (entry->position < strlen(entry->text))
-                entry->position += 1;
+            if (entry->position <= strlen(entry->text) && entry->position > 0)
+                entry->position -= 1;
             // fprintf(stderr, "%d\n", entry->position);
         }
         else if(event->param.key_code==SDLK_RIGHT ) {
-            if(entry->position >0 )
-                entry->position -=1 ;
+            if(entry->position >=0 && entry->position <strlen(entry->text))
+                entry->position +=1 ;
             // fprintf(stderr, "%d\n", entry->position);
         }
     }
