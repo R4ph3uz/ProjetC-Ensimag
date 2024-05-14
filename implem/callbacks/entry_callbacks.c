@@ -75,11 +75,29 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             ei_entry_set_text((ei_widget_t)entry,new);
             if (strcmp(text, new)!=0)
                 entry->position-=1;
+            //calcul nouveau decalage
+            if (entry->decal_x > 0){
+                int width, height;
+                char* text_rest = restrict_text(new, entry->position);
+                hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
+                entry->decal_x = width-entry->widget.screen_location.size.width;
+
+            }
+
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_LEFT) {
 
-            if (entry->position <= strlen(entry->text) && entry->position > 0)
+            if (entry->position > 0)
                 entry->position -= 1;
+            int width, height;
+            char* entry_text_restreint = restrict_text(entry->text,entry->position);
+            hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
+//            if (entry->decal_x < 0 && width < - entry->decal_x){
+//                int width, height;
+//                char* text_rest = restrict_text(text, entry->position);
+//                hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
+//                entry->decal_x = entry->widget.screen_location.top_left.x -width;
+//            }
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_RIGHT ) {
             if(entry->position >=0 && entry->position <strlen(entry->text))
@@ -106,6 +124,9 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             ei_entry_set_text((ei_widget_t)entry,new);
             entry->position = pos1;
             entry->is_in_selection = false;
+
+
+
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_BACKSPACE) {
             // touche backspace
