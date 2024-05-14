@@ -4,6 +4,7 @@
 #include "ei_draw.h"
 #include "ei_utils.h"
 #include "ei_types.h"
+#include <string.h>
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 
@@ -352,10 +353,9 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
 char* restrict_text(char* text, uint8_t taille) {
-    char* res = malloc(sizeof(char)*(strlen(text)-taille+1) ) ;
-    for(int i = 0 ; i< strlen(text)-taille ; i++)
-        res[i] = text[i];
-    res[strlen(text)-taille] = '\0';
+    char* res = malloc(sizeof(char)*(taille+1) ) ;
+    strncpy(res, text, taille);
+    res[taille] = '\0';
     return res;
 }
 
@@ -364,13 +364,12 @@ char*  insert_char(char* text, char character, uint8_t where) {
     int taille = strlen(text)+1;
     char* res = malloc(sizeof(char)*(taille+1));
 
-    for(int i = 0 ; i <where; i++)
-        res[i] = text[i];
+    strncpy(res,text,where);
     res[where] = character;
     for(int i = where+1; i< taille;i++)
         res[i] = text[i-1];
     res[taille] = '\0';
-
+    free(text);
     return res;
 }
 
@@ -428,7 +427,6 @@ char* cut_text(char* text, uint8_t debut, uint8_t fin) {
         res[i] = text[i];
     for(int i = fin; i < strlen(text); i++)
         res[i-taille_cut] = text[i];
-
     res[strlen(text)-taille_cut] = '\0';
     return res;
 }

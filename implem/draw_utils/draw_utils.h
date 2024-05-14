@@ -112,7 +112,7 @@ ei_point_t* circle(ei_point_t centre, int radius, size_t* size_tableau);
 
 
 /**
- * @brief Coupe la fin d'un texte
+ * @brief Garde le début du texte jusqu'à taille
  * @param text texte a restreindre
  * @param taille taille a restreindre, doit être supérieur a 0 et inférieur a la taille (0 renvoie text)
  * @return
