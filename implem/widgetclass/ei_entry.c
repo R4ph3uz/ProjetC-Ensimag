@@ -104,19 +104,22 @@ void entry_drawfunc(ei_widget_t widget,
 
     if(entry->text){
         /* test place cursor pour voir s'il est en dehors de l'entry */
-        const char* entry_text_restreint = restrict_text(entry->text,entry->position);
+        char* entry_text_restreint = restrict_text(entry->text,entry->position);
         int width, height;
         hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
-        if(width > entry->widget.screen_location.size.width - entry->decal_x) { // si dépasse a droite
+        if(width > entry->widget.screen_location.size.width + entry->decal_x) { // si dépasse a droite
             fprintf(stderr, "AIAIIAI\n");
-            entry->decal_x = -width+entry->widget.screen_location.size.width;
+            entry->decal_x = width-entry->widget.screen_location.size.width;
+            fprintf(stderr, "WTFF a droite %d", entry->decal_x);
         }
-        if (width < - entry->decal_x) { //si dépasse a gauche
-            fprintf(stderr, "WTFF %d", width);
+        if (width < entry->decal_x) { //si dépasse a gauche
+            entry_text_restreint = restrict_text(entry->text,entry->position);
+            hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
+            fprintf(stderr, "WTFF g %d", entry->decal_x);
             entry->decal_x = width;
-            fprintf(stderr, "WTFF %d", entry->decal_x);
+            fprintf(stderr, "WTFF g2 %d", entry->decal_x);
         }
-        ei_point_t place = {widget->screen_location.top_left.x+entry->decal_x,widget->screen_location.top_left.y};
+        ei_point_t place = {entry->widget.screen_location.top_left.x-entry->decal_x,entry->widget.screen_location.top_left.y};
         ei_rect_t clipper_text = entry->widget.screen_location;
         ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, &clipper_text);
     }
@@ -129,20 +132,13 @@ void entry_drawfunc(ei_widget_t widget,
         ei_point_t* place_cursor ;
         if (entry->text) {
             const char* entry_text_restreint = restrict_text(entry->text, entry->position);
-            char* text = (char*) ei_entry_get_text(widget);
-            int pos1 = (uint8_t) fminf((float) find_position_cursor_selection_entry(entry, entry->debut_selection),
-                                       (float)find_position_cursor_selection_entry(entry, entry->fin_selection));
-            int pos2 = (uint8_t) fmaxf((float) find_position_cursor_selection_entry(entry, entry->debut_selection),
-                                       (float)find_position_cursor_selection_entry(entry, entry->fin_selection));
-            char* new= cut_text(text, pos1,pos2);
-            fprintf(stderr, "\ndebut selection %d, fin %d texte avant: %s, apres %s\n",pos1,pos2, text, new);
             int width, height;
             hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
             place_cursor = &(ei_point_t){
-                widget->screen_location.top_left.x + entry->decal_x + width -5,
-                widget->screen_location.top_left.y - 5,
+                entry->widget.screen_location.top_left.x - entry->decal_x + width -5,
+                entry->widget.screen_location.top_left.y - 5,
             };
-            free((char*)entry_text_restreint);
+//            free((char*)entry_text_restreint);
 
             // const char* entry_text_restreint = restrict_text(entry->text, entry->position);
             // // fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
@@ -157,7 +153,7 @@ void entry_drawfunc(ei_widget_t widget,
         else
         //No text
             place_cursor = &(ei_point_t){
-                widget->screen_location.top_left.x + entry->decal_x - 10,
+                widget->screen_location.top_left.x - 10,
                 widget->screen_location.top_left.y + decal_y - 5
             };
 

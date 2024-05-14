@@ -30,6 +30,12 @@ void	ei_draw_text		(ei_surface_t		surface,
         if (intersection){
             int point_debut_x = intersection->top_left.x != clipper->top_left.x ? 0: rect_surface_text.size.width-intersection->size.width;
             int point_debut_y = intersection->top_left.y != clipper->top_left.y ? 0: rect_surface_text.size.height-intersection->size.height;
+
+            if (clipper->top_left.x >= rect_surface_text.top_left.x){
+                point_debut_x = clipper->top_left.x -rect_surface_text.top_left.x;
+            }
+
+
             ei_rect_t intersection_for_text = ei_rect(
                     ei_point(point_debut_x,point_debut_y),
                     intersection->size);

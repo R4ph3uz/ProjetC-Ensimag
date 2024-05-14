@@ -411,17 +411,17 @@ int find_selection_entry(ei_entry_t entry, ei_point_t position) {
         temp[i] = entry->text[i];
         temp[i+1] = '\0';
         hw_text_compute_size(temp, *entry->text_font, &width, &height);
-        if(position.x < entry->widget.screen_location.top_left.x + width +entry->decal_x ) {
+        if(position.x < entry->widget.screen_location.top_left.x + width -entry->decal_x ) {
             temp[i] = '\0';
             hw_text_compute_size(temp, *entry->text_font, &width, &height);
             free(temp);
 
-            return entry->widget.screen_location.top_left.x + width +entry->decal_x;
+            return entry->widget.screen_location.top_left.x + width -entry->decal_x;
         }
     }
 
     free(temp);
-    return entry->widget.screen_location.top_left.x + width +entry->decal_x;
+    return entry->widget.screen_location.top_left.x + width -entry->decal_x;
 
 }
 /*--------------------------------------------------------------------------------------------------------------------------*/
@@ -445,7 +445,7 @@ int find_position_cursor_selection_entry(ei_entry_t entry, ei_point_t position) 
         temp[i] = entry->text[i];
         temp[i+1] = '\0';
         hw_text_compute_size(temp, *entry->text_font, &width, &height);
-        if(position.x < entry->widget.screen_location.top_left.x + width +entry->decal_x ) {
+        if(position.x < entry->widget.screen_location.top_left.x + width -entry->decal_x ) {
             free(temp);
             return i;
         }
