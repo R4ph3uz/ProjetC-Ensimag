@@ -186,7 +186,6 @@ bool animation_cursor(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
     ei_entry_t entry = user_param;
     entry->is_focus_visible = !entry->is_focus_visible ;
     hw_event_schedule_app(500,NULL);
-
 }
 
 /*------------------------------------------------------------------------------------------------------------------*/
@@ -195,6 +194,7 @@ bool entry_selection_mouse_move(ei_widget_t widget, ei_event_t* event, ei_user_p
     ei_entry_t entry = user_param;
     entry->is_in_selection = true;
     entry->fin_selection = event->param.mouse.where;
+    fprintf(stderr,"debut:%i fin:%i",entry->debut_selection,entry->fin_selection);
     return true;
 }
 

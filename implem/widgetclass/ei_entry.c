@@ -85,11 +85,21 @@ void entry_drawfunc(ei_widget_t widget,
 
     hw_surface_lock(surface);
     hw_surface_lock(pick_surface);
-
+    if(entry->border_width!=NULL) { // doit etre fait avant de dessiner la entry (vu que en dessous
+        ei_point_t* border = malloc(4*sizeof(ei_point_t));
+        border[0] = (ei_point_t) {top_left_x-*entry->border_width, top_left_y -*entry->border_width};
+        border[1] = (ei_point_t) {top_left_x+widget->screen_location.size.width+*entry->border_width, top_left_y-*entry->border_width };
+        border[2] = (ei_point_t) {top_left_x+widget->screen_location.size.width+*entry->border_width, top_left_y+widget->screen_location.size.height+*entry->border_width };
+        border[3] = (ei_point_t) {top_left_x-*entry->border_width, top_left_y+widget->screen_location.size.height+*entry->border_width };
+        ei_color_t color = (ei_color_t) {0,0,0, 255};
+        ei_draw_polygon(surface, border, nb_points, color, clipper);
+        free(border);
+    }
     ei_draw_polygon(surface, points, nb_points, *entry->color, clipper);
     ei_draw_polygon(pick_surface, points, nb_points, *entry->widget.pick_color, clipper);
 
     ei_const_string_t texte ;
+
 
     if(entry->text){
 
@@ -107,7 +117,6 @@ void entry_drawfunc(ei_widget_t widget,
             entry->decal_x = width;
             fprintf(stderr, "WTFF %d", entry->decal_x);
         }
-        fprintf(stderr, "Pourquoi ?%d " ,entry->decal_x);
         ei_point_t place = {widget->screen_location.top_left.x+entry->decal_x,widget->screen_location.top_left.y};
         ei_rect_t clipper_text = entry->widget.screen_location;
         ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, &clipper_text);
@@ -130,7 +139,7 @@ void entry_drawfunc(ei_widget_t widget,
         ei_point_t* place_cursor ;
         if (entry->text) {
             const char* entry_text_restreint = restrict_text(entry->text, entry->position);
-            fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
+//            fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
             int width, height;
             hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
             place_cursor = &(ei_point_t){
