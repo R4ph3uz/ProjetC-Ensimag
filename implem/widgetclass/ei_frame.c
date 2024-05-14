@@ -71,15 +71,24 @@ void frame_drawfunc(ei_widget_t widget,
     /* Afficher le cadre */
     hw_surface_lock(surface);
     hw_surface_lock(pick_surface);
-    if(frame->border_width!=NULL) { // doit etre fait avant de dessiner la frame (vu que en dessous
-        ei_point_t* border = malloc(4*sizeof(ei_point_t));
-        border[0] = (ei_point_t) {top_left_x-*frame->border_width, top_left_y -*frame->border_width};
-        border[1] = (ei_point_t) {top_left_x+widget->screen_location.size.width+*frame->border_width, top_left_y-*frame->border_width };
-        border[2] = (ei_point_t) {top_left_x+widget->screen_location.size.width+*frame->border_width, top_left_y+widget->screen_location.size.height+*frame->border_width };
-        border[3] = (ei_point_t) {top_left_x-*frame->border_width, top_left_y+widget->screen_location.size.height+*frame->border_width };
-        ei_color_t color = (ei_color_t) {0,0,0, 255};
-        ei_draw_polygon(surface, border, nb_points, color, clipper);
-        free(border);
+    if(frame->border_width!=NULL) { // doit etre fait avant de dessiner la frame (vu que en dessous)
+        if (frame->relief!=NULL){
+            //dessine le relief
+            ei_point_t* border;
+            size_t*number= malloc(sizeof(ei_size_t));
+            border= rounded_frame((ei_point_t) {top_left_x-*frame->border_width, top_left_y -*frame->border_width},0,(rounded_frame_part) full,number);
+            ei_draw_polygon(surface, border, nb_points, color, clipper);
+        }
+        else{
+            ei_point_t* border = malloc(4*sizeof(ei_point_t));
+            border[0] = (ei_point_t) {top_left_x-*frame->border_width, top_left_y -*frame->border_width};
+            border[1] = (ei_point_t) {top_left_x+widget->screen_location.size.width+*frame->border_width, top_left_y-*frame->border_width };
+            border[2] = (ei_point_t) {top_left_x+widget->screen_location.size.width+*frame->border_width, top_left_y+widget->screen_location.size.height+*frame->border_width };
+            border[3] = (ei_point_t) {top_left_x-*frame->border_width, top_left_y+widget->screen_location.size.height+*frame->border_width };
+            ei_color_t color = (ei_color_t) {0,0,0, 255};
+            ei_draw_polygon(surface, border, nb_points, color, clipper);
+            free(border);
+        }
     }
     ei_draw_polygon(surface, points, nb_points, *frame->color, clipper);
     ei_draw_polygon(pick_surface, points, nb_points, *frame->widget.pick_color, clipper);
@@ -141,10 +150,10 @@ void frame_setdefaultsfunc(ei_widget_t widget)
 
     /* Suite spécifique à une  frame*/
 
-    frame->color->alpha = 250;
-    frame->color->blue = 100;
-    frame->color->green = 100;
-    frame->color->red= 0;
+    frame->color->alpha = 255;
+    frame->color->red = 149;
+    frame->color->green = 149;
+    frame->color->blue = 149;
     *frame->border_width =0;
     *frame->relief = ei_relief_none;
 
