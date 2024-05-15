@@ -156,14 +156,19 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 entry->fin_selection = (int32_t) fminf((float)pos1,(float)pos2);
                 entry->position = (int32_t) fminf((float)pos1,(float)pos2);
                 //gérer le décalge si ctrl+backspace
-//                if (entry->decal_x > 0) {
-//                    int width, height;
-//                    char *text_rest = restrict_text(new, entry->position);
-//                    hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
-//                    if (width > width - entry->widget.screen_location.size.width)
-//                        entry->decal_x = width - entry->widget.screen_location.size.width;
-//                }
+                if (entry->decal_x > 0){
+                    int old_width, old_height;
+                    char* old_text = restrict_text(text, entry->position+1);
+                    hw_text_compute_size(old_text, *entry->text_font, &old_width, &old_height);
+                    int decalage = entry->decal_x-old_width+entry->widget.screen_location.size.width;
 
+                    int width, height;
+                    char* text_rest = restrict_text(new, entry->position);
+                    hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
+                    entry->decal_x = width-entry->widget.screen_location.size.width +decalage;
+                    if (width <entry->widget.screen_location.size.width )
+                        entry->decal_x =0;
+                }
             }
             else{
                 char* new = delete_char(text, entry->position);
@@ -172,10 +177,17 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                     entry->position-=1;
                 //calcul nouveau decalage
                 if (entry->decal_x > 0){
+                    int old_width, old_height;
+                    char* old_text = restrict_text(text, entry->position+1);
+                    hw_text_compute_size(old_text, *entry->text_font, &old_width, &old_height);
+                    int decalage = entry->decal_x-old_width+entry->widget.screen_location.size.width;
+
                     int width, height;
                     char* text_rest = restrict_text(new, entry->position);
                     hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
-                    entry->decal_x = width-entry->widget.content_rect->size.width;
+                    entry->decal_x = width-entry->widget.screen_location.size.width +decalage;
+                    if (width <entry->widget.screen_location.size.width )
+                        entry->decal_x =0;
                 }
                 entry->debut_selection=entry->position;
                 entry->fin_selection=entry->position;
@@ -249,10 +261,10 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                                    (float) entry->fin_selection);
         int pos2 = (uint8_t) fmaxf((float) entry->debut_selection,
                                    (float) entry->fin_selection);
-        if (event->type == ei_ev_text_input) {
+        if (event->type == ei_ev_text_input){
             char *new = cut_text(text, pos1, pos2);
-            text = insert_char(new, event->param.text, pos1);
-            ei_entry_set_text((ei_widget_t) entry, text);
+            char* text2 = insert_char(new, event->param.text, entry->position);
+            ei_entry_set_text((ei_widget_t) entry, text2);
             entry->position += 1;
             entry->is_in_selection = false;
         }
@@ -446,13 +458,14 @@ bool handle_tab_entry(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
         return true;
     }
     else if (event->param.key_code == SDLK_TAB && ei_event_has_shift(event)){
-        bool founded;
-        ei_widget_t next_entry = dfs_find_first_after_entry(entry,ei_app_root_widget(),&founded );
+        ei_widget_t temp = NULL;
+        ei_widget_t next_entry = dfs_find_last_before_entry(entry,ei_app_root_widget(),&temp );
         if (next_entry){
             ei_entry_give_focus(next_entry);
         }
         else{
-            next_entry = dfs_find_first_entry(ei_app_root_widget());
+            dfs_find_last_except_entry(entry,ei_app_root_widget(),&temp);
+            next_entry = temp;
             if (next_entry)
                 ei_entry_give_focus(next_entry);
         }
@@ -460,3 +473,40 @@ bool handle_tab_entry(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
     }
    return false;
 }
+
+/*------------------------------------------------------------------------------------------------------------------*/
+
+ei_widget_t dfs_find_last_before_entry(ei_entry_t entry,ei_widget_t node, ei_widget_t* temp){
+    if (node == (ei_widget_t)entry){
+        return *temp;
+    }
+    else if(strcmp(node->wclass->name, "entry")== 0){
+
+        *temp = node;
+    }
+    ei_widget_t temp_widget = node->children_head;
+    while(temp_widget!=NULL){
+        ei_widget_t res = dfs_find_last_before_entry(entry, temp_widget, temp);
+        if(res)
+            return res;
+        temp_widget = temp_widget->next_sibling;
+    }
+    return NULL;
+}
+
+/*------------------------------------------------------------------------------------------------------------------*/
+
+ei_widget_t dfs_find_last_except_entry(ei_entry_t entry,ei_widget_t node,ei_widget_t* temp){
+    if(strcmp(node->wclass->name, "entry")== 0){
+        *temp = node;
+    }
+    ei_widget_t temp_widget = node->children_head;
+    while(temp_widget!=NULL){
+        ei_widget_t res = dfs_find_last_except_entry(entry, temp_widget, temp);
+        if(res)
+            return res;
+        temp_widget = temp_widget->next_sibling;
+    }
+    return NULL;
+}
+

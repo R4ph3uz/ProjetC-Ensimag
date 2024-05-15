@@ -103,4 +103,21 @@ ei_widget_t dfs_find_first_after_entry(ei_entry_t entry,ei_widget_t node, bool* 
  */
 ei_widget_t dfs_find_first_entry(ei_widget_t node);
 
+
+/**
+ *
+ * @param entry the entry we want to find the first before this entry
+ * @param node actual node, root_widget for the first call then modified by the recursive call
+ * @param temp null for the first call
+ * @return the first entry after (prefix order) entry, null if there is none
+ */
+ei_widget_t dfs_find_last_before_entry(ei_entry_t entry,ei_widget_t node, ei_widget_t* temp);
+
+/**
+ *
+ * @param node actual node, root_widget for the first call then modified by the recursive call
+ * @return the last entry in the tree (except entry)
+ */
+ei_widget_t dfs_find_last_except_entry(ei_entry_t entry,ei_widget_t node, ei_widget_t* temp);
+
 #endif //ENTRY_CALLBACKS_H
