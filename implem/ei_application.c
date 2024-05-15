@@ -25,6 +25,7 @@ static ei_surface_t ROOT_SURFACE;
 static ei_widget_t ROOT_WIDGET;
 static ei_surface_t PICKING_SURFACE;
 static bool IS_RUNNING;
+static bool CHANGEMENT_PREMIER_PLAN;
 
 /* ----------------------------------------------------------------- */
 
@@ -109,8 +110,10 @@ void ei_app_run(void)
 
     // (*(ROOT_WIDGET->wclass->drawfunc))(ROOT_WIDGET, ei_app_root_surface(), NULL, NULL);
     IS_RUNNING = true;
+    CHANGEMENT_PREMIER_PLAN = false;
     ei_widget_t widget = NULL;
     ei_event_t* new_event = malloc(sizeof(ei_event_t));
+    widget=ROOT_WIDGET;
     while(IS_RUNNING){
 
         hw_event_wait_next(new_event);
@@ -121,8 +124,10 @@ void ei_app_run(void)
             ei_widget_t precwid=widget;
             widget= ei_widget_pick(&(new_event->param.mouse.where)); // fonction faites pour ça
             // widget = get_widget_by_pickid(get_pick_id(PICKING_SURFACE,new_event->param.mouse.where ));
-            ei_widget_t widget2=widget;
 
+
+            ei_widget_t widget2=widget;
+//            on met en premier plan le plus grand paraent du widget sur lequel on clique different de la root
 
             if (widget!=ROOT_WIDGET && widget!=precwid)
             {
@@ -133,14 +138,15 @@ void ei_app_run(void)
                     }
                 }
 
-                if (widget2)
+                if (widget2 && widget2->parent->children_tail!=widget2)
                 {
 
                     ei_widget_t prec=widget2->parent;
                     ei_widget_t suiv=widget2->next_sibling;
-
+                    CHANGEMENT_PREMIER_PLAN=true;
                     if (prec->children_head!=widget2)
                     {
+
                         prec=prec->children_head;
                         while (prec->next_sibling!=widget2)
                         {
@@ -171,6 +177,7 @@ void ei_app_run(void)
                         widget2->parent->children_tail = widget2;
                         widget2->next_sibling = NULL;
                     }
+
                 }
 
             }
@@ -206,7 +213,7 @@ void ei_app_run(void)
             }
             list_call = list_call->next;
         }
-        if(isModified && widget) {
+        if((isModified && widget)||CHANGEMENT_PREMIER_PLAN) {
             // widget->geom_params->manager->runfunc(widget);
             // rect_after = widget->screen_location;
             // ei_linked_rect_t list_rect;
