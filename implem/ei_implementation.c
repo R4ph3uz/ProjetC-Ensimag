@@ -7,12 +7,12 @@
 void ei_placer_runfunc(ei_widget_t widget)
 {
     ei_rect_t* newscreen=malloc(sizeof (ei_rect_t));
-    int res=(int)((float)*widget->geom_params->height + *(widget->geom_params->rel_height) * (float)(widget->parent->screen_location.size.height));
+    int res=(int)((float)*widget->geom_params->height + *(widget->geom_params->rel_height) * (float)(widget->parent->content_rect->size.height));
     newscreen->size.height =res ;
-    int res2=(int)((float)*widget->geom_params->width + *(widget->geom_params->rel_width) * (float)(widget->parent->screen_location.size.width));
+    int res2=(int)((float)*widget->geom_params->width + *(widget->geom_params->rel_width) * (float)(widget->parent->content_rect->size.width));
     newscreen->size.width = res2;
-    int x =(int)(widget->parent->screen_location.top_left.x+*widget->geom_params->x+(int) ((float)(widget->parent->screen_location.size.width)**(widget->geom_params->rel_x)));
-    int y =(int)(widget->parent->screen_location.top_left.y+*widget->geom_params->y+(int) ((float)(widget->parent->screen_location.size.height)**(widget->geom_params->rel_y)));
+    int x =(int)(widget->parent->content_rect->top_left.x+*widget->geom_params->x+(int) ((float)(widget->parent->content_rect->size.width)**(widget->geom_params->rel_x)));
+    int y =(int)(widget->parent->content_rect->top_left.y+*widget->geom_params->y+(int) ((float)(widget->parent->content_rect->size.height)**(widget->geom_params->rel_y)));
 
     if (*widget->geom_params->anchor==ei_anc_northwest)
     {
@@ -21,43 +21,43 @@ void ei_placer_runfunc(ei_widget_t widget)
     }
     if (*widget->geom_params->anchor==ei_anc_north)
     {
-        newscreen->top_left.x = x - (int) (widget->screen_location.size.width/2);
+        newscreen->top_left.x = x - (int) (newscreen->size.width/2);
         newscreen->top_left.y = y;
     }
     if (*widget->geom_params->anchor==ei_anc_northeast)
     {
-        newscreen->top_left.x = x - (int) (widget->screen_location.size.width);
+        newscreen->top_left.x = x - (int) (newscreen->size.width);
         newscreen->top_left.y = y;
     }
     if (*widget->geom_params->anchor==ei_anc_west)
     {
         newscreen->top_left.x = x;
-        newscreen->top_left.y = y- (int) (widget->screen_location.size.height/2);
+        newscreen->top_left.y = y- (int) (newscreen->size.height/2);
     }
     if (*widget->geom_params->anchor==ei_anc_center)
     {
-        newscreen->top_left.x = x - (int) (widget->screen_location.size.width/2);
-        newscreen->top_left.y = y- (int) (widget->screen_location.size.height/2);
+        newscreen->top_left.x = x - (int) (newscreen->size.width/2);
+        newscreen->top_left.y = y- (int) (newscreen->size.height/2);
     }
     if (*widget->geom_params->anchor==ei_anc_east)
     {
-        newscreen->top_left.x = x - (int) (widget->screen_location.size.width);
-        newscreen->top_left.y = y- (int) (widget->screen_location.size.height/2);
+        newscreen->top_left.x = x - (int) (newscreen->size.width);
+        newscreen->top_left.y = y- (int) (newscreen->size.height/2);
     }
     if (*widget->geom_params->anchor==ei_anc_southwest)
     {
         newscreen->top_left.x = x ;
-        newscreen->top_left.y = y- (int) (widget->screen_location.size.height);
+        newscreen->top_left.y = y- (int) (newscreen->size.height);
     }
     if (*widget->geom_params->anchor==ei_anc_south)
     {
-        newscreen->top_left.x = x - (int) (widget->screen_location.size.width/2);
-        newscreen->top_left.y = y- (int) (widget->screen_location.size.height);
+        newscreen->top_left.x = x - (int) (newscreen->size.width/2);
+        newscreen->top_left.y = y- (int) (newscreen->size.height);
     }
     if (*widget->geom_params->anchor==ei_anc_southeast)
     {
-        newscreen->top_left.x = x - (int) (widget->screen_location.size.width);
-        newscreen->top_left.y = y- (int) (widget->screen_location.size.height);
+        newscreen->top_left.x = x - (int) (newscreen->size.width);
+        newscreen->top_left.y = y- (int) (newscreen->size.height);
     }
     ei_geometry_run_finalize(widget,newscreen);
 
@@ -145,11 +145,11 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
             // verifier surface
             if (clipper==NULL)
             {
-                clipper=&actuel->parent->screen_location;
+                clipper=actuel->parent->content_rect;
             }
             else
             {
-                clipper=intersection_rectangle(*clipper,actuel->parent->screen_location);
+                clipper=intersection_rectangle(*clipper,*actuel->parent->content_rect);
             }
             ei_impl_widget_draw_children(actuel,surface,pick_surface,clipper);
             actuel=actuel->next_sibling;

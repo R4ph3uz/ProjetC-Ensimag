@@ -57,15 +57,15 @@ void frame_drawfunc(ei_widget_t widget,
         widget->geom_params->manager->runfunc(widget);
     ei_frame_t frame = (ei_frame_t) widget;
 
-    int top_left_x = widget->screen_location.top_left.x;
-    int top_left_y = widget->screen_location.top_left.y;
+    int top_left_x = widget->content_rect->top_left.x;
+    int top_left_y = widget->content_rect->top_left.y;
 
 
     ei_point_t* points = malloc(4*sizeof(ei_point_t));
     points[0] = (ei_point_t) {top_left_x, top_left_y };
-    points[1] = (ei_point_t) {top_left_x+widget->screen_location.size.width, top_left_y };
-    points[2] = (ei_point_t) {top_left_x+widget->screen_location.size.width, top_left_y+widget->screen_location.size.height };
-    points[3] = (ei_point_t) {top_left_x, top_left_y+widget->screen_location.size.height };
+    points[1] = (ei_point_t) {top_left_x+widget->content_rect->size.width, top_left_y };
+    points[2] = (ei_point_t) {top_left_x+widget->content_rect->size.width, top_left_y+widget->content_rect->size.height };
+    points[3] = (ei_point_t) {top_left_x, top_left_y+widget->content_rect->size.height };
     size_t nb_points = 4;
 
     /* Afficher le cadre */
@@ -79,9 +79,9 @@ void frame_drawfunc(ei_widget_t widget,
         else{
             ei_point_t* border = malloc(4*sizeof(ei_point_t));
             border[0] = (ei_point_t) {top_left_x-*frame->border_width, top_left_y -*frame->border_width};
-            border[1] = (ei_point_t) {top_left_x+widget->screen_location.size.width+*frame->border_width, top_left_y-*frame->border_width };
-            border[2] = (ei_point_t) {top_left_x+widget->screen_location.size.width+*frame->border_width, top_left_y+widget->screen_location.size.height+*frame->border_width };
-            border[3] = (ei_point_t) {top_left_x-*frame->border_width, top_left_y+widget->screen_location.size.height+*frame->border_width };
+            border[1] = (ei_point_t) {top_left_x+widget->content_rect->size.width+*frame->border_width, top_left_y-*frame->border_width };
+            border[2] = (ei_point_t) {top_left_x+widget->content_rect->size.width+*frame->border_width, top_left_y+widget->content_rect->size.height+*frame->border_width };
+            border[3] = (ei_point_t) {top_left_x-*frame->border_width, top_left_y+widget->content_rect->size.height+*frame->border_width };
             ei_color_t color = (ei_color_t) {0,0,0, 255};
             ei_draw_polygon(surface, border, nb_points, color, clipper);
             ei_draw_polygon(surface, points, nb_points, *frame->color, clipper);
@@ -98,9 +98,9 @@ void frame_drawfunc(ei_widget_t widget,
         // Si il a du texte a afficher (pour l'instant ignoré)
         int width, height;
         hw_text_compute_size(*frame->text, *frame->text_font, &width,&height);
-        uint32_t decal_x = widget->screen_location.size.width/2-width/2;
-        uint32_t decal_y = widget->screen_location.size.height/2-height/2;
-        ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
+        uint32_t decal_x = widget->content_rect->size.width/2-width/2;
+        uint32_t decal_y = widget->content_rect->size.height/2-height/2;
+        ei_point_t place = {widget->content_rect->top_left.x+decal_x,widget->content_rect->top_left.y+decal_y};
         hw_surface_lock(surface);
         ei_draw_text(surface, &place, *frame->text, *frame->text_font, *frame->text_color, clipper);
         hw_surface_unlock(surface);
@@ -110,7 +110,7 @@ void frame_drawfunc(ei_widget_t widget,
         // Si il y a un image a afficher (pour l'instant ignoré)
 
             // Si il y a un image a afficher (pour l'instant ignoré)
-        ei_point_t place = {widget->screen_location.top_left.x,widget->screen_location.top_left.y};
+        ei_point_t place = {widget->content_rect->top_left.x,widget->content_rect->top_left.y};
         if(frame->img_rect == NULL) {
             frame->img_rect = malloc(sizeof(ei_rect_ptr_t));
             *frame->img_rect = malloc(sizeof(ei_rect_t));
@@ -133,7 +133,7 @@ void frame_drawfunc(ei_widget_t widget,
 
 void frame_geomnotifyfunc(ei_widget_t widget)
 {
-
+    *widget->content_rect=widget->screen_location;
 }
 
 /*--------------------------------------------------------------------------------*/

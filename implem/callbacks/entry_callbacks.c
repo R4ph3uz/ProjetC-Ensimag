@@ -47,6 +47,7 @@ void handle_double_click(ei_entry_t entry, ei_event_t* event){
 bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_entry_t entry = (ei_entry_t) widget;
     entry->position = find_position_cursor_selection_entry(entry, event->param.mouse.where);
+    entry->debut_selection = find_position_cursor_selection_entry(entry,event->param.mouse.where);
     ei_bind(ei_ev_mouse_move, NULL, "all", entry_selection_mouse_move, entry);
     ei_bind(ei_ev_mouse_buttonup, NULL, "all", entry_up_click_handler, entry);
 
@@ -69,10 +70,10 @@ bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_par
 bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     // quand on clique n'importe ou sur la page
     ei_entry_t entry = (ei_entry_t) user_param;
-    if(event->param.mouse.where.x> entry->widget.screen_location.top_left.x
-        && event->param.mouse.where.x< entry->widget.screen_location.top_left.x+entry->widget.screen_location.size.width
-        && event->param.mouse.where.y> entry->widget.screen_location.top_left.y
-        && event->param.mouse.where.y< entry->widget.screen_location.top_left.y+ entry->widget.screen_location.size.height)
+    if(event->param.mouse.where.x> entry->widget.content_rect->top_left.x
+        && event->param.mouse.where.x< entry->widget.content_rect->top_left.x+entry->widget.content_rect->size.width
+        && event->param.mouse.where.y> entry->widget.content_rect->top_left.y
+        && event->param.mouse.where.y< entry->widget.content_rect->top_left.y+ entry->widget.content_rect->size.height)
     {
         // je suis dans l'entry
         return false;
@@ -174,7 +175,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                     int width, height;
                     char* text_rest = restrict_text(new, entry->position);
                     hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
-                    entry->decal_x = width-entry->widget.screen_location.size.width;
+                    entry->decal_x = width-entry->widget.content_rect->size.width;
                 }
                 entry->debut_selection=entry->position;
                 entry->fin_selection=entry->position;
@@ -369,14 +370,14 @@ bool entry_selection_mouse_move(ei_widget_t widget, ei_event_t* event, ei_user_p
     entry->is_in_selection = true;
     entry->fin_selection = find_position_cursor_selection_entry(entry,event->param.mouse.where);
 
-    if (event->param.mouse.where.x < entry->widget.screen_location.top_left.x){
+    if (event->param.mouse.where.x < entry->widget.content_rect->top_left.x){
         if (entry->decal_x > 0 ){
             entry->decal_x -= 5;
         }
         else if (entry->decal_x != 0)
             entry->decal_x = 0;
     }
-    else if (event->param.mouse.where.x > entry->widget.screen_location.top_left.x + entry->widget.screen_location.size.width){
+    else if (event->param.mouse.where.x > entry->widget.content_rect->top_left.x + entry->widget.content_rect->size.width){
         entry->decal_x += 5;
     }
     return true;

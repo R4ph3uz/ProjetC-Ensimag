@@ -20,7 +20,8 @@ size_t		ei_geom_param_size()
 void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_location)
 {
     //Si différent
-    if ((widget->screen_location.size.height != new_screen_location->size.height) || (
+
+    if (widget->content_rect==NULL || (widget->screen_location.size.height != new_screen_location->size.height) || (
             widget->screen_location.size.width != new_screen_location->size.width) || (
             widget->screen_location.top_left.x != new_screen_location->top_left.x) || (
             widget->screen_location.top_left.y != new_screen_location->top_left.y))
@@ -81,6 +82,10 @@ void			ei_geometrymanager_unmap	(ei_widget_t widget)
     widget->screen_location.size.width=0;
     widget->screen_location.top_left.x=0;
     widget->screen_location.top_left.y=0;
+    widget->content_rect->size.height=0;
+    widget->content_rect->size.width=0;
+    widget->content_rect->top_left.x=0;
+    widget->content_rect->top_left.y=0;
     free(widget->geom_params->manager);
     free(widget->geom_params->x);
     free(widget->geom_params->y);

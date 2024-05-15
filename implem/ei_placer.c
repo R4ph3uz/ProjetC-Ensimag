@@ -82,8 +82,8 @@ void		ei_place	(ei_widget_t		widget,
         // passer par des pointeurs ?
         int requested_width = widget->requested_size.width;
         int requested_height = widget->requested_size.height;
-        int default_width = widget->parent->screen_location.size.width;
-        int default_height = widget->parent->screen_location.size.height;
+        int default_width = widget->parent->content_rect->size.width;
+        int default_height = widget->parent->content_rect->size.height;
 
         widget->geom_params->width = malloc(sizeof(int));
         if (width) {

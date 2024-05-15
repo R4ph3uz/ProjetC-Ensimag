@@ -86,20 +86,20 @@ void button_drawfunc(ei_widget_t widget,
     hw_surface_lock(pick_surface);
 
     if(!button->img)
-        draw_button(surface,widget->screen_location,*button->corner_radius,*button->color,*button->relief,clipper);
-    draw_button(pick_surface, widget->screen_location,*button->corner_radius,*button->widget.pick_color,ei_relief_none, clipper );
+        draw_button(surface,*widget->content_rect,*button->corner_radius,*button->color,*button->relief,clipper);
+    draw_button(pick_surface, *widget->content_rect,*button->corner_radius,*button->widget.pick_color,ei_relief_none, clipper );
 
      if(button->text && *button->text){
          ei_surface_t surface_text = hw_text_create_surface(*button->text, *button->text_font, *button->text_color);
          ei_rect_t rect_surface_text = hw_surface_get_rect(surface_text);
 
-         int32_t decal_x = widget->screen_location.size.width/2 - rect_surface_text.size.width/2;
-         int32_t decal_y = widget->screen_location.size.height/2 - rect_surface_text.size.height/2;
+         int32_t decal_x = widget->content_rect->size.width/2 - rect_surface_text.size.width/2;
+         int32_t decal_y = widget->content_rect->size.height/2 - rect_surface_text.size.height/2;
          if (*button->relief == ei_relief_sunken){
-             decal_x -= 5 * widget->screen_location.size.height/100;
-             decal_y += 5 * widget->screen_location.size.height/100;
+             decal_x -= 5 * widget->content_rect->size.height/100;
+             decal_y += 5 * widget->content_rect->size.height/100;
          }
-         ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
+         ei_point_t place = {widget->content_rect->top_left.x+decal_x,widget->content_rect->top_left.y+decal_y};
          ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
 
      }
@@ -107,7 +107,7 @@ void button_drawfunc(ei_widget_t widget,
     hw_surface_unlock(pick_surface);
     if(button->img){
         // Si il y a un image a afficher (pour l'instant ignoré)
-        ei_point_t place = {widget->screen_location.top_left.x,widget->screen_location.top_left.y};
+        ei_point_t place = {widget->content_rect->top_left.x,widget->content_rect->top_left.y};
         if(button->img_rect == NULL) {
             button->img_rect = malloc(sizeof(ei_rect_ptr_t));
             *button->img_rect = malloc(sizeof(ei_rect_t));
@@ -128,7 +128,7 @@ void button_drawfunc(ei_widget_t widget,
 /*--------------------------------------------------------------------------------*/
 
 void button_geomnotifyfunc(ei_widget_t widget) {
-
+    *widget->content_rect=widget->screen_location;
 }
 
 /*--------------------------------------------------------------------------------*/

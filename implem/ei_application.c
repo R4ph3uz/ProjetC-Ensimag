@@ -68,6 +68,7 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ROOT_WIDGET->screen_location.top_left = ei_point_zero();
     ROOT_WIDGET->screen_location.size = main_window_size;
 
+    ROOT_WIDGET->content_rect=&ROOT_WIDGET->screen_location;
 
 }
 
