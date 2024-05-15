@@ -3,10 +3,7 @@
 #include <string.h>
 #include "ei_utils.h"
 
-/*------------------------------------------------------------------------------*/
-int max(int a, int b) {
-    return (a > b) ? a : b;
-}
+
 /*------------------------------------------------------------------------------*/
 
 void	ei_draw_text		(ei_surface_t		surface,
@@ -89,8 +86,8 @@ int	ei_copy_surface		(ei_surface_t		destination,
     ei_size_t real_dest_size = hw_surface_get_size(destination);
     ei_size_t real_src_size = hw_surface_get_size(source);
 
-    for(uint32_t i = 0; i< size_dest.height; i++)
-        for(uint32_t j = 0; j < size_dest.width; j++) {
+    for(int i = 0; i < size_dest.height; i++)
+        for(int j = 0; j < size_dest.width; j++) {
 
             uint32_t index_dest = (j+top_left_dest.x)+(i+top_left_dest.y)*real_dest_size.width;
             uint32_t index_src = (j+top_left_src.x)+(i+top_left_src.y)*real_src_size.width;
