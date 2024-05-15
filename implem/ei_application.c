@@ -145,6 +145,7 @@ void ei_app_run(void)
 
                     if (prec->children_head!=widget2)
                     {
+                        CHANGEMENT_PREMIER_PLAN=true;
                         prec=prec->children_head;
                         while (prec->next_sibling!=widget2)
                         {
@@ -175,7 +176,7 @@ void ei_app_run(void)
                         widget2->parent->children_tail = widget2;
                         widget2->next_sibling = NULL;
                     }
-                    CHANGEMENT_PREMIER_PLAN=true;
+
                 }
 
             }
