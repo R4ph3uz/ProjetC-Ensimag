@@ -1,5 +1,5 @@
 #include "ei_toplevel.h"
-#include "../draw_utils/draw_utils.h"
+#include "../utils/draw_utils.h"
 #include "ei_types.h"
 
 /*-----------------------------------------------------------------------------------------------*/

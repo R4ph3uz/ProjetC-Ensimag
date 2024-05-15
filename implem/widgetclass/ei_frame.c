@@ -1,7 +1,7 @@
 #include "ei_frame.h"
 #include <stdlib.h>
 #include <string.h>
-#include "../draw_utils/draw_utils.h"
+#include "../utils/draw_utils.h"
 #include "ei_types.h"
 #include "ei_utils.h"
 /*--------------------------------------------------------------------------------*/

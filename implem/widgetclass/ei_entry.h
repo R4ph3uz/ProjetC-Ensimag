@@ -29,6 +29,7 @@ typedef struct{
     int32_t debut_selection;
     int32_t fin_selection;
 
+    bool is_double_clickable;
 
 } ei_impl_entry_t;
 

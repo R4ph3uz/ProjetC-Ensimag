@@ -6,7 +6,9 @@
 #include <ei_entry.h>
 #include <ei_utils.h>
 #include <stdlib.h>
-#include "../draw_utils/draw_utils.h"
+#include "../utils/draw_utils.h"
+#include "../utils/text_utils.h"
+
 /*---------------------------------------------------------------------------------------------------------------------*/
 
 ei_widget_t entry_allocfunc(){
@@ -60,6 +62,7 @@ void entry_setdefaultsfunc(ei_widget_t widget){
     entry->position= 0 ;
     *entry->text = '\0';
     entry->decal_x =0;
+    entry->is_double_clickable = false;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------*/

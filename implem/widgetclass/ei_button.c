@@ -1,5 +1,5 @@
 #include "ei_button.h"
-#include "../draw_utils/draw_utils.h"
+#include "../utils/draw_utils.h"
 #include "ei_application.h"
 #include "ei_utils.h"
 /*--------------------------------------------------------------------------------*/

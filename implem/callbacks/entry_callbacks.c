@@ -3,7 +3,10 @@
 #include <ei_entry.h>
 #include "../widgetclass/ei_entry.h"
 #include "ei_event.h"
-#include "../draw_utils/draw_utils.h"
+#include "../utils/draw_utils.h"
+#include "ei_utils.h"
+#include "../utils/text_utils.h"
+
 
 /*------------------------------------------------------------------------------------------------------------------*/
 
@@ -13,14 +16,35 @@ bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_par
     entry->debut_selection = find_position_cursor_selection_entry(entry,event->param.mouse.where);
     ei_bind(ei_ev_mouse_move, NULL, "all", entry_selection_mouse_move, entry);
     ei_bind(ei_ev_mouse_buttonup, NULL, "all", entry_up_click_handler, entry);
-    entry->is_in_selection = false;
+    entry_app_event *user_p = malloc(sizeof(entry_app_event));
+    user_p->is_animation_event = false;
+    user_p->is_double_click_event = true;
+    user_p->param= entry;
+    if (entry->is_double_clickable){
+        entry->is_in_selection = true;
+        entry->is_double_clickable = false;
+
+        int debut, fin;
+        find_word(entry->text, find_position_cursor_selection_entry(entry, event->param.mouse.where), &debut, &fin);
+
+        entry->debut_selection = debut;
+        entry->fin_selection = fin;
+        fprintf(stderr, "debut %d, fin %d", debut, fin);
+
+        fprintf(stderr, "test double click\n\n");
+    } else{
+        entry->is_in_selection = false;
+        entry->is_double_clickable = true;
+    }
+    hw_event_schedule_app(200, user_p);
+
     if(event->param.mouse.where.x> widget->screen_location.top_left.x
         && event->param.mouse.where.x< widget->screen_location.top_left.x+widget->screen_location.size.width
         && event->param.mouse.where.y> widget->screen_location.top_left.y
         && event->param.mouse.where.y< widget->screen_location.top_left.y+ widget->screen_location.size.height
         && entry->focus == false)
         ei_entry_give_focus((ei_widget_t) entry );
-    return false;
+    return true;
 }
 
 /*------------------------------------------------------------------------------------------------------------------*/
@@ -51,7 +75,7 @@ bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user
 
 bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_entry_t entry = (ei_entry_t) user_param;
-    char* text = (char*) ei_entry_get_text(widget);
+    char* text = (char*) ei_entry_get_text(user_param);
     if(entry->is_in_selection == false){ // on n'est pas en selection
         if(event->type==ei_ev_text_input){
             char symbole[2] = {event->param.text,'\0'};
@@ -148,9 +172,18 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
 /*------------------------------------------------------------------------------------------------------------------*/
 
 bool animation_cursor(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
-    ei_entry_t entry = user_param;
-    entry->is_focus_visible = !entry->is_focus_visible ;
-    hw_event_schedule_app(500,NULL);
+    entry_app_event * app_event= (entry_app_event * ) event->param.application.user_param;
+    if (app_event->is_animation_event){
+        ei_entry_t entry = (ei_entry_t)app_event->param;
+        entry->is_focus_visible = !entry->is_focus_visible ;
+        hw_event_schedule_app(500,user_param);
+    }
+    else if (app_event->is_double_click_event){
+        ei_entry_t entry = (ei_entry_t)app_event->param;
+        fprintf(stderr, "doubleclick plus disponible\n");
+        entry->is_double_clickable = false;
+    }
+
 }
 
 /*------------------------------------------------------------------------------------------------------------------*/
@@ -160,6 +193,17 @@ bool entry_selection_mouse_move(ei_widget_t widget, ei_event_t* event, ei_user_p
     entry->is_in_selection = true;
     entry->fin_selection = find_position_cursor_selection_entry(entry,event->param.mouse.where);
     fprintf(stderr,"is in selection %i, min %i, fin %i\n",entry->is_in_selection,entry->debut_selection,entry->fin_selection);
+
+    if (event->param.mouse.where.x < entry->widget.screen_location.top_left.x){
+        if (entry->decal_x > 0 ){
+            entry->decal_x -= 5;
+        }
+        else if (entry->decal_x != 0)
+            entry->decal_x = 0;
+    }
+    else if (event->param.mouse.where.x > entry->widget.screen_location.top_left.x + entry->widget.screen_location.size.width){
+        entry->decal_x += 5;
+    }
     return true;
 }
 

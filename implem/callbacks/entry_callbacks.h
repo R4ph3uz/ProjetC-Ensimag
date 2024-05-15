@@ -5,6 +5,12 @@
 #include "ei_types.h"
 #include "ei_event.h"
 
+typedef struct entry_app_event{
+    bool is_animation_event;
+    bool is_double_click_event;
+    void* param;
+}entry_app_event;
+
 /**
  * @brief  check if clicked, then put focus or not on it (first time clicked)
  * @param widget entry

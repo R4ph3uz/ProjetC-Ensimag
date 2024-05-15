@@ -11,7 +11,7 @@
 #define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = malloc(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
 
 ei_entry_t ENTRY_FOCUS;
-int ID_RUN;
+entry_app_event* USER_P;
 /*------------------------------------------------------------------------------*/
 
 
@@ -76,8 +76,8 @@ void			ei_entry_give_focus		(ei_widget_t		widget)
         ei_unbind(ei_ev_keydown,NULL,"all",entry_write,ENTRY_FOCUS); // keystroke
         ei_unbind(ei_ev_text_input,NULL,"all",entry_write,ENTRY_FOCUS); // texte collé ?
         ei_unbind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,ENTRY_FOCUS); // si on clique e dehors
-        ei_unbind(ei_ev_app,NULL, "all", animation_cursor,ENTRY_FOCUS);
-//        hw_event_cancel_app(&ID_RUN);
+        ei_unbind(ei_ev_app,NULL, "all", animation_cursor,USER_P);
+        hw_event_cancel_app(USER_P);
     }
 
 
@@ -86,6 +86,10 @@ void			ei_entry_give_focus		(ei_widget_t		widget)
     ei_bind(ei_ev_keydown,NULL,"all",entry_write,entry); // keystroke
     ei_bind(ei_ev_text_input,NULL,"all",entry_write,entry); // texte collé ?
     ei_bind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors
-    hw_event_schedule_app(500,&ID_RUN);
-    ei_bind(ei_ev_app,NULL, "all", animation_cursor,entry);
+    USER_P = malloc(sizeof(entry_app_event));
+    USER_P->is_animation_event = true;
+    USER_P->is_double_click_event = false;
+    USER_P->param= ENTRY_FOCUS;
+    hw_event_schedule_app(500,(void*)USER_P);
+    ei_bind(ei_ev_app,NULL, "all", animation_cursor,USER_P);
 }

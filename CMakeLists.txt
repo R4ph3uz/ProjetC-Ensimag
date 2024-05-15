@@ -14,8 +14,8 @@ set(HEADER_DIRS				"${ROOT_DIR}/api")
 set(TEST_DIR				"${ROOT_DIR}/tests")
 set(DOCS_DIR				"${ROOT_DIR}/docs")
 set(SRC					"${ROOT_DIR}/implem")
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
-set(LIB_FLAGS				-lfreeimage -lSDL2 -lSDL2_ttf -lSDL2_gfx)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pg")
+set(LIB_FLAGS				-lfreeimage -lSDL2 -lSDL2_ttf -lSDL2_gfx )
 
 if(IG_ASAN)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address")
@@ -84,7 +84,7 @@ set(LIB_EI_SOURCES
 		${SRC}/widgetclass/ei_frame.c
 		${SRC}/ei_implementation.c
 		${SRC}/widgetclass/ei_button.c
-        ${SRC}/draw_utils/draw_utils.c
+        ${SRC}/utils/draw_utils.c
 		${SRC}/callbacks/button_callbacks.c
 		${SRC}/pick_event.c
 		${SRC}/list_event.c
@@ -92,6 +92,8 @@ set(LIB_EI_SOURCES
 		${SRC}/callbacks/toplevel_callbacks.c
 		${SRC}/widgetclass/ei_entry.c
 		${SRC}/callbacks/entry_callbacks.c
+		${SRC}/utils/text_utils.c
+		${SRC}/utils/text_utils.h
 )
 
 add_library(ei STATIC			${LIB_EI_SOURCES})
