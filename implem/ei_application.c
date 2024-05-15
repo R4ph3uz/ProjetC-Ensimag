@@ -113,6 +113,7 @@ void ei_app_run(void)
     CHANGEMENT_PREMIER_PLAN = false;
     ei_widget_t widget = NULL;
     ei_event_t* new_event = malloc(sizeof(ei_event_t));
+    widget=ROOT_WIDGET;
     while(IS_RUNNING){
 
         hw_event_wait_next(new_event);
