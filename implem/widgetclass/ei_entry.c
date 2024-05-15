@@ -63,6 +63,7 @@ void entry_setdefaultsfunc(ei_widget_t widget){
     *entry->text = '\0';
     entry->decal_x =0;
     entry->is_double_clickable = false;
+    entry->is_in_selection = false;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------*/

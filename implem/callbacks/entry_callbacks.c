@@ -6,6 +6,7 @@
 #include "../utils/draw_utils.h"
 #include "ei_utils.h"
 #include "../utils/text_utils.h"
+#include "ei_application.h"
 
 /*------------------------------------------------------------------------------------------------------------------*/
 /**
@@ -83,7 +84,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
     if(entry->is_in_selection == false){ // on n'est pas en selection
         if(event->type==ei_ev_text_input){
             char symbole[2] = {event->param.text,'\0'};
-            if(text && strlen(text)+1<=*entry->requested_char_size){
+            if(text && strlen(text)+1 <= *entry->requested_char_size){
                 text = insert_char(text, event->param.text, entry->position );
                 ei_entry_set_text((ei_widget_t)entry,text);
                 entry->position+=1;
@@ -277,4 +278,59 @@ bool entry_up_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param
     ei_unbind(ei_ev_mouse_move, NULL, "all", entry_selection_mouse_move, entry);
     ei_unbind(ei_ev_mouse_buttonup, NULL, "all", entry_up_click_handler, entry);
     return true;
+}
+
+/*------------------------------------------------------------------------------------------------------------------*/
+
+ei_widget_t dfs_find_first_after_entry(ei_entry_t entry,ei_widget_t node, bool* founded){
+    if (node == (ei_widget_t)entry){
+        *founded = true;
+    }
+    else if(strcmp(node->wclass->name, "entry")== 0 && *founded ){
+            return node;
+    }
+    ei_widget_t temp_widget = node->children_head;
+    while(temp_widget!=NULL){
+        ei_widget_t res = dfs_find_first_after_entry(entry, temp_widget, founded);
+        if(res)
+            return res;
+        temp_widget = temp_widget->next_sibling;
+    }
+    return NULL;
+}
+
+/*------------------------------------------------------------------------------------------------------------------*/
+
+ei_widget_t dfs_find_first_entry(ei_widget_t node){
+    if(strcmp(node->wclass->name, "entry")== 0){
+        return node;
+    }
+    ei_widget_t temp_widget = node->children_head;
+    while(temp_widget!=NULL){
+        ei_widget_t res = dfs_find_first_entry(temp_widget);
+        if(res)
+            return res;
+        temp_widget = temp_widget->next_sibling;
+    }
+    return NULL;
+}
+
+/*------------------------------------------------------------------------------------------------------------------*/
+
+bool handle_tab_entry(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param){
+    ei_entry_t entry = user_param;
+    if (event->param.key_code == SDLK_TAB){
+        bool founded;
+        ei_widget_t next_entry = dfs_find_first_after_entry(entry,ei_app_root_widget(),&founded );
+        if (next_entry){
+            ei_entry_give_focus(next_entry);
+        }
+        else{
+            next_entry = dfs_find_first_entry(ei_app_root_widget());
+            if (next_entry)
+                ei_entry_give_focus(next_entry);
+        }
+        return true;
+    }
+   return false;
 }

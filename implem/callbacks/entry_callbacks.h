@@ -51,4 +51,6 @@ bool entry_selection_mouse_move(ei_widget_t widget, ei_event_t* event, ei_user_p
 
 bool entry_up_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param);
 
+bool handle_tab_entry(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param);
+
 #endif //ENTRY_CALLBACKS_H
