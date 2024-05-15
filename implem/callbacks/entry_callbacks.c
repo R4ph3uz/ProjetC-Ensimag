@@ -46,8 +46,12 @@ bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_par
 
     handle_double_click(entry, event);
 
-    if(entry->focus == false)
+    if(entry->focus == false){
         ei_entry_give_focus((ei_widget_t) entry );
+        entry->is_in_selection = false;
+    }
+
+
     // faire un truc si shift click
     return true;
 }
