@@ -118,10 +118,9 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_LEFT) {
             if (entry->position > 0){
                 entry->position -= 1;
-                if ((event->modifier_mask & (1 << ei_mod_ctrl_left)) != 0 || (event->modifier_mask & (1 << ei_mod_ctrl_right)) != 0 ){
+                if (ei_event_has_ctrl(event)){
                     char* rest_text = restrict_text(text,entry->position);
                     char ch = rest_text[strlen(rest_text)-1];
-                    fprintf(stderr,"control, text %s et char %c",rest_text,ch);
                     while ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')){
                         if(entry->position>0){
                             entry->position-=1;
@@ -130,7 +129,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                     }
                 }
                 // pour les bouttons LSHIFT et RSHIFT enfoncés
-                if((event->modifier_mask & (1 << ei_mod_shift_left)) != 0 || (event->modifier_mask & (1 << ei_mod_shift_right)) != 0){
+                if(ei_event_has_shift(event)){
                     entry->fin_selection=entry->position;
                     entry->is_in_selection=true;
                 }
@@ -142,8 +141,18 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_RIGHT ) {
             if(entry->position >=0 && entry->position <strlen(entry->text)){
                 entry->position +=1;
+                //boutton control enfoncé
+                if (ei_event_has_ctrl(event)){
+                    char ch = text[entry->position];
+                    while ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')){
+                        if(entry->position<(int32_t) strlen(text)){
+                            entry->position+=1;
+                            ch=text[entry->position];
+                        }
+                    }
+                }
                 // pour les bouttons LSHIFT et RSHIFT enfoncés
-                if((event->modifier_mask & (1 << ei_mod_shift_left)) != 0 || (event->modifier_mask & (1 << ei_mod_shift_right)) != 0){
+                if(ei_event_has_shift(event)){
                     entry->fin_selection=entry->position;
                     entry->is_in_selection=true;
                 }
@@ -187,7 +196,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
 
             if (pos1 <= strlen(entry->text) && pos1 > 0){
                 // pour les bouttons LSHIFT et RSHIFT enfoncés
-                if((event->modifier_mask & (1 << ei_mod_shift_left)) != 0 || (event->modifier_mask & (1 << ei_mod_shift_right)) != 0){
+                if(ei_event_has_shift(event)){
                     entry->position-=1;
                     entry->fin_selection = entry->position;
                 }
@@ -200,7 +209,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             }
             else if (pos1==0){
                 // pour les bouttons LSHIFT et RSHIFT enfoncés
-                if((event->modifier_mask & (1 << ei_mod_shift_left)) != 0 || (event->modifier_mask & (1 << ei_mod_shift_right)) != 0){
+                if(ei_event_has_shift(event)){
                     entry->fin_selection = entry->position;
                 }
                 else{
@@ -215,7 +224,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_RIGHT ) {
             if (pos2 <= strlen(entry->text) && pos2 > 0){
                 // pour les bouttons LSHIFT et RSHIFT enfoncés
-                if((event->modifier_mask & (1 << ei_mod_shift_left)) != 0 || (event->modifier_mask & (1 << ei_mod_shift_right)) != 0){
+                if(ei_event_has_shift(event)){
                     entry->position+=1;
                     entry->fin_selection = entry->position;
                 }
@@ -243,7 +252,6 @@ bool animation_cursor(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
     }
     else if (app_event->is_double_click_event){
         ei_entry_t entry = (ei_entry_t)app_event->param;
-        fprintf(stderr, "doubleclick plus disponible\n");
         entry->is_double_clickable = false;
     }
 
@@ -255,7 +263,6 @@ bool entry_selection_mouse_move(ei_widget_t widget, ei_event_t* event, ei_user_p
     ei_entry_t entry = user_param;
     entry->is_in_selection = true;
     entry->fin_selection = find_position_cursor_selection_entry(entry,event->param.mouse.where);
-    fprintf(stderr,"is in selection %i, min %i, fin %i\n",entry->is_in_selection,entry->debut_selection,entry->fin_selection);
 
     if (event->param.mouse.where.x < entry->widget.screen_location.top_left.x){
         if (entry->decal_x > 0 ){
