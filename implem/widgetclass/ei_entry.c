@@ -111,16 +111,12 @@ void entry_drawfunc(ei_widget_t widget,
         int width, height;
         hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
         if(width > entry->widget.screen_location.size.width + entry->decal_x) { // si dépasse a droite
-            fprintf(stderr, "AIAIIAI\n");
             entry->decal_x = width-entry->widget.screen_location.size.width;
-            fprintf(stderr, "WTFF a droite %d", entry->decal_x);
         }
         if (width < entry->decal_x) { //si dépasse a gauche
             entry_text_restreint = restrict_text(entry->text,entry->position);
             hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
-            fprintf(stderr, "WTFF g %d", entry->decal_x);
             entry->decal_x = width;
-            fprintf(stderr, "WTFF g2 %d", entry->decal_x);
         }
         ei_point_t place = {entry->widget.screen_location.top_left.x-entry->decal_x,entry->widget.screen_location.top_left.y};
         ei_rect_t clipper_text = entry->widget.screen_location;
@@ -141,17 +137,6 @@ void entry_drawfunc(ei_widget_t widget,
                 entry->widget.screen_location.top_left.x - entry->decal_x + width -5,
                 entry->widget.screen_location.top_left.y - 5,
             };
-//            free((char*)entry_text_restreint);
-
-            // const char* entry_text_restreint = restrict_text(entry->text, entry->position);
-            // // fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
-            // int width, height;
-            // hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
-            // place_cursor = &(ei_point_t){
-            //     widget->screen_location.top_left.x + entry->decal_x + width - 10,
-            //     widget->screen_location.top_left.y + decal_y - 5
-            // };
-            // free((char*)entry_text_restreint);
         }
         else
         //No text

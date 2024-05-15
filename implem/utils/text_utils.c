@@ -106,7 +106,6 @@ void find_word(char* text, int where, int* debut, int*fin){
     *debut = 0 ;
     for(int i = where-1 ; i >= 0; i--){
         if(text[i] == ' '){
-            fprintf(stderr, "c'est noramlaazjozke");
             *debut = i+1;
             break;
         }
@@ -116,11 +115,8 @@ void find_word(char* text, int where, int* debut, int*fin){
     *fin = strlen(text);
     for(int i = where+1;  i < strlen(text);i++ ){
         if(text[i] == ' '){
-            fprintf(stderr, "c'est noramlaazjozke");
             *fin = i;
             break;
         }
     }
-
-    fprintf(stderr, "debut %d, fin %d", *debut, *fin);
 }
