@@ -118,10 +118,17 @@ void			ei_button_configure		(ei_widget_t		widget,
         *button->relief = *relief;
     }
     if (text != NULL) {
-        if (!button->text) {
-            button->text = malloc(sizeof(*button->text));
+        if(button->text==NULL) {
+            button->text = malloc(sizeof(ei_string_t ));
+            *button->text =  malloc(sizeof(char)*30);
         }
-        memcpy(button->text, text, sizeof(*button->text));
+        if(*text == NULL){
+            button->text = NULL;
+        }
+        else{
+            strcpy(*button->text,*text);
+        }
+
     }
     COPY_IF_NOT_NULL(button->text_font, text_font);
     if (text_color != NULL) {
