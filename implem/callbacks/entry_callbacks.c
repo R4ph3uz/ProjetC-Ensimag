@@ -6,7 +6,15 @@
 #include "../utils/draw_utils.h"
 #include "../utils/text_utils.h"
 #include "ei_application.h"
+/*------------------------------------------------------------------------------------------------------------------*/
 
+void* ID_EVENT_ANIMATION;
+void* get_id_animation(void){
+    return ID_EVENT_ANIMATION;
+}
+void set_id_animation(void* id) {
+    ID_EVENT_ANIMATION= id;
+}
 /*------------------------------------------------------------------------------------------------------------------*/
 /**
  * @brief  cette fonction gere les doubles click pour le callback simple click  (il ne faut pas la bin
@@ -75,6 +83,7 @@ bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user
     ei_unbind(ei_ev_text_input,NULL,"all",entry_write,entry); // texte collé ?
     ei_unbind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors
     ei_unbind(ei_ev_app,NULL, "all", animation_cursor,entry);
+    hw_event_cancel_app(get_id_animation());
     entry->focus=false;
     return true;
 
@@ -338,7 +347,7 @@ bool animation_cursor(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
     if (app_event->is_animation_event){
         ei_entry_t entry = (ei_entry_t)app_event->param;
         entry->is_focus_visible = !entry->is_focus_visible ;
-        hw_event_schedule_app(500,user_param);
+        set_id_animation( hw_event_schedule_app(750,user_param));
     }
     else if (app_event->is_double_click_event){
         ei_entry_t entry = (ei_entry_t)app_event->param;
@@ -416,7 +425,20 @@ ei_widget_t dfs_find_first_entry(ei_widget_t node){
 
 bool handle_tab_entry(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param){
     ei_entry_t entry = user_param;
-    if (event->param.key_code == SDLK_TAB){
+    if (event->param.key_code == SDLK_TAB && !ei_event_has_shift(event)){
+        bool founded;
+        ei_widget_t next_entry = dfs_find_first_after_entry(entry,ei_app_root_widget(),&founded );
+        if (next_entry){
+            ei_entry_give_focus(next_entry);
+        }
+        else{
+            next_entry = dfs_find_first_entry(ei_app_root_widget());
+            if (next_entry)
+                ei_entry_give_focus(next_entry);
+        }
+        return true;
+    }
+    else if (event->param.key_code == SDLK_TAB && ei_event_has_shift(event)){
         bool founded;
         ei_widget_t next_entry = dfs_find_first_after_entry(entry,ei_app_root_widget(),&founded );
         if (next_entry){
