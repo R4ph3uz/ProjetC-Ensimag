@@ -7,15 +7,14 @@
 #include "ei_utils.h"
 #include "../utils/text_utils.h"
 
-
 /*------------------------------------------------------------------------------------------------------------------*/
-
-bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
-    ei_entry_t entry = (ei_entry_t) widget;
-    entry->position = find_position_cursor_selection_entry(entry, event->param.mouse.where);
-    entry->debut_selection = find_position_cursor_selection_entry(entry,event->param.mouse.where);
-    ei_bind(ei_ev_mouse_move, NULL, "all", entry_selection_mouse_move, entry);
-    ei_bind(ei_ev_mouse_buttonup, NULL, "all", entry_up_click_handler, entry);
+/**
+ * @brief  cette fonction gere les doubles click pour le callback simple click  (il ne faut pas la bin
+ * @param entry entry
+ * @param event event
+ * @return nothing
+ */
+void handle_double_click(ei_entry_t entry, ei_event_t* event){
     entry_app_event *user_p = malloc(sizeof(entry_app_event));
     user_p->is_animation_event = false;
     user_p->is_double_click_event = true;
@@ -37,6 +36,17 @@ bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_par
         entry->is_double_clickable = true;
     }
     hw_event_schedule_app(200, user_p);
+}
+/*------------------------------------------------------------------------------------------------------------------*/
+
+bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
+    ei_entry_t entry = (ei_entry_t) widget;
+    entry->position = find_position_cursor_selection_entry(entry, event->param.mouse.where);
+    entry->debut_selection = find_position_cursor_selection_entry(entry,event->param.mouse.where);
+    ei_bind(ei_ev_mouse_move, NULL, "all", entry_selection_mouse_move, entry);
+    ei_bind(ei_ev_mouse_buttonup, NULL, "all", entry_up_click_handler, entry);
+
+    handle_double_click(entry, event);
 
     if(event->param.mouse.where.x> widget->screen_location.top_left.x
         && event->param.mouse.where.x< widget->screen_location.top_left.x+widget->screen_location.size.width
