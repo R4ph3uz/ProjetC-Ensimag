@@ -57,8 +57,8 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     button->color->blue= 180;
     button->color->green= 180;
 
-    *button->border_width=1;
-    *button->corner_radius = 1;
+    *button->border_width=3;
+    *button->corner_radius = 10;
     *button->relief=ei_relief_raised;
     button->text = NULL;
     ei_fontstyle_t style = ei_style_normal;
@@ -96,8 +96,8 @@ void button_drawfunc(ei_widget_t widget,
          int32_t decal_x = widget->screen_location.size.width/2 - rect_surface_text.size.width/2;
          int32_t decal_y = widget->screen_location.size.height/2 - rect_surface_text.size.height/2;
          if (*button->relief == ei_relief_sunken){
-             decal_x -= 5;
-             decal_y += 5;
+             decal_x -= 5 * widget->screen_location.size.height/100;
+             decal_y += 5 * widget->screen_location.size.height/100;
          }
          ei_point_t place = {widget->screen_location.top_left.x+decal_x,widget->screen_location.top_left.y+decal_y};
          ei_draw_text(surface, &place, *button->text, *button->text_font, *button->text_color, clipper);
