@@ -20,14 +20,14 @@ typedef struct{
     /*variable text */
     char* text;
     bool focus;
-    uint8_t position;   //>position du curseur (a partir de la fin du texte)
+    uint32_t position;   //>position du curseur (a partir de la fin du texte)
     bool is_focus_visible; //> boolean for cursor animation
 
     int decal_x;
 
     bool is_in_selection;
-    ei_point_t debut_selection;
-    ei_point_t fin_selection;
+    int32_t debut_selection;
+    int32_t fin_selection;
 
 
 } ei_impl_entry_t;

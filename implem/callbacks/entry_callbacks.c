@@ -10,7 +10,7 @@
 bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_entry_t entry = (ei_entry_t) widget;
     entry->position = find_position_cursor_selection_entry(entry, event->param.mouse.where);
-    entry->debut_selection = event->param.mouse.where;
+    entry->debut_selection = find_position_cursor_selection_entry(entry,event->param.mouse.where);
     ei_bind(ei_ev_mouse_move, NULL, "all", entry_selection_mouse_move, entry);
     ei_bind(ei_ev_mouse_buttonup, NULL, "all", entry_up_click_handler, entry);
     entry->is_in_selection = false;
@@ -89,15 +89,6 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
 
             if (entry->position > 0)
                 entry->position -= 1;
-            int width, height;
-            char* entry_text_restreint = restrict_text(entry->text,entry->position);
-            hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
-//            if (entry->decal_x < 0 && width < - entry->decal_x){
-//                int width, height;
-//                char* text_rest = restrict_text(text, entry->position);
-//                hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
-//                entry->decal_x = entry->widget.screen_location.top_left.x -width;
-//            }
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_RIGHT ) {
             if(entry->position >=0 && entry->position <strlen(entry->text))
@@ -106,10 +97,10 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
     }
     else{
         //min entre debut selection et fin selection
-        int pos1 = (uint8_t) fminf((float) find_position_cursor_selection_entry(entry, entry->debut_selection),
-                                   (float)find_position_cursor_selection_entry(entry, entry->fin_selection));
-        int pos2 = (uint8_t) fmaxf((float) find_position_cursor_selection_entry(entry, entry->debut_selection),
-                                   (float)find_position_cursor_selection_entry(entry, entry->fin_selection));
+        int pos1 = (uint8_t) fminf((float)  entry->debut_selection,
+                                   (float) entry->fin_selection);
+        int pos2 = (uint8_t) fmaxf((float)  entry->debut_selection,
+                                   (float) entry->fin_selection);
         if (event->type == ei_ev_text_input){
             char symbole[2] = {event->param.text,'\0'};
             char* new= cut_text(text, pos1,pos2);
@@ -167,7 +158,8 @@ bool animation_cursor(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
 bool entry_selection_mouse_move(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param){
     ei_entry_t entry = user_param;
     entry->is_in_selection = true;
-    entry->fin_selection = event->param.mouse.where;
+    entry->fin_selection = find_position_cursor_selection_entry(entry,event->param.mouse.where);
+    fprintf(stderr,"is in selection %i, min %i, fin %i\n",entry->is_in_selection,entry->debut_selection,entry->fin_selection);
     return true;
 }
 

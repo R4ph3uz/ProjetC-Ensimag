@@ -165,10 +165,17 @@ void entry_drawfunc(ei_widget_t widget,
 
         if(entry->is_in_selection){
             ei_point_t* rect = malloc(sizeof(ei_point_t)* 4);
-            rect[0] = ei_point(find_selection_entry(entry,entry->debut_selection) , entry->widget.screen_location.top_left.y);
-            rect[1] = ei_point(find_selection_entry(entry,entry->debut_selection), entry->widget.screen_location.top_left.y + entry->widget.screen_location.size.height);
-            rect[2] = ei_point(find_selection_entry(entry,entry->fin_selection), entry->widget.screen_location.top_left.y + entry->widget.screen_location.size.height);
-            rect[3] = ei_point(find_selection_entry(entry,entry->fin_selection), entry->widget.screen_location.top_left.y);
+            int l_rect_bleu_x,r_rect_bleu_x;
+            int size_text,h;
+            hw_text_compute_size(restrict_text(entry->text,fminf(entry->debut_selection,entry->fin_selection)),*entry->text_font,&size_text,&h);
+            l_rect_bleu_x=entry->widget.screen_location.top_left.x-entry->decal_x+size_text;
+            rect[0] = ei_point(l_rect_bleu_x , entry->widget.screen_location.top_left.y); // top left
+            rect[1] = ei_point(l_rect_bleu_x, entry->widget.screen_location.top_left.y + entry->widget.screen_location.size.height); //bottom left
+
+            hw_text_compute_size(restrict_text(entry->text,fmaxf(entry->debut_selection,entry->fin_selection)),*entry->text_font,&size_text,&h);
+            r_rect_bleu_x=entry->widget.screen_location.top_left.x-entry->decal_x+size_text;
+            rect[2] = ei_point(r_rect_bleu_x, entry->widget.screen_location.top_left.y + entry->widget.screen_location.size.height);
+            rect[3] = ei_point(r_rect_bleu_x, entry->widget.screen_location.top_left.y);
 
             ei_color_t select_color = (ei_color_t) {25, 25, 200, 100};
             ei_draw_polygon(surface, rect ,4, select_color, &entry->widget.screen_location);
