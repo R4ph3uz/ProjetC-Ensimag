@@ -4,7 +4,6 @@
 #include "../widgetclass/ei_entry.h"
 #include "ei_event.h"
 #include "../utils/draw_utils.h"
-#include "ei_utils.h"
 #include "../utils/text_utils.h"
 #include "ei_application.h"
 
@@ -40,7 +39,6 @@ void handle_double_click(ei_entry_t entry, ei_event_t* event){
 bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_entry_t entry = (ei_entry_t) widget;
     entry->position = find_position_cursor_selection_entry(entry, event->param.mouse.where);
-    entry->debut_selection = find_position_cursor_selection_entry(entry,event->param.mouse.where);
     ei_bind(ei_ev_mouse_move, NULL, "all", entry_selection_mouse_move, entry);
     ei_bind(ei_ev_mouse_buttonup, NULL, "all", entry_up_click_handler, entry);
 
@@ -48,6 +46,8 @@ bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_par
 
     if(entry->focus == false){
         ei_entry_give_focus((ei_widget_t) entry );
+        entry->debut_selection = entry->position;
+        entry->fin_selection=entry->position;
         entry->is_in_selection = false;
     }
 
@@ -87,8 +87,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
     char* text = (char*) ei_entry_get_text(user_param);
     if(entry->is_in_selection == false){ // on n'est pas en selection
         if(event->type==ei_ev_text_input){
-            char symbole[2] = {event->param.text,'\0'};
-            if(text && strlen(text)+1 <= *entry->requested_char_size){
+            if(text && (int32_t) strlen(text)+1 <= *entry->requested_char_size){
                 text = insert_char(text, event->param.text, entry->position );
                 ei_entry_set_text((ei_widget_t)entry,text);
                 entry->position+=1;
@@ -100,36 +99,91 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_DELETE) {
             //touche suppr
-            char* new = delete_char(text, entry->position+1);
-            ei_entry_set_text((ei_widget_t)entry,new);
-            entry->debut_selection=entry->position;
+
+            //supprime tout un mot
+            if (ei_event_has_ctrl(event)){
+                char ch = text[entry->position];
+                int pos1 =entry->position;
+                int pos2 =pos1;
+                while (((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')) && (entry->position<(int32_t) strlen(text))) {
+                    pos2++;
+                    entry->position++;
+                    ch=text[entry->position];
+                }
+                char *new = cut_text(text, pos1, pos2);
+                ei_entry_set_text((ei_widget_t)entry,new);
+                entry->debut_selection = (int32_t) fminf((float)pos1,(float)pos2);
+                entry->fin_selection = (int32_t) fminf((float)pos1,(float)pos2);
+                entry->position = (int32_t) fminf((float)pos1,(float)pos2);
+            }
+            else{ // supprime qu'un seul caractere
+                char* new = delete_char(text, entry->position+1);
+                ei_entry_set_text((ei_widget_t)entry,new);
+                entry->debut_selection=entry->position;
+            }
         }
         if (event->type == ei_ev_keydown && event->param.key_code==SDLK_BACKSPACE) {
             // touche backspace pas en selection
-            char* new = delete_char(text, entry->position);
-            ei_entry_set_text((ei_widget_t)entry,new);
-            if (strcmp(text, new)!=0)
-                entry->position-=1;
-            //calcul nouveau decalage
-            if (entry->decal_x > 0){
-                int width, height;
-                char* text_rest = restrict_text(new, entry->position);
-                hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
-                entry->decal_x = width-entry->widget.screen_location.size.width;
+
+            //supprime tout un mot
+            if (ei_event_has_ctrl(event)) {
+                char ch = text[entry->position-1];
+                int pos1 =entry->position;
+                int pos2 =pos1;
+                while(ch==' '){ // supprime tous les espaces après le mot
+                    pos2--;
+                    entry->position--;
+                    ch=text[entry->position-1];
+                }// puis supprime le mot
+                while (((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9' )) && (pos2>0)) {
+                    pos2--;
+                    entry->position--;
+                    ch=text[entry->position-1];
+                }
+                char *new = cut_text(text, pos2, pos1);
+                ei_entry_set_text((ei_widget_t)entry,new);
+                entry->debut_selection = (int32_t) fminf((float)pos1,(float)pos2);
+                entry->fin_selection = (int32_t) fminf((float)pos1,(float)pos2);
+                entry->position = (int32_t) fminf((float)pos1,(float)pos2);
+                //gérer le décalge si ctrl+backspace
+//                if (entry->decal_x > 0){
+//                    int width, height;
+//                    char* text_rest = restrict_text(new, entry->position);
+//                    hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
+//                    entry->decal_x = width-entry->widget.screen_location.size.width;
+//                }
             }
-            entry->debut_selection=entry->position;
+            else{
+                char* new = delete_char(text, entry->position);
+                ei_entry_set_text((ei_widget_t)entry,new);
+                if (strcmp(text, new)!=0)
+                    entry->position-=1;
+                //calcul nouveau decalage
+                if (entry->decal_x > 0){
+                    int width, height;
+                    char* text_rest = restrict_text(new, entry->position);
+                    hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
+                    entry->decal_x = width-entry->widget.screen_location.size.width;
+                }
+                entry->debut_selection=entry->position;
+                entry->fin_selection=entry->position;
+            }
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_LEFT) {
             if (entry->position > 0){
                 entry->position -= 1;
                 if (ei_event_has_ctrl(event)){
                     char* rest_text = restrict_text(text,entry->position);
-                    char ch = rest_text[strlen(rest_text)-1];
-                    while ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')){
-                        if(entry->position>0){
-                            entry->position-=1;
-                            ch=rest_text[entry->position-1];
-                        }
+                    char ch = rest_text[(int32_t) strlen(rest_text)-1];
+                    while(ch==' ' && entry->position>0){
+                        entry->position--;
+                        entry->fin_selection= entry->position;
+                        ch=rest_text[entry->position-1];
+                    }
+                    while (((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')) && entry->position>0 && entry->position<(int32_t) strlen(text)){
+                        entry->position-=1;
+                        entry->fin_selection= entry->position;
+                        ch=rest_text[entry->position-1];
                     }
                 }
                 // pour les bouttons LSHIFT et RSHIFT enfoncés
@@ -141,18 +195,25 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                     entry->debut_selection=entry->position;
                 }
             }
+            else{
+                entry->fin_selection= 0;
+            }
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_RIGHT ) {
-            if(entry->position >=0 && entry->position <strlen(entry->text)){
+            if(entry->position < (int32_t) strlen(entry->text)){
                 entry->position +=1;
                 //boutton control enfoncé
                 if (ei_event_has_ctrl(event)){
                     char ch = text[entry->position];
-                    while ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')){
-                        if(entry->position<(int32_t) strlen(text)){
-                            entry->position+=1;
-                            ch=text[entry->position];
-                        }
+                    while(ch==' '){
+                        entry->fin_selection= entry->position;
+                        entry->position++;
+                        ch=text[entry->position];
+                    }
+                    while (((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')) && (entry->position<(int32_t) strlen(text))) {
+                        entry->fin_selection= entry->position;
+                        entry->position++;
+                        ch=text[entry->position];
                     }
                 }
                 // pour les bouttons LSHIFT et RSHIFT enfoncés
@@ -163,6 +224,9 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 else{
                     entry->debut_selection=entry->position;
                 }
+            }
+            else{
+                entry->fin_selection= (int32_t) strlen(text);
             }
         }
     }
@@ -174,7 +238,6 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                                    (float) entry->fin_selection);
         if (event->type == ei_ev_text_input){
 //            if (pos2 <= strlen(entry->text) && pos1 > 0) {
-                char symbole[2] = {event->param.text, '\0'};
                 char *new = cut_text(text, pos1, pos2);
                 text = insert_char(new, event->param.text, entry->position);
                 ei_entry_set_text((ei_widget_t) entry, text);
@@ -188,6 +251,8 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             ei_entry_set_text((ei_widget_t)entry,new);
             entry->position = pos1;
             entry->is_in_selection = false;
+            entry->debut_selection=entry->position;
+            entry->fin_selection=entry->position;
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_BACKSPACE) {
             // touche backspace
@@ -198,7 +263,18 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_LEFT) {
 
-            if (pos1 <= strlen(entry->text) && pos1 > 0){
+            if (pos1 <= (int32_t)strlen(entry->text) && pos1 > 0){
+                //boutton control enfoncé
+                if (ei_event_has_ctrl(event)){
+                    char* rest_text = restrict_text(text,entry->position);
+                    char ch = rest_text[strlen(rest_text)-1];
+                    while ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')){
+                        if(entry->position>0){
+                            entry->position-=1;
+                            ch=rest_text[entry->position-1];
+                        }
+                    }
+                }
                 // pour les bouttons LSHIFT et RSHIFT enfoncés
                 if(ei_event_has_shift(event)){
                     entry->position-=1;
@@ -226,7 +302,17 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
 
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_RIGHT ) {
-            if (pos2 <= strlen(entry->text) && pos2 > 0){
+            if (pos2 <=(int32_t) strlen(entry->text) && pos2 > 0){
+                //boutton control enfoncé
+                if (ei_event_has_ctrl(event)){
+                    char ch = text[entry->position];
+                    while ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')){
+                        if(entry->position<(int32_t) strlen(text)){
+                            entry->position+=1;
+                            ch=text[entry->position];
+                        }
+                    }
+                }
                 // pour les bouttons LSHIFT et RSHIFT enfoncés
                 if(ei_event_has_shift(event)){
                     entry->position+=1;

@@ -35,8 +35,7 @@ char * delete_char(char *text, uint8_t where) {
     if(0<where && where <=taille+1 ) {
         char* res =malloc(sizeof(char)*(taille+1));
 
-        for(int i = 0 ; i <where-1; i++)
-            res[i] = text[i];
+        strncpy(res,text,where-1);
         for(int i = where-1; i< taille;i++)
             res[i] = text[i+1];
         res[taille] = '\0';
@@ -75,8 +74,7 @@ int find_selection_entry(ei_entry_t entry, ei_point_t position) {
 char* cut_text(char* text, uint8_t debut, uint8_t fin) {
     int taille_cut = fin-debut;
     char* res = malloc(sizeof(char)*(strlen(text)-taille_cut+1) ) ;
-    for(int i = 0 ; i< debut ; i++)
-        res[i] = text[i];
+    strncpy(res,text,debut);
     for(int i = fin; i < strlen(text); i++)
         res[i-taille_cut] = text[i];
     res[strlen(text)-taille_cut] = '\0';
