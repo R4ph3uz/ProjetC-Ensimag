@@ -16,6 +16,17 @@ void* get_id_animation(void){
 void set_id_animation(void* id) {
     ID_EVENT_ANIMATION= id;
 }
+
+#define SAFE_REALLOC(ptr, size) \
+    ({ \
+        void *new_ptr = realloc(ptr, size); \
+        if (!new_ptr && (size) != 0) { \
+            fprintf(stderr, "Memory reallocation failed, exiting application.\n"); \
+            exit(EXIT_FAILURE); \
+        } \
+        new_ptr; \
+    })
+
 /*------------------------------------------------------------------------------------------------------------------*/
 /**
  * @brief  cette fonction gere les doubles click pour le callback simple click  (il ne faut pas la bin
@@ -53,7 +64,6 @@ bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_par
     ei_bind(ei_ev_mouse_buttonup, NULL, "all", entry_up_click_handler, entry);
 
     handle_double_click(entry, event);
-
     if(entry->focus == false){
         ei_entry_give_focus((ei_widget_t) entry );
         entry->debut_selection = entry->position;
@@ -80,7 +90,9 @@ bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user
         return false;
 
     }
-
+    ei_unbind(ei_ev_keydown,NULL,  "entry",controlc, entry);
+    ei_unbind(ei_ev_keydown,NULL,  "entry",controlx, entry);
+    ei_unbind(ei_ev_keydown,NULL,  "entry",controlv, entry);
     ei_unbind(ei_ev_keydown,NULL,"all",entry_write,entry); // keystroke
     ei_unbind(ei_ev_text_input,NULL,"all",entry_write,entry); // texte collé ?
     ei_unbind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors
@@ -272,6 +284,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
         if (event->type == ei_ev_keydown && event->param.key_code == SDLK_DELETE) {
             // touche suppr si en selection
             char *new = cut_text(text, pos1, pos2);
+            free(text);
             ei_entry_set_text((ei_widget_t) entry, new);
             entry->position = pos1;
             entry->is_in_selection = false;
@@ -281,6 +294,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
         if (event->type == ei_ev_keydown && event->param.key_code == SDLK_BACKSPACE) {
             // touch backspace
             char *new = cut_text(text, pos1, pos2);
+            free(text);
             ei_entry_set_text((ei_widget_t) entry, new);
             entry->position = pos1;
             entry->is_in_selection = false;
@@ -475,19 +489,92 @@ bool handle_tab_entry(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
    return false;
 }
 
-void controlc(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
+bool controlc(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
     ei_entry_t entry = (ei_entry_t) user_param;
-    char* text = entry->text;
-    char* new_text = texte_selectionne(text,entry->debut_selection,entry->fin_selection);
-    if(!TEXTE_COPIE){
-        TEXTE_COPIE=malloc(sizeof(char)*strlen(new_text));
+    if (ei_event_has_ctrl(event) && event->param.key_code=='c') {
+        if (entry->is_in_selection) {
+            int pos1 = (uint8_t) fminf((float) entry->debut_selection,
+                                       (float) entry->fin_selection);
+            int pos2 = (uint8_t) fmaxf((float) entry->debut_selection,
+                                       (float) entry->fin_selection);
+            char *text = entry->text;
+            char *new_text = texte_selectionne(text, pos1, pos2);
+            if (!TEXTE_COPIE) {
+                TEXTE_COPIE = SAFE_MALLOC(sizeof(char) * strlen(new_text));
+                strcpy(TEXTE_COPIE, new_text);
+            } else {
+                TEXTE_COPIE = SAFE_REALLOC(TEXTE_COPIE, sizeof(char) * strlen(new_text));
+                strcpy(TEXTE_COPIE, new_text);
+            }
+            free(new_text);
+            fprintf(stderr,"dans controle-c texte copié %s / pos1 %i / pos2 %i\n",TEXTE_COPIE,pos1,pos2);
+            return true;
+        } else {
+            return false;
+        }
     }
-    else{
-        TEXTE_COPIE = realloc(TEXTE_COPIE,sizeof(char)*strlen(new_text));
-    }
-
+    else
+        return false;
 }
+/*------------------------------------------------------------------------------------------------------------------*/
 
+bool controlx(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
+    ei_entry_t entry = (ei_entry_t) user_param;
+    if (ei_event_has_ctrl(event) && event->param.key_code=='x') {
+        if (entry->is_in_selection){
+            char* text = entry->text;
+            int pos1 = (uint8_t) fminf((float) entry->debut_selection,
+                                       (float) entry->fin_selection);
+            int pos2 = (uint8_t) fmaxf((float) entry->debut_selection,
+                                       (float) entry->fin_selection);
+            char* new_text = texte_selectionne(text,pos1,pos2);
+            char *new = cut_text(text, pos1, pos2);
+            ei_entry_set_text((ei_widget_t) entry, new);
+            entry->position = pos1;
+            entry->is_in_selection = false;
+            entry->debut_selection = entry->position;
+            entry->fin_selection = entry->position;
+            if(!TEXTE_COPIE){
+                TEXTE_COPIE=SAFE_MALLOC(sizeof(char)*strlen(new_text));
+                strcpy(TEXTE_COPIE,new_text);
+            }
+            else{
+                TEXTE_COPIE = SAFE_REALLOC(TEXTE_COPIE,sizeof(char)*strlen(new_text));
+                strcpy(TEXTE_COPIE,new_text);
+            }
+            fprintf(stderr,"dans controle-x texte copié %s / pos1 %i / pos2 %i\n",TEXTE_COPIE,pos1,pos2);
+            free(new_text);
+            free(text);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    else
+        return false;
+}
+/*------------------------------------------------------------------------------------------------------------------*/
+bool controlv(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
+    ei_entry_t entry = (ei_entry_t) user_param;
+    if (ei_event_has_ctrl(event) && event->param.key_code=='v') {
+        fprintf(stderr,"dans controle-v texte copié %s / position %i\n",TEXTE_COPIE,entry->position);
+        char* text = entry->text;
+        if(!TEXTE_COPIE){
+            return false;
+        }
+        else{
+            for(int i=0; i<(int)strlen(TEXTE_COPIE);i++){
+                char* text2 = insert_char(text,TEXTE_COPIE[i],entry->position);
+                ei_entry_set_text((ei_widget_t) entry, text2);
+                entry->position++;
+            }
+            return true;
+        }
+    }
+    else
+        return false;
+}
 /*------------------------------------------------------------------------------------------------------------------*/
 
 ei_widget_t dfs_find_last_before_entry(ei_entry_t entry,ei_widget_t node, ei_widget_t* temp){

@@ -16,7 +16,7 @@ char* restrict_text(char* text, uint8_t taille) {
 
 /*--------------------------------------------------------------------------------------------------------------------------*/
 char*  insert_char(char* text, char character, uint8_t where) {
-    int taille = strlen(text)+1;
+    int taille = (int) strlen(text)+1;
     char* res = malloc(sizeof(char)*(taille+1));
 
     strncpy(res,text,where);
@@ -122,8 +122,8 @@ void find_word(char* text, int where, int* debut, int*fin){
 char* texte_selectionne(char* text, int32_t debut, int32_t fin){
     int taille_cut = fin-debut;
     char* res = malloc(sizeof(char)*(strlen(text)-taille_cut+1) ) ;
-    for(int i = debut; i <= fin; i++)
+    for(int i = debut; i < fin; i++)
         res[i-debut] = text[i];
-    res[taille_cut+1] = '\0';
+    res[taille_cut] = '\0';
     return res;
 }

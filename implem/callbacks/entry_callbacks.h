@@ -86,6 +86,29 @@ void* get_id_animation(void);
  * @param id la valeur de l'id renvoyé par hw_schedule_app
  */
 void set_id_animation(void* id);
+/**
+ * effectue le control-c
+ * @param widget
+ * @param event
+ * @param user_param entry du control c
+ */
+bool controlc(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param);
+
+/**
+ * effectue le control-x
+ * @param widget
+ * @param event
+ * @param user_param entry du control x
+ */
+bool controlx(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param);
+
+/**
+ * effectue le control-v
+ * @param widget
+ * @param event
+ * @param user_param entry du control v
+ */
+bool controlv(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param);
 
 /**
  *
