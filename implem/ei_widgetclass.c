@@ -1,5 +1,5 @@
 #include "ei_geometrymanager.h"
-
+#include "ei_implementation.h"
 
 /*-------------------------------------------------------------------------------------------------------*/
 static ei_widgetclass_t* LISTE_WIDGETCLASS= NULL;
@@ -35,3 +35,7 @@ ei_widgetclass_t*	ei_widgetclass_from_name	(ei_const_string_t name)
 
 /*-------------------------------------------------------------------------------------------------------*/
 
+size_t		ei_widget_struct_size ()
+{
+    return (sizeof(ei_impl_widget_t));
+}

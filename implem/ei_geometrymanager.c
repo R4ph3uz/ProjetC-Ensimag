@@ -10,8 +10,7 @@ static ei_geometrymanager_t* LISTE_GEOMETRYMANAGER= NULL;
 
 size_t		ei_geom_param_size()
 {
-    size_t i=10;
-    return i;
+    return (sizeof(ei_impl_geom_param_t));
 //    return sizeof(ei_impl_geom_param_t);
 }
 
