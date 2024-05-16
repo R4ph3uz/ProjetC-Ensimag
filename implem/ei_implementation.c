@@ -206,3 +206,46 @@ ei_geometrymanager_t* create_placer_gm(){
     res->next = NULL;
     return res;
 }
+
+/*-------------------------------------------------------------------------------------------------------*/
+void supprime_de_ses_freres(ei_widget_t widget)
+{
+    ei_widget_t prec=widget->parent;
+    ei_widget_t suiv=widget->next_sibling;
+    if (prec->children_head!=widget)
+    {
+        prec=prec->children_head;
+        while (prec->next_sibling!=widget)
+        {
+            prec=prec->next_sibling;
+        }
+        prec->next_sibling=suiv;
+        if(suiv==NULL)
+        {
+            prec->parent->children_tail=prec;
+        }
+    }
+    else
+    {
+        prec->children_head=suiv;
+        if(suiv==NULL)
+        {
+            prec->children_tail=NULL;
+        }
+    }
+}
+/*-------------------------------------------------------------------------------------------------------*/
+
+void place_a_la_fin(ei_widget_t widget2) {
+    if (widget2->parent->children_tail == NULL) {
+        widget2->parent->children_tail = widget2;
+        widget2->parent->children_head = widget2;
+    } else {
+        widget2->parent->children_tail->next_sibling = widget2;
+        widget2->parent->children_tail = widget2;
+        widget2->next_sibling = NULL;
+    }
+}
+
+
+/*-------------------------------------------------------------------------------------------------------*/

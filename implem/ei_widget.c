@@ -72,37 +72,16 @@ void			ei_widget_destroy		(ei_widget_t		widget)
 {
     //détruit les enfants
 
-    ei_widget_t prec=widget->parent;
-    ei_widget_t suiv=widget->next_sibling;
-    if (prec->children_head!=widget)
-    {
-        prec=prec->children_head;
-        while (prec->next_sibling!=widget)
-        {
-            prec=prec->next_sibling;
-        }
-        prec->next_sibling=suiv;
-        if(suiv==NULL)
-        {
-            prec->parent->children_tail=prec;
-        }
-    }
-    else
-    {
-        prec->children_head=suiv;
-        if(suiv==NULL)
-        {
-            prec->children_tail=NULL;
-        }
-    }
+    supprime_de_ses_freres(widget);
     while(widget->children_head){
         ei_widget_t prochain = widget->children_head->next_sibling;
         ei_widget_destroy(widget->children_head);
         widget->children_head=prochain;
     }
 
-
     ei_geometrymanager_unmap(widget);
+    if (widget->destructor)
+    widget->destructor(widget);
 //    (*(widget->wclass->releasefunc))(widget); // ici libère la mémoire
 }
 

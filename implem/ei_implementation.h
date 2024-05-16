@@ -141,6 +141,22 @@ ei_rect_t* intersection_rectangle(ei_rect_t rect1 , ei_rect_t rect2);
 /**
  * @brief	Crée un geometry manager de type placer
  */
-ei_geometrymanager_t* create_placer_gm();
+ei_geometrymanager_t* create_placer_gm(void);
+
+
+/**
+ * @brief	Supprime le widget parmis ses freres et soeur
+ *
+ * @param	widget le widget
+ */
+void supprime_de_ses_freres(ei_widget_t widget);
+
+/**
+ * @brief	place le widget a la fin de la liste de freres
+ *
+ * @param	widget le widget
+ */
+void place_a_la_fin(ei_widget_t widget);
 
 #endif
+
