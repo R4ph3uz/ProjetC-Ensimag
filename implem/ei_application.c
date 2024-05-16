@@ -16,6 +16,7 @@
 #include "widgetclass/ei_toplevel.h"
 #include "callbacks/toplevel_callbacks.h"
 #include "widgetclass/ei_entry.h"
+#include "grid.h"
 
 /* ----------------------------------------------------------------- */
 
@@ -48,9 +49,11 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ei_bind(ei_ev_mouse_buttondown, NULL, "toplevel", toplevel_down_click_handler, NULL);
     ei_bind(ei_ev_mouse_buttondown,NULL,"entry",entry_down_click_handler,NULL);
 
-    //défini le geometry manager
+    //défini les geometry manager
+    ei_geometrymanager_t* grid = create_grid_gm();
     ei_geometrymanager_t* placer = create_placer_gm();
-    // enregistre
+    // enregistres
+    ei_geometrymanager_register(grid);
     ei_geometrymanager_register(placer);
     ROOT_SURFACE =  hw_create_window(main_window_size, fullscreen);
     PICKING_SURFACE = hw_surface_create(ROOT_SURFACE, main_window_size, false);

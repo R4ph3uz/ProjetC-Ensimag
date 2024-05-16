@@ -93,7 +93,8 @@ set(LIB_EI_SOURCES
 		${SRC}/widgetclass/ei_entry.c
 		${SRC}/callbacks/entry_callbacks.c
 		${SRC}/utils/text_utils.c
-		${SRC}/utils/text_utils.h
+		${SRC}/grid.c
+		${SRC}/grid.h
 )
 
 add_library(ei STATIC			${LIB_EI_SOURCES})
