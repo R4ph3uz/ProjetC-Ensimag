@@ -7,6 +7,9 @@
 void ei_placer_runfunc(ei_widget_t widget)
 {
     ei_rect_t* newscreen=malloc(sizeof (ei_rect_t));
+    if(!widget->geom_params){
+        return;
+    }
     int res=(int)((float)*widget->geom_params->height + *(widget->geom_params->rel_height) * (float)(widget->parent->content_rect->size.height));
     newscreen->size.height =res ;
     int res2=(int)((float)*widget->geom_params->width + *(widget->geom_params->rel_width) * (float)(widget->parent->content_rect->size.width));
@@ -114,6 +117,41 @@ ei_rect_t* intersection_rectangle(ei_rect_t rect1,ei_rect_t rect2) {
         intersection_rect->size.height = height;
         return intersection_rect;
     }
+}
+
+/*------------------------------------------------------------------------------------*/
+
+ei_rect_t* union_rectangle(ei_rect_t rect1, ei_rect_t rect2)
+{
+    // Calculate the top-left point of the union rectangle
+    int x1 = rect1.top_left.x;
+    int y1 = rect1.top_left.y;
+    int x2 = rect2.top_left.x;
+    int y2 = rect2.top_left.y;
+    int x = (x1 < x2) ? x1 : x2;
+    int y = (y1 < y2) ? y1 : y2;
+
+    // Calculate the size of the union rectangle
+    int w1 = rect1.size.width;
+    int h1 = rect1.size.height;
+    int w2 = rect2.size.width;
+    int h2 = rect2.size.height;
+    int w = (x1 + w1 > x2 + w2) ? (x1 + w1 - x) : (x2 + w2 - x);
+    int h = (y1 + h1 > y2 + h2) ? (y1 + h1 - y) : (y2 + h2 - y);
+
+    // Allocate memory for the union rectangle
+    ei_rect_t* rect = malloc(sizeof(ei_rect_t));
+    if (!rect) {
+        return NULL;
+    }
+
+    // Set the values of the union rectangle
+    rect->top_left.x = x;
+    rect->top_left.y = y;
+    rect->size.width = w;
+    rect->size.height = h;
+
+    return rect;
 }
 
 /*------------------------------------------------------------------------------------*/

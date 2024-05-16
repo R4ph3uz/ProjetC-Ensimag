@@ -101,6 +101,13 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
  */
 uint32_t	ei_impl_map_rgba(ei_surface_t surface, ei_color_t color);
 
+/**
+ * @brief	Calcule le rectangle d'union de deux rectangles
+ *
+ * @param	rect1	Premier rectangle
+ * @param	rect2	Deuxième rectangle
+ */
+ei_rect_t* union_rectangle(ei_rect_t rect1, ei_rect_t rect2);
 
 /**
  * \brief	Fields common to all geometry managers. Every geometry manager specializes this by adding its own fields.

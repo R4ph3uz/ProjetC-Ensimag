@@ -124,7 +124,7 @@ void frame_drawfunc(ei_widget_t widget,
 
 void frame_geomnotifyfunc(ei_widget_t widget)
 {
-    *widget->content_rect=widget->screen_location;
+    widget->content_rect=&widget->screen_location;
 }
 
 /*--------------------------------------------------------------------------------*/
