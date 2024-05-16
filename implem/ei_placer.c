@@ -20,14 +20,9 @@ void		ei_place	(ei_widget_t		widget,
     if (widget->geom_params==NULL) {
         widget->geom_params = SAFE_MALLOC(sizeof(ei_impl_geom_param_t));
 
-        widget->geom_params->manager = SAFE_MALLOC(sizeof(ei_geometrymanager_t));
-        widget->geom_params->manager->runfunc = ei_placer_runfunc;
-        widget->geom_params->manager->releasefunc = ei_placer_releasefunc;
-        widget->geom_params->manager->next = NULL;
-        const char naame[] = "placer";
-        strcpy(widget->geom_params->manager->name, naame);
-        widget->geom_params->is_reconfigurable = SAFE_MALLOC(sizeof(bool));
-        *widget->geom_params->is_reconfigurable=true;
+        widget->geom_params->manager = create_placer_gm();
+        widget->geom_params->is_reconfigurable = malloc(sizeof(bool));
+        *widget->geom_params->is_reconfigurable=SAFE_MALLOC(sizeof(bool));
         widget->geom_params->anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
         if (anchor) {
             *widget->geom_params->anchor = *anchor;

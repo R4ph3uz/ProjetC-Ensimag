@@ -49,14 +49,7 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ei_bind(ei_ev_mouse_buttondown,NULL,"entry",entry_down_click_handler,NULL);
 
     //défini le geometry manager
-    ei_geometrymanager_t* placer = SAFE_MALLOC(sizeof(ei_geometrymanager_t));
-    placer->runfunc = ei_placer_runfunc;
-    placer->releasefunc = ei_placer_releasefunc;
-
-    const char name[] = "button";
-    strcpy(placer->name, name);
-
-    placer->next = NULL;
+    ei_geometrymanager_t* placer = create_placer_gm();
     // enregistre
     ei_geometrymanager_register(placer);
     ROOT_SURFACE =  hw_create_window(main_window_size, fullscreen);

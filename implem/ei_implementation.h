@@ -131,6 +131,9 @@ ei_surface_t get_pick_surface(void);
  * @param	rect2	Deuxième rectangle
  */
 ei_rect_t* intersection_rectangle(ei_rect_t rect1 , ei_rect_t rect2);
-
+/**
+ * @brief	Crée un geometry manager de type placer
+ */
+ei_geometrymanager_t* create_placer_gm();
 
 #endif

@@ -157,3 +157,14 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
     }
 }
 
+/*-------------------------------------------------------------------------------------------------------*/
+
+ei_geometrymanager_t* create_placer_gm(){
+    ei_geometrymanager_t* res = SAFE_MALLOC(sizeof(ei_geometrymanager_t));
+    res->runfunc=ei_placer_runfunc;
+    res->releasefunc = ei_placer_releasefunc;
+    const char name[] = "placer";
+    strcpy(res->name, name);
+    res->next = NULL;
+    return res;
+}
