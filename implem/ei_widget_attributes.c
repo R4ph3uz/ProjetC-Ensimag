@@ -89,5 +89,10 @@ const ei_rect_t*	ei_widget_get_content_rect	(ei_widget_t		widget)
 
 void	 		ei_widget_set_content_rect	(ei_widget_t		widget, const ei_rect_t*	content_rect)
 {
-    widget->content_rect=(ei_rect_t*) content_rect;
+    if(widget->content_rect==NULL)
+    {
+        widget->content_rect=malloc(sizeof(ei_rect_t));
+    }
+    memcpy(widget->content_rect,content_rect, sizeof (ei_rect_t));
+
 }
