@@ -8,7 +8,7 @@
 
 bool toplevel_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_toplevel_t toplevel = (ei_toplevel_t) widget;
-    if (event->param.mouse.where.x>widget->content_rect->top_left.x-1  && event->param.mouse.where.x<widget->content_rect->top_left.x+11 && event->param.mouse.where.y>widget->content_rect->top_left.y-21  && event->param.mouse.where.y<widget->content_rect->top_left.y-9)
+    if (event->param.mouse.where.x>widget->content_rect->top_left.x+6  && event->param.mouse.where.x<widget->content_rect->top_left.x+20 && event->param.mouse.where.y>widget->content_rect->top_left.y-17  && event->param.mouse.where.y<widget->content_rect->top_left.y-3)
     {
         // sur la partie rouge
         ei_widget_destroy(widget);
