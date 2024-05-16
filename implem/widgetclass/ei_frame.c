@@ -8,18 +8,9 @@
 
 ei_widget_t frame_allocfunc()
 {
-    ei_impl_frame_t* frame = malloc(sizeof(ei_impl_frame_t));
+    ei_impl_frame_t* frame = calloc(sizeof(ei_impl_frame_t),1);
 
-    frame->color = malloc(sizeof(ei_color_t));
-    frame->relief = malloc(sizeof(ei_relief_t));
-    frame->text = malloc(sizeof(ei_string_t));
-    frame->text_font = malloc(sizeof(ei_font_t));
-    frame->text_color = malloc(sizeof(ei_color_t));
-    frame->text_anchor = malloc(sizeof(ei_anchor_t));
-    frame->img = malloc(sizeof(ei_surface_t));
-    frame->img_rect = malloc(sizeof(ei_rect_ptr_t));
-    frame->img_anchor = malloc(sizeof(ei_anchor_t));
-    frame->border_width = malloc(sizeof(int));
+
     return (ei_widget_t) frame;
 }
 
@@ -143,7 +134,16 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     ei_frame_t frame = (ei_frame_t) widget;
 
     /* Suite spécifique à une  frame*/
-
+    frame->color = malloc(sizeof(ei_color_t));
+    frame->relief = malloc(sizeof(ei_relief_t));
+    frame->text = malloc(sizeof(ei_string_t));
+    frame->text_font = malloc(sizeof(ei_font_t));
+    frame->text_color = malloc(sizeof(ei_color_t));
+    frame->text_anchor = malloc(sizeof(ei_anchor_t));
+    frame->img = malloc(sizeof(ei_surface_t));
+    frame->img_rect = malloc(sizeof(ei_rect_ptr_t));
+    frame->img_anchor = malloc(sizeof(ei_anchor_t));
+    frame->border_width = malloc(sizeof(int));
     frame->color->alpha = 255;
     frame->color->red = 149;
     frame->color->green = 149;

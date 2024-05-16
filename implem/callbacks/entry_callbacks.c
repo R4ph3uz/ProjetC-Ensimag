@@ -380,8 +380,9 @@ bool animation_cursor(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
     entry_app_event * app_event= (entry_app_event * ) event->param.application.user_param;
     if (app_event->is_animation_event){
         ei_entry_t entry = (ei_entry_t)app_event->param;
+        if (entry){
         entry->is_focus_visible = !entry->is_focus_visible ;
-        set_id_animation( hw_event_schedule_app(750,user_param));
+        set_id_animation( hw_event_schedule_app(750,user_param));}
     }
     else if (app_event->is_double_click_event){
         ei_entry_t entry = (ei_entry_t)app_event->param;

@@ -12,14 +12,8 @@
 /*---------------------------------------------------------------------------------------------------------------------*/
 
 ei_widget_t entry_allocfunc(){
-    ei_impl_entry_t* entry = malloc(sizeof(ei_impl_entry_t));
-    entry->color = malloc(sizeof(ei_color_t));
-    entry->requested_char_size = malloc(sizeof(int));
-    entry->text_font = malloc(sizeof(ei_font_t));
-    entry->text_color = malloc(sizeof(ei_color_t));
-    entry->border_width = malloc(sizeof(int));
-    entry->focus=malloc(sizeof(bool));
-    entry->text= malloc(sizeof(char));
+    ei_impl_entry_t* entry = calloc(sizeof(ei_impl_entry_t),1);
+
     return (ei_widget_t) entry;
 }
 
@@ -47,7 +41,13 @@ void entry_setdefaultsfunc(ei_widget_t widget){
     ei_entry_t entry = (ei_entry_t) widget;
 
     /* Suite spécifique à une  entry*/
-
+    entry->color = malloc(sizeof(ei_color_t));
+    entry->requested_char_size = malloc(sizeof(int));
+    entry->text_font = malloc(sizeof(ei_font_t));
+    entry->text_color = malloc(sizeof(ei_color_t));
+    entry->border_width = malloc(sizeof(int));
+    entry->focus=malloc(sizeof(bool));
+    entry->text= malloc(sizeof(char));
     entry->color->alpha = 255;
     entry->color->blue = 255;
     entry->color->green = 255;

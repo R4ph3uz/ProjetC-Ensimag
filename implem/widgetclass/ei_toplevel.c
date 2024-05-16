@@ -5,15 +5,9 @@
 /*-----------------------------------------------------------------------------------------------*/
 
 ei_widget_t toplevel_allocfunc() {
-    ei_impl_toplevel_t* top_level = malloc(sizeof(ei_impl_toplevel_t));
+    ei_impl_toplevel_t* top_level = calloc(sizeof(ei_impl_toplevel_t),1);
 
-    top_level->color = malloc(sizeof(ei_color_t));
-    top_level->border_width = malloc(sizeof(int));
-    top_level->title = malloc(sizeof(ei_string_t));
-    top_level->closable = malloc(sizeof(bool));
-    top_level->resizable = malloc(sizeof(ei_axis_set_t));
-    top_level->min_size = malloc(sizeof(ei_size_t*));
-    (*top_level->min_size)= malloc(sizeof(ei_size_t));
+
     ei_widget_t widget = (ei_widget_t) top_level;
     return widget;
 }
@@ -79,7 +73,13 @@ void toplevel_geomnotifyfunc(ei_widget_t widget) {
 
 void toplevel_setdefaultsfunc(ei_widget_t widget) {
     ei_toplevel_t top_level = (ei_toplevel_t) widget;
-
+    top_level->color = malloc(sizeof(ei_color_t));
+    top_level->border_width = malloc(sizeof(int));
+    top_level->title = malloc(sizeof(ei_string_t));
+    top_level->closable = malloc(sizeof(bool));
+    top_level->resizable = malloc(sizeof(ei_axis_set_t));
+    top_level->min_size = malloc(sizeof(ei_size_t*));
+    (*top_level->min_size)= malloc(sizeof(ei_size_t));
     *top_level->border_width= 1;
     *top_level->closable = true;
     *top_level->resizable = ei_axis_both;
