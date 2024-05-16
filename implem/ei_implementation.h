@@ -14,6 +14,17 @@
 #include "ei_widget.h"
 #include "ei_geometrymanager.h"
 
+#define SAFE_MALLOC(size) \
+    ({ \
+        void *ptr = malloc(size); \
+        if (!ptr) { \
+            fprintf(stderr, "Memory allocation failed, exiting application.\n"); \
+            exit(EXIT_FAILURE);\
+        } \
+        ptr; \
+    })
+
+
 void ei_placer_releasefunc(ei_widget_t widget);
 void ei_placer_runfunc(ei_widget_t widget);
 

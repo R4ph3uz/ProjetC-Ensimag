@@ -49,7 +49,7 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ei_bind(ei_ev_mouse_buttondown,NULL,"entry",entry_down_click_handler,NULL);
 
     //défini le geometry manager
-    ei_geometrymanager_t* placer = malloc(sizeof(ei_geometrymanager_t));
+    ei_geometrymanager_t* placer = SAFE_MALLOC(sizeof(ei_geometrymanager_t));
     placer->runfunc = ei_placer_runfunc;
     placer->releasefunc = ei_placer_releasefunc;
 
@@ -113,7 +113,7 @@ void ei_app_run(void)
     IS_RUNNING = true;
     CHANGEMENT_PREMIER_PLAN = false;
     ei_widget_t widget = NULL;
-    ei_event_t* new_event = malloc(sizeof(ei_event_t));
+    ei_event_t* new_event = SAFE_MALLOC(sizeof(ei_event_t));
     widget=ROOT_WIDGET;
     while(IS_RUNNING){
 

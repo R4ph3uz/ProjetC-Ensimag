@@ -20,7 +20,7 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 
     widget->wclass = wclass;
     widget->pick_id=PICKID; // < Id of this widget in the picking offscreen
-    widget->pick_color = malloc(sizeof(ei_color_t));//< pick_id encoded as a color
+    widget->pick_color = SAFE_MALLOC(sizeof(ei_color_t));//< pick_id encoded as a color
     widget->pick_color->red=(uint8_t)( PICKID & 0xFF);
     widget->pick_color->green=(uint8_t)((PICKID >> 8) & 0xFF);
     widget->pick_color->blue=(uint8_t)((PICKID >> 16) & 0xFF);
@@ -53,7 +53,7 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 
 
 
-    widget->content_rect=malloc(sizeof(ei_rect_ptr_t));
+    widget->content_rect=SAFE_MALLOC(sizeof(ei_rect_ptr_t));
     widget->content_rect->size.width=0;
     widget->content_rect->size.height=0;
     widget->content_rect->top_left.x=0;

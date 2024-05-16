@@ -53,4 +53,13 @@ int find_position_cursor_selection_entry(ei_entry_t entry, ei_point_t position);
 
 void find_word(char* text, int where, int* debut, int* fin);
 
+/**
+ * \brief prend un texte, deux endroits (debut<=fin) et renvoie le texte à l'interieur.
+ * @param text
+ * @param debut
+ * @param fin
+ * @return texte entre debut et fin
+ */
+char* texte_selectionne(char* text, int32_t debut, int32_t fin);
+
 #endif //PROJETC_IG_TEXT_UTILS_H

@@ -8,6 +8,7 @@
 #include "ei_application.h"
 /*------------------------------------------------------------------------------------------------------------------*/
 
+char* TEXTE_COPIE;
 void* ID_EVENT_ANIMATION;
 void* get_id_animation(void){
     return ID_EVENT_ANIMATION;
@@ -472,6 +473,19 @@ bool handle_tab_entry(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
         return true;
     }
    return false;
+}
+
+void controlc(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
+    ei_entry_t entry = (ei_entry_t) user_param;
+    char* text = entry->text;
+    char* new_text = texte_selectionne(text,entry->debut_selection,entry->fin_selection);
+    if(!TEXTE_COPIE){
+        TEXTE_COPIE=malloc(sizeof(char)*strlen(new_text));
+    }
+    else{
+        TEXTE_COPIE = realloc(TEXTE_COPIE,sizeof(char)*strlen(new_text));
+    }
+
 }
 
 /*------------------------------------------------------------------------------------------------------------------*/

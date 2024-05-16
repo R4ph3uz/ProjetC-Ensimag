@@ -8,7 +8,7 @@
 
 /*------------------------------------------------------------------------------*/
 
-#define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = malloc(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
+#define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = SAFE_MALLOC(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
 
 ei_entry_t ENTRY_FOCUS;
 entry_app_event* USER_P;
@@ -26,7 +26,7 @@ void			ei_entry_configure		(ei_widget_t		widget,
     ei_entry_t entry = (ei_entry_t) widget;
     // mets la width a "a"*requested_char_size
     if(requested_char_size){
-        char* falsestring=(char*) malloc((*requested_char_size+1)*sizeof(char));
+        char* falsestring=(char*) SAFE_MALLOC((*requested_char_size+1)*sizeof(char));
         memset(falsestring,97,*requested_char_size);
         falsestring[*requested_char_size]='\0';
         ei_surface_t surfaceee=hw_text_create_surface(falsestring,*entry->text_font,*entry->text_color);
@@ -53,7 +53,7 @@ void			ei_entry_set_text		(ei_widget_t		widget,
                                           ei_const_string_t 	text)
 {
     ei_entry_t entry = (ei_entry_t) widget;
-    entry->text= malloc(sizeof(char)* (strlen(text)+1));
+    entry->text= SAFE_MALLOC(sizeof(char)* (strlen(text)+1));
     strcpy( entry->text,text);
 }
 
@@ -89,7 +89,7 @@ void			ei_entry_give_focus		(ei_widget_t		widget)
     ei_bind(ei_ev_keydown,NULL,"all",entry_write,entry); // keystroke
     ei_bind(ei_ev_text_input,NULL,"all",entry_write,entry); // texte collé ?
     ei_bind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors
-    USER_P = malloc(sizeof(entry_app_event));
+    USER_P = SAFE_MALLOC(sizeof(entry_app_event));
     USER_P->is_animation_event = true;
     USER_P->is_double_click_event = false;
     USER_P->param= ENTRY_FOCUS;

@@ -18,17 +18,17 @@ void		ei_place	(ei_widget_t		widget,
                          float*			rel_width,
                          float*			rel_height) {
     if (widget->geom_params==NULL) {
-        widget->geom_params = malloc(sizeof(ei_impl_geom_param_t));
+        widget->geom_params = SAFE_MALLOC(sizeof(ei_impl_geom_param_t));
 
-        widget->geom_params->manager = malloc(sizeof(ei_geometrymanager_t));
+        widget->geom_params->manager = SAFE_MALLOC(sizeof(ei_geometrymanager_t));
         widget->geom_params->manager->runfunc = ei_placer_runfunc;
         widget->geom_params->manager->releasefunc = ei_placer_releasefunc;
         widget->geom_params->manager->next = NULL;
         const char naame[] = "placer";
         strcpy(widget->geom_params->manager->name, naame);
-        widget->geom_params->is_reconfigurable = malloc(sizeof(bool));
+        widget->geom_params->is_reconfigurable = SAFE_MALLOC(sizeof(bool));
         *widget->geom_params->is_reconfigurable=true;
-        widget->geom_params->anchor = malloc(sizeof(ei_anchor_t));
+        widget->geom_params->anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
         if (anchor) {
             *widget->geom_params->anchor = *anchor;
         } else {
@@ -36,42 +36,42 @@ void		ei_place	(ei_widget_t		widget,
         }
 
 
-        widget->geom_params->x = malloc(sizeof(int));
+        widget->geom_params->x = SAFE_MALLOC(sizeof(int));
         if (x) {
             *widget->geom_params->x = *x;
         } else {
             *widget->geom_params->x = 0;
         }
 
-        widget->geom_params->y = malloc(sizeof(int));
+        widget->geom_params->y = SAFE_MALLOC(sizeof(int));
         if (y) {
             *(widget->geom_params->y) = *y;
         } else {
             *(widget->geom_params->y) = 0;
         }
 
-        widget->geom_params->rel_y = malloc(sizeof(float));
+        widget->geom_params->rel_y = SAFE_MALLOC(sizeof(float));
         if (rel_y) {
             *widget->geom_params->rel_y = *rel_y;
         } else {
             *widget->geom_params->rel_y = 0;
         }
 
-        widget->geom_params->rel_x = malloc(sizeof(float));
+        widget->geom_params->rel_x = SAFE_MALLOC(sizeof(float));
         if (rel_x) {
             *widget->geom_params->rel_x = *rel_x;
         } else {
             *widget->geom_params->rel_x = 0;
         }
 
-        widget->geom_params->rel_width = malloc(sizeof(float));
+        widget->geom_params->rel_width = SAFE_MALLOC(sizeof(float));
         if (rel_width) {
             *widget->geom_params->rel_width = *rel_width;
         } else {
             *widget->geom_params->rel_width = 0;
         }
 
-        widget->geom_params->rel_height = malloc(sizeof(float));
+        widget->geom_params->rel_height = SAFE_MALLOC(sizeof(float));
         if (rel_height) {
             *widget->geom_params->rel_height = *rel_height;
         } else {
@@ -85,7 +85,7 @@ void		ei_place	(ei_widget_t		widget,
         int default_width = widget->parent->content_rect->size.width;
         int default_height = widget->parent->content_rect->size.height;
 
-        widget->geom_params->width = malloc(sizeof(int));
+        widget->geom_params->width = SAFE_MALLOC(sizeof(int));
         if (width) {
             *widget->geom_params->width = *width;
             *widget->geom_params->is_reconfigurable=false;
@@ -102,7 +102,7 @@ void		ei_place	(ei_widget_t		widget,
             }
         }
 
-        widget->geom_params->height = malloc(sizeof(int));
+        widget->geom_params->height = SAFE_MALLOC(sizeof(int));
         if (height) {
             *widget->geom_params->height = *height;
             *widget->geom_params->is_reconfigurable=false;

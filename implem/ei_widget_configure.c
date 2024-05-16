@@ -8,7 +8,7 @@
 #include "ei_utils.h"
 #include "ei_placer.h"
 #include "ei_widget_attributes.h"
-#define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = malloc(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
+#define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = SAFE_MALLOC(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
 
 /*-------------------------------------------------------------------------------------------------------*/
 
@@ -40,8 +40,8 @@ void			ei_frame_configure		(ei_widget_t		widget,
     COPY_IF_NOT_NULL(frame->relief, relief);
     if (text != NULL) {
         if(frame->text==NULL) {
-            frame->text = malloc(sizeof(ei_string_t ));
-            *frame->text =  malloc(sizeof(char)*30);
+            frame->text = SAFE_MALLOC(sizeof(ei_string_t ));
+            *frame->text =  SAFE_MALLOC(sizeof(char)*30);
         }
         strcpy(*frame->text,*text);
     }
@@ -53,7 +53,7 @@ void			ei_frame_configure		(ei_widget_t		widget,
 
     if(img != NULL) {
         if(frame->img == NULL)
-            frame->img = malloc(sizeof(ei_surface_t));
+            frame->img = SAFE_MALLOC(sizeof(ei_surface_t));
 
         *frame->img = hw_surface_create(*img, hw_surface_get_rect(*img).size,true  );
         hw_surface_lock(*img);
@@ -64,9 +64,9 @@ void			ei_frame_configure		(ei_widget_t		widget,
     }
     if (img_rect != NULL) {
         if (frame->img_rect==NULL){
-            frame->img_rect=malloc(sizeof(ei_rect_ptr_t));
+            frame->img_rect=SAFE_MALLOC(sizeof(ei_rect_ptr_t));
         }
-        *frame->img_rect = malloc(sizeof(ei_rect_t));
+        *frame->img_rect = SAFE_MALLOC(sizeof(ei_rect_t));
         memcpy(*frame->img_rect, *img_rect, sizeof(ei_rect_t));
 
     }
@@ -100,27 +100,27 @@ void			ei_button_configure		(ei_widget_t		widget,
     ei_button_t button = (ei_button_t) widget;
     if ((ei_color_t *) color != NULL) {
         if (!button->color) {
-            button->color = malloc(sizeof(*button->color));
+            button->color = SAFE_MALLOC(sizeof(*button->color));
         }
         memcpy(button->color, (ei_color_t *) color, sizeof(*button->color));
     }
     COPY_IF_NOT_NULL(button->border_width, border_width);
     if (corner_radius != NULL) {
         if (!button->corner_radius) {
-            button->corner_radius = malloc(sizeof(*button->corner_radius));
+            button->corner_radius = SAFE_MALLOC(sizeof(*button->corner_radius));
         }
         memcpy(button->corner_radius, corner_radius, sizeof(*button->corner_radius));
     }
     if (relief != NULL) {
         if (!button->relief) {
-            button->relief = malloc(sizeof(*button->relief));
+            button->relief = SAFE_MALLOC(sizeof(*button->relief));
         }
         *button->relief = *relief;
     }
     if (text != NULL) {
         if(button->text==NULL) {
-            button->text = malloc(sizeof(ei_string_t ));
-            *button->text =  malloc(sizeof(char)*30);
+            button->text = SAFE_MALLOC(sizeof(ei_string_t ));
+            *button->text =  SAFE_MALLOC(sizeof(char)*30);
         }
         if(*text == NULL){
             button->text = NULL;
@@ -133,7 +133,7 @@ void			ei_button_configure		(ei_widget_t		widget,
     COPY_IF_NOT_NULL(button->text_font, text_font);
     if (text_color != NULL) {
         if (!button->text_color) {
-            button->text_color = malloc(sizeof(*button->text_color));
+            button->text_color = SAFE_MALLOC(sizeof(*button->text_color));
         }
         memcpy(button->text_color, text_color, sizeof(*button->text_color));
     }
@@ -143,7 +143,7 @@ void			ei_button_configure		(ei_widget_t		widget,
         if (*img == NULL)
             button->img = NULL;
         else {
-            button->img = malloc(sizeof(ei_surface_t));
+            button->img = SAFE_MALLOC(sizeof(ei_surface_t));
             *button->img = hw_surface_create(*img, hw_surface_get_rect(*img).size, true);
             hw_surface_lock(*img);
             hw_surface_lock(*button->img);
@@ -155,9 +155,9 @@ void			ei_button_configure		(ei_widget_t		widget,
     }
     if (img_rect != NULL) {
         if (button->img_rect == NULL) {
-            button->img_rect = malloc(sizeof(ei_rect_ptr_t));
+            button->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
         }
-        *button->img_rect = malloc(sizeof(ei_rect_t));
+        *button->img_rect = SAFE_MALLOC(sizeof(ei_rect_t));
         memcpy(*button->img_rect, *img_rect, sizeof(ei_rect_t));
 
     }
