@@ -131,7 +131,7 @@ void ei_app_run(void)
                     while (widget2->parent != ROOT_WIDGET) {
                         widget2 = widget2->parent;
                     }
-                        widget_last_child = widget2;
+                    widget_last_child = widget2;
                 }
 
                 if (widget2 && widget2->parent->children_tail!=widget2)
@@ -218,9 +218,9 @@ void ei_app_run(void)
              if(widget == ROOT_WIDGET){
                  list_rect = NULL;
              }
-             else{
+             else if (ROOT_WIDGET->children_tail){
                  //find the closest parent that is a top level, if there is none then update everything
-                 ei_widget_t temp = widget_last_child;
+                 ei_widget_t temp = ROOT_WIDGET->children_tail;
                  while(temp->parent!=NULL){
                      if(strcmp(temp->wclass->name, "toplevel")== 0 ){
                          break;
