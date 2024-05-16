@@ -72,6 +72,9 @@ void			ei_entry_give_focus		(ei_widget_t		widget)
     ei_entry_t entry = (ei_entry_t) widget;
     if(ENTRY_FOCUS){
         ENTRY_FOCUS->focus = false;
+        ei_unbind(ei_ev_keydown,NULL,  "entry",controlc, entry);
+        ei_unbind(ei_ev_keydown,NULL,  "entry",controlx, entry);
+        ei_unbind(ei_ev_keydown,NULL,  "entry",controlv, entry);
         ei_unbind(ei_ev_keydown,NULL,"all",entry_write,ENTRY_FOCUS); // keystroke
         ei_unbind(ei_ev_text_input,NULL,"all",entry_write,ENTRY_FOCUS); // texte collé ?
         ei_unbind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,ENTRY_FOCUS); // si on clique e dehors
@@ -86,6 +89,9 @@ void			ei_entry_give_focus		(ei_widget_t		widget)
     entry->is_in_selection =true;
     entry->debut_selection =  0;
     entry->fin_selection = strlen(entry->text );
+    ei_bind(ei_ev_keydown,NULL,  "entry",controlc, entry);
+    ei_bind(ei_ev_keydown,NULL,  "entry",controlx, entry);
+    ei_bind(ei_ev_keydown,NULL,  "entry",controlv, entry);
     ei_bind(ei_ev_keydown,NULL,"all",entry_write,entry); // keystroke
     ei_bind(ei_ev_text_input,NULL,"all",entry_write,entry); // texte collé ?
     ei_bind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors
