@@ -143,4 +143,8 @@ ei_widget_t dfs_find_last_before_entry(ei_entry_t entry,ei_widget_t node, ei_wid
  */
 ei_widget_t dfs_find_last_except_entry(ei_entry_t entry,ei_widget_t node, ei_widget_t* temp);
 
+ei_entry_t get_entry_focus(void);
+
+void set_entry_focus(ei_entry_t entry);
+
 #endif //ENTRY_CALLBACKS_H

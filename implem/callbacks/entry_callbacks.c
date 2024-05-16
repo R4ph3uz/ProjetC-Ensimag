@@ -7,7 +7,7 @@
 #include "../utils/text_utils.h"
 #include "ei_application.h"
 /*------------------------------------------------------------------------------------------------------------------*/
-
+ei_entry_t ENTRY_FOCUS;
 char* TEXTE_COPIE;
 void* ID_EVENT_ANIMATION;
 void* get_id_animation(void){
@@ -16,6 +16,8 @@ void* get_id_animation(void){
 void set_id_animation(void* id) {
     ID_EVENT_ANIMATION= id;
 }
+
+/*------------------------------------------------------------------------------------------------------------------*/
 
 #define SAFE_REALLOC(ptr, size) \
     ({ \
@@ -90,6 +92,7 @@ bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user
         return false;
 
     }
+    set_entry_focus(NULL);
     ei_unbind(ei_ev_keydown,NULL,  "entry",controlc, entry);
     ei_unbind(ei_ev_keydown,NULL,  "entry",controlx, entry);
     ei_unbind(ei_ev_keydown,NULL,  "entry",controlv, entry);
@@ -615,3 +618,11 @@ ei_widget_t dfs_find_last_except_entry(ei_entry_t entry,ei_widget_t node,ei_widg
     return NULL;
 }
 
+/*------------------------------------------------------------------------------------------------------------------*/
+ei_entry_t get_entry_focus(void) {
+    return ENTRY_FOCUS;
+}
+
+void set_entry_focus(ei_entry_t entry) {
+    ENTRY_FOCUS=entry;
+}
