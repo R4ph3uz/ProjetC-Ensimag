@@ -5,7 +5,7 @@
 /*-----------------------------------------------------------------------------------------------*/
 
 ei_widget_t toplevel_allocfunc() {
-    ei_impl_toplevel_t* top_level = calloc(sizeof(ei_impl_toplevel_t),1);
+    ei_impl_toplevel_t* top_level = SAFE_CALLOC(sizeof(ei_impl_toplevel_t));
 
 
     ei_widget_t widget = (ei_widget_t) top_level;

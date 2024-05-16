@@ -12,7 +12,7 @@
 /*---------------------------------------------------------------------------------------------------------------------*/
 
 ei_widget_t entry_allocfunc(){
-    ei_impl_entry_t* entry = calloc(sizeof(ei_impl_entry_t),1);
+    ei_impl_entry_t* entry = SAFE_CALLOC(sizeof(ei_impl_entry_t));
 
     return (ei_widget_t) entry;
 }

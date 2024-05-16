@@ -197,7 +197,7 @@ void ei_app_run(void)
                  if(temp->parent && temp->geom_params){
                      ei_rect_t* test  = intersection_rectangle(hw_surface_get_rect(ROOT_SURFACE),temp->screen_location );
                      rect_before = *test;
-                     temp->geom_params->manager->runfunc(widget);
+                     temp->geom_params->manager->runfunc(temp);
                      ei_rect_t* test2  = intersection_rectangle(hw_surface_get_rect(ROOT_SURFACE),temp->screen_location );
                      rect_after = *test2;
                      list_rect = malloc(sizeof(ei_linked_rect_t));

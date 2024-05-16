@@ -5,7 +5,7 @@
 /*--------------------------------------------------------------------------------*/
 
 ei_widget_t button_allocfunc() {
-    ei_impl_button_t* button = calloc(sizeof(ei_impl_button_t),1);
+    ei_impl_button_t* button = SAFE_CALLOC(sizeof(ei_impl_button_t));
 
 
     return (ei_widget_t) button;

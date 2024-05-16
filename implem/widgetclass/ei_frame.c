@@ -8,7 +8,7 @@
 
 ei_widget_t frame_allocfunc()
 {
-    ei_impl_frame_t* frame = calloc(sizeof(ei_impl_frame_t),1);
+    ei_impl_frame_t* frame = SAFE_CALLOC(sizeof(ei_impl_frame_t));
 
 
     return (ei_widget_t) frame;

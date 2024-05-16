@@ -24,8 +24,32 @@
         ptr; \
     })
 
+#define SAFE_CALLOC(size) \
+    ({ \
+        void *ptr = calloc(size,1); \
+        if (!ptr) { \
+            fprintf(stderr, "Memory allocation failed, exiting application.\n"); \
+            exit(EXIT_FAILURE);\
+        } \
+        ptr; \
+    })
 
+/**
+ * @brief	unmap le widget et ses enfants pour le geometry manager placer
+ *
+ * @param	widget		Le widget a unmap
+ */
 void ei_placer_releasefunc(ei_widget_t widget);
+
+
+
+
+/**
+ * @brief	A function that runs the geometry computation for this widget.
+ * 		Must call \ref ei_geometry_run_finalize before returning.
+ *
+ * @param	widget		The widget instance for which to compute geometry.
+ */
 void ei_placer_runfunc(ei_widget_t widget);
 
 typedef struct list_widget_callback {
