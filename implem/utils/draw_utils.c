@@ -84,36 +84,37 @@ ei_point_t* rounded_frame(ei_rect_t* rectangle,
         return conc3;
     }
     else if(part==high){
-        points1 = polygon_arc(top_left, rayon, 225, 270, &nb_points1);
-        points = polygon_arc(top_right, rayon, 270, 360, &nb_points);
-        points2 = polygon_arc(bottom_right, rayon, 0, 45, &nb_points2);
+        points3 = polygon_arc(bottom_left, rayon, 135, 180, &nb_points3);
+        points1 = polygon_arc(top_left, rayon, 180, 270, &nb_points1);
+        points = polygon_arc(top_right, rayon, 270, 315, &nb_points);
         int h;
 
         h= (rectangle->size.width > rectangle->size.height ) ? rectangle->size.height /2 : rectangle->size.width/2;
-        *nb_concat = nb_points1+nb_points+nb_points2+2;
-        conc1 = concatene_points(points1, points, nb_points1, nb_points);
-        conc2 = concatene_points(conc1, points2, nb_points1+nb_points, nb_points2);
-        ei_point_t* intermediare = malloc(sizeof(ei_point_t)*2);
-        intermediare[1] = (ei_point_t){rectangle->top_left.x+h,rectangle->top_left.y+h};
-        intermediare[0] = (ei_point_t){rectangle->top_left.x-h +rectangle->size.width ,rectangle->top_left.y-h+rectangle->size.height};
+        *nb_concat = nb_points1+nb_points+nb_points3+2;
+        conc1 = concatene_points(points3, points1, nb_points3, nb_points1);
+        conc2 = concatene_points(conc1, points, nb_points1+nb_points3, nb_points);
+        ei_point_t* intermediaire = malloc(sizeof(ei_point_t)*2);
+        intermediaire[1] = (ei_point_t){rectangle->top_left.x+h,rectangle->top_left.y+h};
+        intermediaire[0] = (ei_point_t){rectangle->top_left.x-h +rectangle->size.width ,rectangle->top_left.y-h+rectangle->size.height};
 
 
-        conc3 = concatene_points(conc2,intermediare, nb_points1+nb_points+nb_points2, 2);
+        conc3 = concatene_points(conc2,intermediaire, nb_points1+nb_points+nb_points3, 2);
         free(points1);
-        free(points2);
+        free(points3);
         free(points);
         free(conc1);
         free(conc2);
-        free(intermediare);
+        free(intermediaire);
         return conc3;
     }
     else{
-        points1 = polygon_arc(top_left, rayon, 180, 225, &nb_points1);
-        points2 = polygon_arc(bottom_right, rayon, 45, 90, &nb_points2);
-        points3 = polygon_arc(bottom_left, rayon, 90, 180, &nb_points3);
-        conc1 = concatene_points(points2, points3, nb_points2, nb_points3);
-        conc2 = concatene_points(conc1, points1, nb_points2+nb_points3, nb_points1);
-        *nb_concat = nb_points1+ nb_points2 + nb_points3+2;
+        points = polygon_arc(top_right, rayon, 315, 360, &nb_points);
+        points2 = polygon_arc(bottom_right, rayon, 0, 90, &nb_points2);
+        points3 = polygon_arc(bottom_left, rayon, 90, 135, &nb_points3);
+
+        conc1 = concatene_points(points, points2, nb_points, nb_points2);
+        conc2 = concatene_points(conc1, points3, nb_points2+nb_points, nb_points3);
+        *nb_concat = nb_points+ nb_points2 + nb_points3+2;
 
         int h;
 
@@ -122,8 +123,9 @@ ei_point_t* rounded_frame(ei_rect_t* rectangle,
         ei_point_t* intermediaire = malloc(sizeof(ei_point_t)*2);
         intermediaire[0] = (ei_point_t){rectangle->top_left.x+h,rectangle->top_left.y+h};
         intermediaire[1] = (ei_point_t){rectangle->top_left.x-h +rectangle->size.width ,rectangle->top_left.y-h+rectangle->size.height};
-        conc3 = concatene_points(conc2,intermediaire, nb_points1+nb_points3+nb_points2, 2);
-        free(points1);
+
+        conc3 = concatene_points(conc2,intermediaire, nb_points+nb_points3+nb_points2, 2);
+        free(points);
         free(points2);
         free(points3);
         free(conc1);

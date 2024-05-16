@@ -96,7 +96,7 @@ void button_drawfunc(ei_widget_t widget,
          int32_t decal_x = widget->content_rect->size.width/2 - rect_surface_text.size.width/2;
          int32_t decal_y = widget->content_rect->size.height/2 - rect_surface_text.size.height/2;
          if (*button->relief == ei_relief_sunken){
-             decal_x -= 5 * widget->content_rect->size.height/100;
+             decal_x += 5 * widget->content_rect->size.height/100;
              decal_y += 5 * widget->content_rect->size.height/100;
          }
          ei_point_t place = {widget->content_rect->top_left.x+decal_x,widget->content_rect->top_left.y+decal_y};
