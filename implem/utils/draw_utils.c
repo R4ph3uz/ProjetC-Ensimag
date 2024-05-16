@@ -16,7 +16,7 @@ ei_point_t* polygon_arc(ei_point_t centre,
 {
     if(rayon == 0){
         *size_tableau = 1;
-        ei_point_t* points = malloc(sizeof(ei_point_t ));
+        ei_point_t* points = SAFE_MALLOC(sizeof(ei_point_t ));
         points[0] = centre;
         return points;
     }
@@ -28,7 +28,7 @@ ei_point_t* polygon_arc(ei_point_t centre,
     *size_tableau = (uint32_t)ceil(fabs(end_rad - start_rad) / (2 * M_PI / 360) +1);
 
     // Allocate memory for the points
-    ei_point_t* points = malloc(*size_tableau * sizeof(ei_point_t));
+    ei_point_t* points = SAFE_MALLOC(*size_tableau * sizeof(ei_point_t));
     if (!points) {
         return NULL;
     }
@@ -120,7 +120,7 @@ ei_point_t* rounded_frame(ei_rect_t* rectangle,
 
         h= (rectangle->size.width > rectangle->size.height ) ? rectangle->size.height /2 : rectangle->size.width/2;
 
-        ei_point_t* intermediaire = malloc(sizeof(ei_point_t)*2);
+        ei_point_t* intermediaire = SAFE_MALLOC(sizeof(ei_point_t)*2);
         intermediaire[0] = (ei_point_t){rectangle->top_left.x+h,rectangle->top_left.y+h};
         intermediaire[1] = (ei_point_t){rectangle->top_left.x-h +rectangle->size.width ,rectangle->top_left.y-h+rectangle->size.height};
 
@@ -188,7 +188,7 @@ void draw_button(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_
 /*------------------------------------------------------------------------------------------------------------------------*/
 
 ei_point_t* concatene_points(ei_point_t* points1, ei_point_t* points2, size_t size1, size_t size2){
-    ei_point_t *res = malloc(sizeof(ei_point_t)*(size1+size2));
+    ei_point_t *res = SAFE_MALLOC(sizeof(ei_point_t)*(size1+size2));
     memcpy(res, points1,sizeof(ei_point_t)*size1);
     memcpy(&res[size1], points2,sizeof(ei_point_t)*size2);
     return res;
@@ -261,7 +261,7 @@ ei_point_t* circle(ei_point_t centre, int radius, size_t* size_tableau)
     *size_tableau = (size_t)(2 * M_PI * radius * points_per_unit);
 
     // Allocate memory for the points
-    ei_point_t* points = malloc(*size_tableau * sizeof(ei_point_t));
+    ei_point_t* points = SAFE_MALLOC(*size_tableau * sizeof(ei_point_t));
     if (!points) {
         return NULL;
     }
@@ -282,9 +282,9 @@ ei_point_t* circle(ei_point_t centre, int radius, size_t* size_tableau)
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
 void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color, ei_rect_t* clipper, bool isPicking, ei_axis_set_t* resizable ) {
-    ei_point_t* conc2 =  malloc(sizeof(ei_point_t)*4);
-;   ei_point_t* carre_bas_droite = malloc(sizeof(ei_point_t)*4);
-    ei_point_t* border_line = malloc(sizeof(ei_point_t)*5);
+    ei_point_t* conc2 =  SAFE_MALLOC(sizeof(ei_point_t)*4);
+;   ei_point_t* carre_bas_droite = SAFE_MALLOC(sizeof(ei_point_t)*4);
+    ei_point_t* border_line = SAFE_MALLOC(sizeof(ei_point_t)*5);
     ei_point_t* conc3 = NULL;
 
     size_t nb_concat;
