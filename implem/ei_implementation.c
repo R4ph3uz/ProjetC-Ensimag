@@ -1,6 +1,7 @@
 #include "ei_implementation.h"
 #include "hw_interface.h"
 #include <stdlib.h>
+#include "ei_application.h"
 
 /*-------------------------------------------------------------------------------------------------------*/
 
@@ -185,16 +186,18 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
     if (actuel!=NULL) {
         while(actuel!=NULL) {
             // verifier surface
-            if (clipper==NULL)
+            if (!widget->parent)
             {
                 clipper=actuel->parent->content_rect;
             }
-            else
-            {
+            else if(clipper) {
                 clipper=intersection_rectangle(*clipper,*actuel->parent->content_rect);
             }
-            ei_impl_widget_draw_children(actuel,surface,pick_surface,clipper);
-            actuel=actuel->next_sibling;
+            if (clipper) {
+                ei_impl_widget_draw_children(actuel, surface, pick_surface, clipper);
+
+            }
+            actuel = actuel->next_sibling;
         }
     }
 }
