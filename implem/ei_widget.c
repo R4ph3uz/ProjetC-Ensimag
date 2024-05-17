@@ -16,9 +16,9 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 {
     ei_widgetclass_t* wclass = ei_widgetclass_from_name(class_name);
     ei_widget_t widget = (wclass->allocfunc)();
+    widget->wclass = wclass;
     (*(wclass->setdefaultsfunc))(widget);
 
-    widget->wclass = wclass;
     widget->pick_id=PICKID; // < Id of this widget in the picking offscreen
     widget->pick_color = SAFE_MALLOC(sizeof(ei_color_t));//< pick_id encoded as a color
     widget->pick_color->red=(uint8_t)( PICKID & 0xFF);
