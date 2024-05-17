@@ -249,11 +249,13 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 else{
                     entry->debut_selection=entry->position;
                 }
+                return true;
             }
             else{
                 entry->fin_selection= 0;
+                return false;
             }
-            return true;
+
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_RIGHT ) {
             if(entry->position < (int32_t) strlen(entry->text)){
@@ -280,12 +282,13 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 else{
                     entry->debut_selection=entry->position;
                 }
+                return true;
             }
             else{
-                entry->fin_selection= (int32_t) strlen(text);
+                entry->fin_selection= entry->position =(int32_t) strlen(text);
+                return false;
             }
         }
-        return true;
     }
     else {
         //min entre debut selection et fin selection
@@ -356,6 +359,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 if (ei_event_has_shift(event)) {
                     entry->fin_selection = 0;
                     entry->position = 0;
+                    return false;
                 } else {
                     entry->position = 0;
                     entry->is_in_selection = false;
@@ -364,6 +368,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 }
             }
             return true;
+
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_RIGHT ) {
             if(entry->position < (int32_t) strlen(entry->text)){
@@ -385,6 +390,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 // pour les bouttons LSHIFT et RSHIFT enfoncés
                 if(ei_event_has_shift(event)){
                     entry->fin_selection = entry->position;
+                    return false;
                 }
                 else {
                     entry->position = pos2;
@@ -392,15 +398,21 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                     entry->debut_selection = entry->position;
                     entry->fin_selection = entry->position;
                 }
+                return true;
             }
             else{
-                entry->position=(int32_t) strlen(text);
-                entry->debut_selection=entry->fin_selection=(int32_t) strlen(text);
+                if (ei_event_has_shift(event)){
+                    entry->position=(int32_t) strlen(text);
+                    entry->fin_selection=(int32_t) strlen(text);
+                    return false;
+                }
+                else{
+                    entry->position=entry->debut_selection=entry->fin_selection=(int32_t) strlen(text);
+                    return true;
+                }
             }
-            return true;
         }
     }
-
     return false;
 }
 
