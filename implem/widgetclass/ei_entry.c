@@ -121,7 +121,8 @@ void entry_drawfunc(ei_widget_t widget,
         }
         ei_point_t place = {entry->widget.content_rect->top_left.x-entry->decal_x,entry->widget.content_rect->top_left.y};
         ei_rect_t clipper_text = entry->widget.screen_location;
-        ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, &clipper_text);
+        ei_rect_t *clip = intersection_rectangle(clipper_text,*clipper);
+        ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, clip);
     }
     // place une border autour de l'entry
     if(entry->focus) {
