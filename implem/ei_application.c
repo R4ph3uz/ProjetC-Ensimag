@@ -71,32 +71,6 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 
 /* ----------------------------------------------------------------- */
 
-// fonction inutilisée car une fonction est deja ecrite pour ça (ei_widget_pick() )
-uint32_t get_pick_id(ei_surface_t pick_surface, ei_point_t point) {
-    hw_surface_lock(pick_surface);
-    uint32_t* buffer = (uint32_t*)hw_surface_get_buffer(pick_surface);
-    ei_size_t size = hw_surface_get_size(pick_surface);
-
-    hw_surface_unlock(pick_surface);
-    uint32_t index = (point.x)+(point.y)*size.width;
-    uint8_t color[4];
-    // Décalage de bits et masquage pour extraire chaque octet
-    color[0] = (uint8_t)( buffer[index] & 0xFF);
-    color[1] = (uint8_t)((buffer[index] >> 8) & 0xFF);
-    color[2] = (uint8_t)((buffer[index] >> 16) & 0xFF);
-    color[3] = (uint8_t)((buffer[index] >> 24) & 0xFF);
-
-    int ir,ig,ib,ia;
-    hw_surface_get_channel_indices( pick_surface, &ir, &ig, &ib, &ia);
-
-    uint32_t value = ((uint32_t)color[ir]) |
-                     ((uint32_t)color[ig] << 8) |
-                     ((uint32_t)color[ib] << 16) ;
-
-    return value;
-
-}
-/* ----------------------------------------------------------------- */
 
 void ei_app_run(void)
 {
@@ -184,7 +158,7 @@ void ei_app_run(void)
             list_call = list_call->next;
         }
 
-        if(((isModified||isModified1) && widget)||CHANGEMENT_PREMIER_PLAN) {
+        if(((isModified||isModified1) )||CHANGEMENT_PREMIER_PLAN) {
 
 
             ei_rect_t * union_rect = NULL;
@@ -214,7 +188,7 @@ void ei_app_run(void)
                      list.rect = rect_before;
                      list.next = NULL;
                      list_rect->next = &list;
-//                     union_rect = union_rectangle(rect_before, rect_after);
+                     union_rect = union_rectangle(rect_before, rect_after);
                  }
                  else{
                      list_rect= NULL;
@@ -222,10 +196,9 @@ void ei_app_run(void)
 
              }
 
-            ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
-            hw_surface_update_rects(ROOT_SURFACE,NULL);
         }
-
+        ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
+        hw_surface_update_rects(ROOT_SURFACE,NULL);
     }
     //free(new_event);
     hw_quit();

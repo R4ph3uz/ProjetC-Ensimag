@@ -67,6 +67,7 @@ void	 		ei_widget_set_requested_size	(ei_widget_t		widget, ei_size_t 		requested
     {
         *widget->geom_params->height = requested_size.height;
         *widget->geom_params->width = requested_size.width;
+        widget->geom_params->manager->runfunc(widget);//laisser ?
     }
 }
 
