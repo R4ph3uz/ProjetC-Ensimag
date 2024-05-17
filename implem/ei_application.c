@@ -151,13 +151,14 @@ void ei_app_run(void)
             memcpy(&rect_before, &widget->screen_location,sizeof(ei_rect_t));
         }
 
+        bool isModified1 = false;
         bool isModified = false;
 
         if(widget && widget->callback && new_event->type==ei_ev_mouse_buttonup ) {
             list_widget_callback* temp = widget->callback;
             while(temp!=NULL){
                 if(temp->eventtype == new_event->type){
-                    isModified = isModified || (*temp->callback)(widget, new_event,widget->user_data);
+                    isModified1 = isModified1 || (*temp->callback)(widget, new_event,widget->user_data);
                 }
                 temp=temp->next;
             }
@@ -168,18 +169,22 @@ void ei_app_run(void)
         list_callback* list_call = get_list_callback();
         while(list_call!=NULL) {
 
-            if(widget && list_call->eventtype == new_event->type && strcmp(list_call->tag, widget->wclass->name)==0 ) {
+            if(list_call->tag && list_call->eventtype == new_event->type && strcmp(list_call->tag, widget->wclass->name)==0 ) {
                 isModified = (*list_call->callback)(widget,new_event,list_call->user_param)|| isModified ;
-
             }
+            if( isModified)
+                break;
+
             if(list_call->tag && strcmp(list_call->tag, "all")==0 &&  list_call->eventtype == new_event->type) {
                 isModified = (*list_call->callback)(widget, new_event, list_call->user_param) || isModified;
 
             }
+            if(isModified)
+                break;
             list_call = list_call->next;
         }
 
-        if((isModified && widget)||CHANGEMENT_PREMIER_PLAN) {
+        if(((isModified||isModified1) && widget)||CHANGEMENT_PREMIER_PLAN) {
 
 
             ei_rect_t * union_rect = NULL;
@@ -217,8 +222,8 @@ void ei_app_run(void)
 
              }
 
-            ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),union_rect);
-            hw_surface_update_rects(ROOT_SURFACE,list_rect);
+            ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
+            hw_surface_update_rects(ROOT_SURFACE,NULL);
         }
 
     }

@@ -85,8 +85,8 @@ void toplevel_setdefaultsfunc(ei_widget_t widget) {
     *top_level->resizable = ei_axis_both;
     const char* title = "title";
     strcpy((char*) top_level->title ,title);
-    (*top_level->min_size)->width = 100;
-    (*top_level->min_size)->height = 100;
+    (*top_level->min_size)->width = 160;
+    (*top_level->min_size)->height = 120;
     top_level->color->alpha = 255;
     top_level->color->red = 149;
     top_level->color->green = 149;

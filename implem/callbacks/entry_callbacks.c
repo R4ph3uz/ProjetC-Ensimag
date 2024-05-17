@@ -101,15 +101,16 @@ bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user
         return false;
 
     }
-    set_entry_focus(NULL);
+
     ei_unbind(ei_ev_keydown,NULL,  "entry",controlc, entry);
     ei_unbind(ei_ev_keydown,NULL,  "entry",controlx, entry);
     ei_unbind(ei_ev_keydown,NULL,  "entry",controlv, entry);
     ei_unbind(ei_ev_keydown,NULL,"all",entry_write,entry); // keystroke
     ei_unbind(ei_ev_text_input,NULL,"all",entry_write,entry); // texte collé ?
     ei_unbind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors
-    ei_unbind(ei_ev_app,NULL, "all", animation_cursor,entry);
-    hw_event_cancel_app(get_id_animation());
+    ei_unbind(ei_ev_app,NULL, "all", animation_cursor,NULL);
+    set_entry_focus(NULL);
+//    hw_event_cancel_app(get_id_animation());
     entry->focus=false;
     return true;
 
@@ -127,9 +128,11 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 ei_entry_set_text((ei_widget_t)entry,text);
                 entry->position+=1;
                 entry->debut_selection=entry->position; // mais dans le doute si au prochain on entre en selection je sauvegarde cette position
+                return true;
             }
             else{
                 //on laisse le texte comme ceci
+                return false;
             }
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_DELETE) {
@@ -156,6 +159,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 ei_entry_set_text((ei_widget_t)entry,new);
                 entry->debut_selection=entry->position;
             }
+            return true;
         }
         if (event->type == ei_ev_keydown && event->param.key_code==SDLK_BACKSPACE) {
             // touch backspace pas en selection
@@ -217,6 +221,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 entry->debut_selection=entry->position;
                 entry->fin_selection=entry->position;
             }
+            return true;
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_LEFT) {
             if (entry->position > 0){
@@ -248,6 +253,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             else{
                 entry->fin_selection= 0;
             }
+            return true;
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_RIGHT ) {
             if(entry->position < (int32_t) strlen(entry->text)){
@@ -279,6 +285,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 entry->fin_selection= (int32_t) strlen(text);
             }
         }
+        return true;
     }
     else {
         //min entre debut selection et fin selection
@@ -294,6 +301,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             entry->position += 1;
             entry->debut_selection=entry->fin_selection =entry->position;
             entry->is_in_selection = false;
+            return true;
         }
         if (event->type == ei_ev_keydown && event->param.key_code == SDLK_DELETE) {
             // touche suppr si en selection
@@ -304,6 +312,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             entry->is_in_selection = false;
             entry->debut_selection = entry->position;
             entry->fin_selection = entry->position;
+            return true;
         }
         if (event->type == ei_ev_keydown && event->param.key_code == SDLK_BACKSPACE) {
             // touch backspace
@@ -312,6 +321,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             ei_entry_set_text((ei_widget_t) entry, new);
             entry->position = pos1;
             entry->is_in_selection = false;
+            return true;
         }
         if (event->type == ei_ev_keydown && event->param.key_code == SDLK_LEFT) {
             if (entry->position > 0) {
@@ -353,6 +363,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                     entry->fin_selection = entry->position;
                 }
             }
+            return true;
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_RIGHT ) {
             if(entry->position < (int32_t) strlen(entry->text)){
@@ -386,10 +397,11 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 entry->position=(int32_t) strlen(text);
                 entry->debut_selection=entry->fin_selection=(int32_t) strlen(text);
             }
+            return true;
         }
     }
 
-    return true;
+    return false;
 }
 
 /*------------------------------------------------------------------------------------------------------------------*/
@@ -399,14 +411,18 @@ bool animation_cursor(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
     if (app_event->is_animation_event){
         ei_entry_t entry = (ei_entry_t)app_event->param;
         if (entry){
-        entry->is_focus_visible = !entry->is_focus_visible ;
-        set_id_animation( hw_event_schedule_app(750,user_param));}
+            entry->is_focus_visible = !entry->is_focus_visible ;
+            set_id_animation( hw_event_schedule_app(750,event->param.application.user_param));
+            return true;
+        }
+
     }
     else if (app_event->is_double_click_event){
 
             ei_entry_t entry = (ei_entry_t) app_event->param;
         if (entry) {
             entry->is_double_clickable = false;
+            return true;
         }
     }
     return false;
@@ -504,13 +520,17 @@ bool handle_tab_entry(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
         else{
             dfs_find_last_except_entry(entry,ei_app_root_widget(),&temp);
             next_entry = temp;
-            if (next_entry)
+            if (next_entry){
                 ei_entry_give_focus(next_entry);
+            }
+
         }
         return true;
     }
    return false;
 }
+
+/*------------------------------------------------------------------------------------------------------------------*/
 
 bool controlc(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
     ei_entry_t entry = (ei_entry_t) user_param;

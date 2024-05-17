@@ -14,8 +14,12 @@ void ei_placer_runfunc(ei_widget_t widget)
     newscreen->size.height =res ;
     int res2=(int)((float)*widget->geom_params->width + *(widget->geom_params->rel_width) * (float)(widget->parent->content_rect->size.width));
     newscreen->size.width = res2;
-    int x =(int)(widget->parent->content_rect->top_left.x+*widget->geom_params->x+(int) ((float)(widget->parent->content_rect->size.width)**(widget->geom_params->rel_x)));
-    int y =(int)(widget->parent->content_rect->top_left.y+*widget->geom_params->y+(int) ((float)(widget->parent->content_rect->size.height)**(widget->geom_params->rel_y)));
+    int x =(int)(widget->parent->content_rect->top_left.x
+            + *widget->geom_params->x+(int)((float)(widget->parent->content_rect->size.width)
+            * *(widget->geom_params->rel_x)));
+    int y =(int)(widget->parent->content_rect->top_left.y + *widget->geom_params->y
+            + (int)((float)(widget->parent->content_rect->size.height)
+            * *(widget->geom_params->rel_y)));
 
     if (*widget->geom_params->anchor==ei_anc_northwest)
     {
