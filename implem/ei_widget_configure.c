@@ -91,13 +91,20 @@ void			ei_button_configure		(ei_widget_t		widget,
 							 ei_anchor_t*		img_anchor,
 							 ei_callback_t*		callback,
 							 ei_user_param_t*	user_param) {
-    if (requested_size)
-        ei_widget_set_requested_size(widget,*requested_size);
-    else if (!widget->geom_params)
-        ei_widget_set_requested_size(widget, ei_size(50,20));
 
 
     ei_button_t button = (ei_button_t) widget;
+
+    if (requested_size)
+        ei_widget_set_requested_size(widget,*requested_size);
+    else if (!widget->geom_params && text){
+        int width, height;
+        hw_text_compute_size(*text, *button->text_font,&width, &height );
+        ei_widget_set_requested_size(widget, ei_size(width,height));
+    }
+    else if(!widget->geom_params)
+        ei_widget_set_requested_size(widget, ei_size(50,20));
+
     if ((ei_color_t *) color != NULL) {
         if (!button->color) {
             button->color = SAFE_MALLOC(sizeof(*button->color));
