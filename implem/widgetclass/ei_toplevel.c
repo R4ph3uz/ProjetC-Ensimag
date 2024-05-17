@@ -46,7 +46,7 @@ void toplevel_drawfunc(ei_widget_t widget,
     if(top_level->title)
     {
         uint32_t decal_x = 20;
-        uint32_t decal_y = -25;
+        int32_t decal_y = -25;
         ei_point_t place = {widget->content_rect->top_left.x+decal_x,widget->content_rect->top_left.y+decal_y};
         ei_color_t	blanc	= { 0xdf, 0xdf, 0xdf, 0xff };
         void* test= hw_text_font_create("misc/font.ttf",ei_style_normal,20);
