@@ -147,6 +147,8 @@ void frame_drawfunc(ei_widget_t widget,
     {
         ei_point_t place = {0,0};
         ei_rect_t rect=hw_surface_get_rect(*frame->img);
+        if (widget->content_rect->size.width<rect.size.width ||widget->content_rect->size.height<rect.size.height)
+            *frame->img_anchor=ei_anc_northwest;
         if(!frame->img_anchor)
         {
             place.x=widget->content_rect->top_left.x+(int)((float)(widget->content_rect->size.width)/2)-(int)((float)rect.size.width/2);
