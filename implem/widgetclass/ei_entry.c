@@ -6,18 +6,14 @@
 #include <ei_entry.h>
 #include <ei_utils.h>
 #include <stdlib.h>
-#include "../draw_utils/draw_utils.h"
+#include "../utils/draw_utils.h"
+#include "../utils/text_utils.h"
+
 /*---------------------------------------------------------------------------------------------------------------------*/
 
 ei_widget_t entry_allocfunc(){
-    ei_impl_entry_t* entry = malloc(sizeof(ei_impl_entry_t));
-    entry->color = malloc(sizeof(ei_color_t));
-    entry->requested_char_size = malloc(sizeof(int));
-    entry->text_font = malloc(sizeof(ei_font_t));
-    entry->text_color = malloc(sizeof(ei_color_t));
-    entry->border_width = malloc(sizeof(int));
-    entry->focus=malloc(sizeof(bool));
-    entry->text= malloc(sizeof(char));
+    ei_impl_entry_t* entry = SAFE_CALLOC(sizeof(ei_impl_entry_t));
+
     return (ei_widget_t) entry;
 }
 
@@ -45,7 +41,13 @@ void entry_setdefaultsfunc(ei_widget_t widget){
     ei_entry_t entry = (ei_entry_t) widget;
 
     /* Suite spécifique à une  entry*/
-
+    entry->color = malloc(sizeof(ei_color_t));
+    entry->requested_char_size = malloc(sizeof(int));
+    entry->text_font = malloc(sizeof(ei_font_t));
+    entry->text_color = malloc(sizeof(ei_color_t));
+    entry->border_width = malloc(sizeof(int));
+    entry->focus=malloc(sizeof(bool));
+    entry->text= malloc(sizeof(char));
     entry->color->alpha = 255;
     entry->color->blue = 255;
     entry->color->green = 255;
@@ -60,6 +62,8 @@ void entry_setdefaultsfunc(ei_widget_t widget){
     entry->position= 0 ;
     *entry->text = '\0';
     entry->decal_x =0;
+    entry->is_double_clickable = false;
+    entry->is_in_selection = false;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------*/
@@ -73,87 +77,74 @@ void entry_drawfunc(ei_widget_t widget,
         widget->geom_params->manager->runfunc(widget);
     ei_entry_t entry = (ei_entry_t) widget;
 
-    int top_left_x = widget->screen_location.top_left.x;
-    int top_left_y = widget->screen_location.top_left.y;
+    int top_left_x = widget->content_rect->top_left.x;
+    int top_left_y = widget->content_rect->top_left.y;
 
     ei_point_t* points = malloc(4*sizeof(ei_point_t));
     points[0] = (ei_point_t) {top_left_x, top_left_y };
-    points[1] = (ei_point_t) {top_left_x+widget->screen_location.size.width, top_left_y };
-    points[2] = (ei_point_t) {top_left_x+widget->screen_location.size.width, top_left_y+widget->screen_location.size.height };
-    points[3] = (ei_point_t) {top_left_x, top_left_y+widget->screen_location.size.height };
+    points[1] = (ei_point_t) {top_left_x+widget->content_rect->size.width, top_left_y };
+    points[2] = (ei_point_t) {top_left_x+widget->content_rect->size.width, top_left_y+widget->content_rect->size.height };
+    points[3] = (ei_point_t) {top_left_x, top_left_y+widget->content_rect->size.height };
     size_t nb_points = 4;
 
     hw_surface_lock(surface);
     hw_surface_lock(pick_surface);
-
+    if(entry->border_width!=NULL) { // doit etre fait avant de dessiner la entry (vu que en dessous
+        ei_point_t* border = malloc(4*sizeof(ei_point_t));
+        if (entry->focus)
+            *entry->border_width = 2;
+        else
+            *entry->border_width= 1;
+        border[0] = (ei_point_t) {top_left_x - (*entry->border_width), top_left_y - *entry->border_width};
+        border[1] = (ei_point_t) {top_left_x + widget->content_rect->size.width + *entry->border_width, top_left_y - *entry->border_width };
+        border[2] = (ei_point_t) {top_left_x + widget->content_rect->size.width + *entry->border_width, top_left_y + widget->content_rect->size.height + *entry->border_width };
+        border[3] = (ei_point_t) {top_left_x - (*entry->border_width), top_left_y + widget->content_rect->size.height + *entry->border_width };
+        ei_color_t color = (ei_color_t) {0,0,0, 255};
+        ei_draw_polygon(surface, border, 4, color, clipper);
+        free(border);
+    }
     ei_draw_polygon(surface, points, nb_points, *entry->color, clipper);
     ei_draw_polygon(pick_surface, points, nb_points, *entry->widget.pick_color, clipper);
 
-    ei_const_string_t texte ;
-
     if(entry->text){
-
-        // entry->decal_x =0;// widget->screen_location.size.width/10;
         /* test place cursor pour voir s'il est en dehors de l'entry */
-        const char* entry_text_restreint = restrict_text(entry->text, entry->position);
+        char* entry_text_restreint = restrict_text(entry->text,entry->position);
         int width, height;
         hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
-        if(width > entry->widget.screen_location.size.width - entry->decal_x) { // si dépasse a droite
-            fprintf(stderr, "AIAIIAI\n");
-            entry->decal_x = -width+entry->widget.screen_location.size.width;
+        if(width > entry->widget.content_rect->size.width + entry->decal_x) { // si dépasse a droite
+            entry->decal_x = width-entry->widget.content_rect->size.width;
         }
-        if (width < - entry->decal_x) { //si dépasse a gauche
-            fprintf(stderr, "WTFF %d", width);
+        if (width < entry->decal_x) { //si dépasse a gauche
+            entry_text_restreint = restrict_text(entry->text,entry->position);
+            hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
             entry->decal_x = width;
-            fprintf(stderr, "WTFF %d", entry->decal_x);
         }
-        fprintf(stderr, "Pourquoi ?%d " ,entry->decal_x);
-        ei_point_t place = {widget->screen_location.top_left.x+entry->decal_x,widget->screen_location.top_left.y};
+        ei_point_t place = {entry->widget.content_rect->top_left.x-entry->decal_x,entry->widget.content_rect->top_left.y};
         ei_rect_t clipper_text = entry->widget.screen_location;
-        ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, &clipper_text);
-
-
-        // uint32_t decal_y = 0;//widget->screen_location.size.height/2;
-        // ei_point_t place = {widget->screen_location.top_left.x+entry->decal_x,widget->screen_location.top_left.y+decal_y};
-        // clipper->size.height = clipper->size.height ;
-        // clipper->size.width = clipper->size.width ;
-        // ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, clipper);
+        ei_rect_t *clip = intersection_rectangle(clipper_text,*clipper);
+        ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, clip);
     }
-    // place une border autour de l'entryei_point_t place = {widget->screen_location.top_left.x+entry->decal_x,widget->screen_location.top_left.y+decal_y};
+    // place une border autour de l'entry
     if(entry->focus) {
         //mets un curseur si focus
-        uint32_t decal_y = 0;//widget->screen_location.size.height/2;
-        ei_point_t place = {widget->screen_location.top_left.x+entry->decal_x,widget->screen_location.top_left.y+decal_y};
-        ei_draw_polyline(surface, points, nb_points,(ei_color_t){40,40,40,255}, NULL);
+        uint32_t decal_y = 0;//widget->content_rect->size.height/2;
 
         //calcul de la place du curseur |
         ei_point_t* place_cursor ;
         if (entry->text) {
             const char* entry_text_restreint = restrict_text(entry->text, entry->position);
-            fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
             int width, height;
             hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
             place_cursor = &(ei_point_t){
-                widget->screen_location.top_left.x + entry->decal_x + width -5,
-                widget->screen_location.top_left.y - 5,
+                entry->widget.content_rect->top_left.x - entry->decal_x + width -5,
+                entry->widget.content_rect->top_left.y - 5,
             };
-            free((char*)entry_text_restreint);
-
-            // const char* entry_text_restreint = restrict_text(entry->text, entry->position);
-            // // fprintf(stderr, "texte res: %s  vs text normal %s \n", entry_text_restreint, entry->text);
-            // int width, height;
-            // hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
-            // place_cursor = &(ei_point_t){
-            //     widget->screen_location.top_left.x + entry->decal_x + width - 10,
-            //     widget->screen_location.top_left.y + decal_y - 5
-            // };
-            // free((char*)entry_text_restreint);
         }
         else
         //No text
             place_cursor = &(ei_point_t){
-                widget->screen_location.top_left.x + entry->decal_x - 10,
-                widget->screen_location.top_left.y + decal_y - 5
+                widget->content_rect->top_left.x - 10,
+                widget->content_rect->top_left.y + decal_y - 5
             };
 
 
@@ -164,10 +155,17 @@ void entry_drawfunc(ei_widget_t widget,
 
         if(entry->is_in_selection){
             ei_point_t* rect = malloc(sizeof(ei_point_t)* 4);
-            rect[0] = ei_point(find_selection_entry(entry,entry->debut_selection) , entry->widget.screen_location.top_left.y);
-            rect[1] = ei_point(find_selection_entry(entry,entry->debut_selection), entry->widget.screen_location.top_left.y + entry->widget.screen_location.size.height);
-            rect[2] = ei_point(find_selection_entry(entry,entry->fin_selection), entry->widget.screen_location.top_left.y + entry->widget.screen_location.size.height);
-            rect[3] = ei_point(find_selection_entry(entry,entry->fin_selection), entry->widget.screen_location.top_left.y);
+            int l_rect_bleu_x,r_rect_bleu_x;
+            int size_text,h;
+            hw_text_compute_size(restrict_text(entry->text,fminf(entry->debut_selection,entry->fin_selection)),*entry->text_font,&size_text,&h);
+            l_rect_bleu_x=entry->widget.content_rect->top_left.x-entry->decal_x+size_text;
+            rect[0] = ei_point(l_rect_bleu_x , entry->widget.content_rect->top_left.y); // top left
+            rect[1] = ei_point(l_rect_bleu_x, entry->widget.content_rect->top_left.y + entry->widget.content_rect->size.height); //bottom left
+
+            hw_text_compute_size(restrict_text(entry->text,fmaxf(entry->debut_selection,entry->fin_selection)),*entry->text_font,&size_text,&h);
+            r_rect_bleu_x=entry->widget.content_rect->top_left.x-entry->decal_x+size_text;
+            rect[2] = ei_point(r_rect_bleu_x, entry->widget.content_rect->top_left.y + entry->widget.content_rect->size.height);
+            rect[3] = ei_point(r_rect_bleu_x, entry->widget.content_rect->top_left.y);
 
             ei_color_t select_color = (ei_color_t) {25, 25, 200, 100};
             ei_draw_polygon(surface, rect ,4, select_color, &entry->widget.screen_location);
@@ -182,7 +180,7 @@ void entry_drawfunc(ei_widget_t widget,
 
 
 void entry_geomnotifyfunc(ei_widget_t widget){
-
+    widget->content_rect=&widget->screen_location;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------*/

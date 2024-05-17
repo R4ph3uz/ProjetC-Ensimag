@@ -14,7 +14,42 @@
 #include "ei_widget.h"
 #include "ei_geometrymanager.h"
 
+#define SAFE_MALLOC(size) \
+    ({ \
+        void *ptr = malloc(size); \
+        if (!ptr) { \
+            fprintf(stderr, "Memory allocation failed, exiting application.\n"); \
+            exit(EXIT_FAILURE);\
+        } \
+        ptr; \
+    })
+
+#define SAFE_CALLOC(size) \
+    ({ \
+        void *ptr = calloc(size,1); \
+        if (!ptr) { \
+            fprintf(stderr, "Memory allocation failed, exiting application.\n"); \
+            exit(EXIT_FAILURE);\
+        } \
+        ptr; \
+    })
+
+/**
+ * @brief	unmap le widget et ses enfants pour le geometry manager placer
+ *
+ * @param	widget		Le widget a unmap
+ */
 void ei_placer_releasefunc(ei_widget_t widget);
+
+
+
+
+/**
+ * @brief	A function that runs the geometry computation for this widget.
+ * 		Must call \ref ei_geometry_run_finalize before returning.
+ *
+ * @param	widget		The widget instance for which to compute geometry.
+ */
 void ei_placer_runfunc(ei_widget_t widget);
 
 typedef struct list_widget_callback {
@@ -90,6 +125,13 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
  */
 uint32_t	ei_impl_map_rgba(ei_surface_t surface, ei_color_t color);
 
+/**
+ * @brief	Calcule le rectangle d'union de deux rectangles
+ *
+ * @param	rect1	Premier rectangle
+ * @param	rect2	Deuxième rectangle
+ */
+ei_rect_t* union_rectangle(ei_rect_t rect1, ei_rect_t rect2);
 
 /**
  * \brief	Fields common to all geometry managers. Every geometry manager specializes this by adding its own fields.
@@ -120,6 +162,25 @@ ei_surface_t get_pick_surface(void);
  * @param	rect2	Deuxième rectangle
  */
 ei_rect_t* intersection_rectangle(ei_rect_t rect1 , ei_rect_t rect2);
+/**
+ * @brief	Crée un geometry manager de type placer
+ */
+ei_geometrymanager_t* create_placer_gm(void);
 
+
+/**
+ * @brief	Supprime le widget parmis ses freres et soeur
+ *
+ * @param	widget le widget
+ */
+void supprime_de_ses_freres(ei_widget_t widget);
+
+/**
+ * @brief	place le widget a la fin de la liste de freres
+ *
+ * @param	widget le widget
+ */
+void place_a_la_fin(ei_widget_t widget);
 
 #endif
+

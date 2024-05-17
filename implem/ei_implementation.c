@@ -1,18 +1,26 @@
 #include "ei_implementation.h"
 #include "hw_interface.h"
 #include <stdlib.h>
+#include "ei_application.h"
 
 /*-------------------------------------------------------------------------------------------------------*/
 
 void ei_placer_runfunc(ei_widget_t widget)
 {
     ei_rect_t* newscreen=malloc(sizeof (ei_rect_t));
-    int res=(int)((float)*widget->geom_params->height + *(widget->geom_params->rel_height) * (float)(widget->parent->screen_location.size.height));
+    if(!widget->geom_params){
+        return;
+    }
+    int res=(int)((float)*widget->geom_params->height + *(widget->geom_params->rel_height) * (float)(widget->parent->content_rect->size.height));
     newscreen->size.height =res ;
-    int res2=(int)((float)*widget->geom_params->width + *(widget->geom_params->rel_width) * (float)(widget->parent->screen_location.size.width));
+    int res2=(int)((float)*widget->geom_params->width + *(widget->geom_params->rel_width) * (float)(widget->parent->content_rect->size.width));
     newscreen->size.width = res2;
-    int x =(int)(widget->parent->screen_location.top_left.x+*widget->geom_params->x+(int) ((float)(widget->parent->screen_location.size.width)**(widget->geom_params->rel_x)));
-    int y =(int)(widget->parent->screen_location.top_left.y+*widget->geom_params->y+(int) ((float)(widget->parent->screen_location.size.height)**(widget->geom_params->rel_y)));
+    int x =(int)(widget->parent->content_rect->top_left.x
+            + *widget->geom_params->x+(int)((float)(widget->parent->content_rect->size.width)
+            * *(widget->geom_params->rel_x)));
+    int y =(int)(widget->parent->content_rect->top_left.y + *widget->geom_params->y
+            + (int)((float)(widget->parent->content_rect->size.height)
+            * *(widget->geom_params->rel_y)));
 
     if (*widget->geom_params->anchor==ei_anc_northwest)
     {
@@ -21,43 +29,43 @@ void ei_placer_runfunc(ei_widget_t widget)
     }
     if (*widget->geom_params->anchor==ei_anc_north)
     {
-        newscreen->top_left.x = x - (int) (widget->screen_location.size.width/2);
+        newscreen->top_left.x = x - (int) (newscreen->size.width/2);
         newscreen->top_left.y = y;
     }
     if (*widget->geom_params->anchor==ei_anc_northeast)
     {
-        newscreen->top_left.x = x - (int) (widget->screen_location.size.width);
+        newscreen->top_left.x = x - (int) (newscreen->size.width);
         newscreen->top_left.y = y;
     }
     if (*widget->geom_params->anchor==ei_anc_west)
     {
         newscreen->top_left.x = x;
-        newscreen->top_left.y = y- (int) (widget->screen_location.size.height/2);
+        newscreen->top_left.y = y- (int) (newscreen->size.height/2);
     }
     if (*widget->geom_params->anchor==ei_anc_center)
     {
-        newscreen->top_left.x = x - (int) (widget->screen_location.size.width/2);
-        newscreen->top_left.y = y- (int) (widget->screen_location.size.height/2);
+        newscreen->top_left.x = x - (int) (newscreen->size.width/2);
+        newscreen->top_left.y = y- (int) (newscreen->size.height/2);
     }
     if (*widget->geom_params->anchor==ei_anc_east)
     {
-        newscreen->top_left.x = x - (int) (widget->screen_location.size.width);
-        newscreen->top_left.y = y- (int) (widget->screen_location.size.height/2);
+        newscreen->top_left.x = x - (int) (newscreen->size.width);
+        newscreen->top_left.y = y- (int) (newscreen->size.height/2);
     }
     if (*widget->geom_params->anchor==ei_anc_southwest)
     {
         newscreen->top_left.x = x ;
-        newscreen->top_left.y = y- (int) (widget->screen_location.size.height);
+        newscreen->top_left.y = y- (int) (newscreen->size.height);
     }
     if (*widget->geom_params->anchor==ei_anc_south)
     {
-        newscreen->top_left.x = x - (int) (widget->screen_location.size.width/2);
-        newscreen->top_left.y = y- (int) (widget->screen_location.size.height);
+        newscreen->top_left.x = x - (int) (newscreen->size.width/2);
+        newscreen->top_left.y = y- (int) (newscreen->size.height);
     }
     if (*widget->geom_params->anchor==ei_anc_southeast)
     {
-        newscreen->top_left.x = x - (int) (widget->screen_location.size.width);
-        newscreen->top_left.y = y- (int) (widget->screen_location.size.height);
+        newscreen->top_left.x = x - (int) (newscreen->size.width);
+        newscreen->top_left.y = y- (int) (newscreen->size.height);
     }
     ei_geometry_run_finalize(widget,newscreen);
 
@@ -118,6 +126,41 @@ ei_rect_t* intersection_rectangle(ei_rect_t rect1,ei_rect_t rect2) {
 
 /*------------------------------------------------------------------------------------*/
 
+ei_rect_t* union_rectangle(ei_rect_t rect1, ei_rect_t rect2)
+{
+    // Calculate the top-left point of the union rectangle
+    int x1 = rect1.top_left.x;
+    int y1 = rect1.top_left.y;
+    int x2 = rect2.top_left.x;
+    int y2 = rect2.top_left.y;
+    int x = (x1 < x2) ? x1 : x2;
+    int y = (y1 < y2) ? y1 : y2;
+
+    // Calculate the size of the union rectangle
+    int w1 = rect1.size.width;
+    int h1 = rect1.size.height;
+    int w2 = rect2.size.width;
+    int h2 = rect2.size.height;
+    int w = (x1 + w1 > x2 + w2) ? (x1 + w1 - x) : (x2 + w2 - x);
+    int h = (y1 + h1 > y2 + h2) ? (y1 + h1 - y) : (y2 + h2 - y);
+
+    // Allocate memory for the union rectangle
+    ei_rect_t* rect = malloc(sizeof(ei_rect_t));
+    if (!rect) {
+        return NULL;
+    }
+
+    // Set the values of the union rectangle
+    rect->top_left.x = x;
+    rect->top_left.y = y;
+    rect->size.width = w;
+    rect->size.height = h;
+
+    return rect;
+}
+
+/*------------------------------------------------------------------------------------*/
+
 uint32_t	ei_impl_map_rgba(ei_surface_t surface, ei_color_t color){
     int ir,ig,ib,ia;
     hw_surface_get_channel_indices( surface, &ir, &ig, &ib, &ia);
@@ -143,17 +186,73 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
     if (actuel!=NULL) {
         while(actuel!=NULL) {
             // verifier surface
-            if (clipper==NULL)
+            if (!widget->parent)
             {
-                clipper=&actuel->parent->screen_location;
+                clipper=actuel->parent->content_rect;
             }
-            else
-            {
-                clipper=intersection_rectangle(*clipper,actuel->parent->screen_location);
+            else if(clipper) {
+                clipper=intersection_rectangle(*clipper,*actuel->parent->content_rect);
             }
-            ei_impl_widget_draw_children(actuel,surface,pick_surface,clipper);
-            actuel=actuel->next_sibling;
+            if (clipper) {
+                ei_impl_widget_draw_children(actuel, surface, pick_surface, clipper);
+
+            }
+            actuel = actuel->next_sibling;
         }
     }
 }
 
+/*-------------------------------------------------------------------------------------------------------*/
+
+ei_geometrymanager_t* create_placer_gm(){
+    ei_geometrymanager_t* res = SAFE_MALLOC(sizeof(ei_geometrymanager_t));
+    res->runfunc=ei_placer_runfunc;
+    res->releasefunc = ei_placer_releasefunc;
+    const char name[] = "placer";
+    strcpy(res->name, name);
+    res->next = NULL;
+    return res;
+}
+
+/*-------------------------------------------------------------------------------------------------------*/
+void supprime_de_ses_freres(ei_widget_t widget)
+{
+    ei_widget_t prec=widget->parent;
+    ei_widget_t suiv=widget->next_sibling;
+    if (prec->children_head!=widget)
+    {
+        prec=prec->children_head;
+        while (prec->next_sibling!=widget)
+        {
+            prec=prec->next_sibling;
+        }
+        prec->next_sibling=suiv;
+        if(suiv==NULL)
+        {
+            prec->parent->children_tail=prec;
+        }
+    }
+    else
+    {
+        prec->children_head=suiv;
+        if(suiv==NULL)
+        {
+            prec->children_tail=NULL;
+        }
+    }
+}
+/*-------------------------------------------------------------------------------------------------------*/
+
+void place_a_la_fin(ei_widget_t widget2) {
+    if (widget2->parent->children_tail == NULL) {
+        widget2->parent->children_tail = widget2;
+        widget2->parent->children_head = widget2;
+    } else {
+        widget2->parent->children_tail->next_sibling = widget2;
+        widget2->parent->children_tail = widget2;
+        widget2->next_sibling = NULL;
+    }
+}
+
+
+/*-------------------------------------------------------------------------------------------------------*/

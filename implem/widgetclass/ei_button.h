@@ -23,6 +23,8 @@ typedef struct{
     ei_anchor_t*		img_anchor;
     ei_callback_t*		callback;
     ei_user_param_t*	user_param;
+
+    bool is_clicked;
 } ei_impl_button_t;
 
 typedef ei_impl_button_t* ei_button_t;

@@ -16,6 +16,7 @@
 #include "widgetclass/ei_toplevel.h"
 #include "callbacks/toplevel_callbacks.h"
 #include "widgetclass/ei_entry.h"
+#include "grid.h"
 
 /* ----------------------------------------------------------------- */
 
@@ -25,6 +26,7 @@ static ei_surface_t ROOT_SURFACE;
 static ei_widget_t ROOT_WIDGET;
 static ei_surface_t PICKING_SURFACE;
 static bool IS_RUNNING;
+static bool CHANGEMENT_PREMIER_PLAN;
 
 /* ----------------------------------------------------------------- */
 
@@ -47,16 +49,11 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ei_bind(ei_ev_mouse_buttondown, NULL, "toplevel", toplevel_down_click_handler, NULL);
     ei_bind(ei_ev_mouse_buttondown,NULL,"entry",entry_down_click_handler,NULL);
 
-    //défini le geometry manager
-    ei_geometrymanager_t* placer = malloc(sizeof(ei_geometrymanager_t));
-    placer->runfunc = ei_placer_runfunc;
-    placer->releasefunc = ei_placer_releasefunc;
-
-    const char name[] = "button";
-    strcpy(placer->name, name);
-
-    placer->next = NULL;
-    // enregistre
+    //défini les geometry manager
+    ei_geometrymanager_t* grid = create_grid_gm();
+    ei_geometrymanager_t* placer = create_placer_gm();
+    // enregistres
+    ei_geometrymanager_register(grid);
     ei_geometrymanager_register(placer);
     ROOT_SURFACE =  hw_create_window(main_window_size, fullscreen);
     PICKING_SURFACE = hw_surface_create(ROOT_SURFACE, main_window_size, false);
@@ -67,39 +64,13 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ROOT_WIDGET->screen_location.top_left = ei_point_zero();
     ROOT_WIDGET->screen_location.size = main_window_size;
 
+    ROOT_WIDGET->content_rect=&ROOT_WIDGET->screen_location;
 
 }
 
 
 /* ----------------------------------------------------------------- */
 
-// fonction inutilisée car une fonction est deja ecrite pour ça (ei_widget_pick() )
-uint32_t get_pick_id(ei_surface_t pick_surface, ei_point_t point) {
-    hw_surface_lock(pick_surface);
-    uint32_t* buffer = (uint32_t*)hw_surface_get_buffer(pick_surface);
-    ei_size_t size = hw_surface_get_size(pick_surface);
-
-    hw_surface_unlock(pick_surface);
-    uint32_t index = (point.x)+(point.y)*size.width;
-    uint8_t color[4];
-    // Décalage de bits et masquage pour extraire chaque octet
-    color[0] = (uint8_t)( buffer[index] & 0xFF);
-    color[1] = (uint8_t)((buffer[index] >> 8) & 0xFF);
-    color[2] = (uint8_t)((buffer[index] >> 16) & 0xFF);
-    color[3] = (uint8_t)((buffer[index] >> 24) & 0xFF);
-
-    int ir,ig,ib,ia;
-    hw_surface_get_channel_indices( pick_surface, &ir, &ig, &ib, &ia);
-
-    uint32_t value = ((uint32_t)color[ir]) |
-                     ((uint32_t)color[ig] << 8) |
-                     ((uint32_t)color[ib] << 16) ;
-
-    return value;
-
-}
-
-/* ----------------------------------------------------------------- */
 
 void ei_app_run(void)
 {
@@ -109,8 +80,12 @@ void ei_app_run(void)
 
     // (*(ROOT_WIDGET->wclass->drawfunc))(ROOT_WIDGET, ei_app_root_surface(), NULL, NULL);
     IS_RUNNING = true;
+    CHANGEMENT_PREMIER_PLAN = false;
     ei_widget_t widget = NULL;
-    ei_event_t* new_event = malloc(sizeof(ei_event_t));
+    ei_event_t* new_event = SAFE_MALLOC(sizeof(ei_event_t));
+    widget=ROOT_WIDGET;
+
+    ei_widget_t widget_last_child;
     while(IS_RUNNING){
 
         hw_event_wait_next(new_event);
@@ -121,8 +96,10 @@ void ei_app_run(void)
             ei_widget_t precwid=widget;
             widget= ei_widget_pick(&(new_event->param.mouse.where)); // fonction faites pour ça
             // widget = get_widget_by_pickid(get_pick_id(PICKING_SURFACE,new_event->param.mouse.where ));
-            ei_widget_t widget2=widget;
 
+
+            ei_widget_t widget2=widget;
+//            on met en premier plan le plus grand paraent du widget sur lequel on clique different de la root
 
             if (widget!=ROOT_WIDGET && widget!=precwid)
             {
@@ -131,46 +108,15 @@ void ei_app_run(void)
                     while (widget2->parent != ROOT_WIDGET) {
                         widget2 = widget2->parent;
                     }
+                    widget_last_child = widget2;
                 }
 
-                if (widget2)
+                if (widget2 && widget2->parent->children_tail!=widget2)
                 {
+                    CHANGEMENT_PREMIER_PLAN=true;
+                    supprime_de_ses_freres(widget2);
+                    place_a_la_fin(widget2);
 
-                    ei_widget_t prec=widget2->parent;
-                    ei_widget_t suiv=widget2->next_sibling;
-
-                    if (prec->children_head!=widget2)
-                    {
-                        prec=prec->children_head;
-                        while (prec->next_sibling!=widget2)
-                        {
-                            prec=prec->next_sibling;
-                        }
-                        prec->next_sibling=suiv;
-                        if(suiv==NULL)
-                        {
-                            prec->parent->children_tail=prec;
-                        }
-                    }
-                    else
-                    {
-                        prec->children_head=suiv;
-                        if(suiv==NULL)
-                        {
-                            prec->children_tail=NULL;
-                        }
-                    }
-                    if (widget2->parent->children_tail==NULL)
-                    {
-                        widget2->parent->children_tail=widget2;
-                        widget2->parent->children_head=widget2;
-                    }
-                    else
-                    {
-                        widget2->parent->children_tail->next_sibling = widget2;
-                        widget2->parent->children_tail = widget2;
-                        widget2->next_sibling = NULL;
-                    }
                 }
 
             }
@@ -179,13 +125,14 @@ void ei_app_run(void)
             memcpy(&rect_before, &widget->screen_location,sizeof(ei_rect_t));
         }
 
+        bool isModified1 = false;
         bool isModified = false;
 
         if(widget && widget->callback && new_event->type==ei_ev_mouse_buttonup ) {
             list_widget_callback* temp = widget->callback;
             while(temp!=NULL){
                 if(temp->eventtype == new_event->type){
-                    isModified = isModified || (*temp->callback)(widget, new_event,widget->user_data);
+                    isModified1 = isModified1 || (*temp->callback)(widget, new_event,widget->user_data);
                 }
                 temp=temp->next;
             }
@@ -196,31 +143,64 @@ void ei_app_run(void)
         list_callback* list_call = get_list_callback();
         while(list_call!=NULL) {
 
-            if(widget && list_call->eventtype == new_event->type && strcmp(list_call->tag, widget->wclass->name)==0 ) {
+            if(list_call->tag && list_call->eventtype == new_event->type && strcmp(list_call->tag, widget->wclass->name)==0 ) {
                 isModified = (*list_call->callback)(widget,new_event,list_call->user_param)|| isModified ;
-
             }
+            if( isModified)
+                break;
+
             if(list_call->tag && strcmp(list_call->tag, "all")==0 &&  list_call->eventtype == new_event->type) {
                 isModified = (*list_call->callback)(widget, new_event, list_call->user_param) || isModified;
 
             }
+            if(isModified)
+                break;
             list_call = list_call->next;
         }
-        if(isModified && widget) {
-            // widget->geom_params->manager->runfunc(widget);
-            // rect_after = widget->screen_location;
-            // ei_linked_rect_t list_rect;
-            // list_rect.rect = rect_after;
-            // ei_linked_rect_t list;
-            // list.rect = rect_before;
-            // list.next = NULL;
-            // list_rect.next = &list;
-            ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
-            hw_surface_update_rects(ROOT_SURFACE,NULL);
-        }
 
+        if(((isModified||isModified1) )||CHANGEMENT_PREMIER_PLAN) {
+
+
+            ei_rect_t * union_rect = NULL;
+             ei_linked_rect_t* list_rect;
+             if(widget == ROOT_WIDGET){
+                 list_rect = NULL;
+             }
+             else if (ROOT_WIDGET->children_tail){
+                 //find the closest parent that is a top level, if there is none then update everything
+                 ei_widget_t temp = ROOT_WIDGET->children_tail;
+                 while(temp->parent!=NULL){
+                     if(strcmp(temp->wclass->name, "toplevel")== 0 ){
+                         break;
+                     }
+                     temp = temp->parent;
+                 }
+
+                 if(temp->parent && temp->geom_params){
+                     ei_rect_t* test  = intersection_rectangle(hw_surface_get_rect(ROOT_SURFACE),temp->screen_location );
+                     rect_before = *test;
+                     temp->geom_params->manager->runfunc(temp);
+                     ei_rect_t* test2  = intersection_rectangle(hw_surface_get_rect(ROOT_SURFACE),temp->screen_location );
+                     rect_after = *test2;
+                     list_rect = malloc(sizeof(ei_linked_rect_t));
+                     list_rect->rect = rect_after;
+                     ei_linked_rect_t list;
+                     list.rect = rect_before;
+                     list.next = NULL;
+                     list_rect->next = &list;
+                     union_rect = union_rectangle(rect_before, rect_after);
+                 }
+                 else{
+                     list_rect= NULL;
+                 }
+
+             }
+
+        }
+        ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
+        hw_surface_update_rects(ROOT_SURFACE,NULL);
     }
-    //free(new_event);
+    free(new_event);
     hw_quit();
 }
 

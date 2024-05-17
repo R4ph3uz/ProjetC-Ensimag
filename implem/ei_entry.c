@@ -8,9 +8,10 @@
 
 /*------------------------------------------------------------------------------*/
 
-#define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = malloc(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
+#define COPY_IF_NOT_NULL(field, value) if ((value) != NULL) { if ((field) == NULL){(field) = SAFE_MALLOC(sizeof(*(field)));} memcpy((field), (value),sizeof(*(field)) );}
 
-ei_entry_t ENTRY_FOCUS;
+
+entry_app_event* USER_P;
 /*------------------------------------------------------------------------------*/
 
 
@@ -25,10 +26,9 @@ void			ei_entry_configure		(ei_widget_t		widget,
     ei_entry_t entry = (ei_entry_t) widget;
     // mets la width a "a"*requested_char_size
     if(requested_char_size){
-        char* falsestring=(char*) malloc((*requested_char_size+1)*sizeof(char));
+        char* falsestring=(char*) SAFE_MALLOC((*requested_char_size+1)*sizeof(char));
         memset(falsestring,97,*requested_char_size);
         falsestring[*requested_char_size]='\0';
-        // fprintf(stderr,"%s\n",falsestring);
         ei_surface_t surfaceee=hw_text_create_surface(falsestring,*entry->text_font,*entry->text_color);
         int width= hw_surface_get_rect(surfaceee).size.width;
         ei_widget_set_requested_size(widget,ei_size(width,20));
@@ -53,7 +53,7 @@ void			ei_entry_set_text		(ei_widget_t		widget,
                                           ei_const_string_t 	text)
 {
     ei_entry_t entry = (ei_entry_t) widget;
-    entry->text= malloc(sizeof(char)* (strlen(text)+1));
+    entry->text= SAFE_MALLOC(sizeof(char)* (strlen(text)+1));
     strcpy( entry->text,text);
 }
 
@@ -70,21 +70,38 @@ ei_const_string_t 	ei_entry_get_text		(ei_widget_t		widget)
 void			ei_entry_give_focus		(ei_widget_t		widget)
 {
     ei_entry_t entry = (ei_entry_t) widget;
-    if(ENTRY_FOCUS){
-        ENTRY_FOCUS->focus = false;
-        ei_unbind(ei_ev_keydown,NULL,"all",entry_write,ENTRY_FOCUS); // keystroke
-        ei_unbind(ei_ev_text_input,NULL,"all",entry_write,ENTRY_FOCUS); // texte collé ?
-        ei_unbind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,ENTRY_FOCUS); // si on clique e dehors
-        hw_event_schedule_app(500,NULL);
-        ei_unbind(ei_ev_app,NULL, "all", animation_cursor,ENTRY_FOCUS);
+    ei_entry_t old_entry = get_entry_focus();
+    if(old_entry){
+        old_entry->focus = false;
+        ei_unbind(ei_ev_keydown,NULL,  "entry",controlc, old_entry);
+        ei_unbind(ei_ev_keydown,NULL,  "entry",controlx, old_entry);
+        ei_unbind(ei_ev_keydown,NULL,  "entry",controlv, old_entry);
+        ei_unbind(ei_ev_keydown,NULL,"all",entry_write,old_entry); // keystroke
+        ei_unbind(ei_ev_text_input,NULL,"all",entry_write,old_entry); // texte collé ?
+        ei_unbind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,old_entry); // si on clique e dehors
+        ei_unbind(ei_ev_app,NULL, "all", animation_cursor,NULL);
+        ei_unbind(ei_ev_keydown, NULL, "all", handle_tab_entry, old_entry);
+        hw_event_cancel_app(get_id_animation());
     }
 
 
     entry->focus =true;
-    ENTRY_FOCUS = entry;
+    set_entry_focus(entry);
+    entry->is_in_selection =true;
+    entry->debut_selection =  0;
+    entry->fin_selection = strlen(entry->text );
+    ei_bind(ei_ev_keydown,NULL,  "entry",controlc, entry);
+    ei_bind(ei_ev_keydown,NULL,  "entry",controlx, entry);
+    ei_bind(ei_ev_keydown,NULL,  "entry",controlv, entry);
     ei_bind(ei_ev_keydown,NULL,"all",entry_write,entry); // keystroke
     ei_bind(ei_ev_text_input,NULL,"all",entry_write,entry); // texte collé ?
     ei_bind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors
-    hw_event_schedule_app(500,NULL);
-    ei_bind(ei_ev_app,NULL, "all", animation_cursor,entry);
+    USER_P = SAFE_MALLOC(sizeof(entry_app_event));
+    USER_P->is_animation_event = true;
+    USER_P->is_double_click_event = false;
+    USER_P->param= entry;
+
+    set_id_animation( hw_event_schedule_app(600,USER_P));
+    ei_bind(ei_ev_app,NULL, "all", animation_cursor,NULL);
+    ei_bind(ei_ev_keydown, NULL, "all", handle_tab_entry, entry);
 }

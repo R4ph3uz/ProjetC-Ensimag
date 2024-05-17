@@ -12,7 +12,8 @@ void add_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t even
         LIST_CALLBACK = malloc(sizeof(list_callback));
         LIST_CALLBACK->callback = callback;
         LIST_CALLBACK->eventtype = eventtype;
-        LIST_CALLBACK->tag= tag;
+        LIST_CALLBACK->tag = malloc(sizeof(char)*(strlen(tag)+1));
+        strcpy(LIST_CALLBACK->tag, tag);
         LIST_CALLBACK->user_param = user_param;
         LIST_CALLBACK->next = NULL;
     }
@@ -20,7 +21,8 @@ void add_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t even
         list_callback* temp = malloc(sizeof(list_callback));
         temp->callback = callback;
         temp->eventtype = eventtype;
-        temp->tag= tag;
+        temp->tag = malloc(sizeof(char)*(strlen(tag)+1));
+        strcpy(temp->tag, tag);
         temp->next = LIST_CALLBACK;
         temp->user_param = user_param;
         LIST_CALLBACK = temp;
@@ -33,18 +35,29 @@ void add_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t even
 void remove_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t eventtype, void* user_param) {
     list_callback *parcours = LIST_CALLBACK;
 
-    if(strcmp(parcours->tag,tag)==0 && memcmp(&parcours->eventtype,&eventtype, sizeof(ei_eventtype_t))==0 ) {
-        LIST_CALLBACK->tag ="zae";
+    if(strcmp(parcours->tag,tag)==0
+        && parcours->eventtype==eventtype
+        && callback==parcours->callback
+        && user_param == parcours->user_param) {
+        list_callback* temp = LIST_CALLBACK;
         LIST_CALLBACK = LIST_CALLBACK->next;
-
+            if (user_param!= parcours->user_param)
+                fprintf(stderr, "C'EST PAS LE MEME USER PARAM");
+        free(temp);
         return;
     }
 
     while(parcours->next!=NULL) {
-        if(strcmp(parcours->next->tag,tag)==0 && memcmp(&parcours->next->eventtype,&eventtype, sizeof(ei_eventtype_t))==0 ) {
-            fprintf(stderr, parcours->next->tag);
-            list_callback* temp = parcours->next;
+        if(strcmp(parcours->next->tag,tag)==0
+            && memcmp(&parcours->next->eventtype,&eventtype, sizeof(ei_eventtype_t))==0
+            && callback==parcours->next->callback
+            && eventtype==parcours->next->eventtype
+            && user_param == parcours->next->user_param) {
+             list_callback* temp = parcours->next;
+            if (user_param!= parcours->next->user_param)
+                fprintf(stderr, "C'EST PAS LE MEME USER PARAM 2");
             parcours->next = parcours->next->next;
+
             free(temp); // Besoin de free les sous structures (je pense pas)?
             return;
         }

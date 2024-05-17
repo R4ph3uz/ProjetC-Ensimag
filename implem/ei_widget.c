@@ -16,11 +16,11 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 {
     ei_widgetclass_t* wclass = ei_widgetclass_from_name(class_name);
     ei_widget_t widget = (wclass->allocfunc)();
+    widget->wclass = wclass;
     (*(wclass->setdefaultsfunc))(widget);
 
-    widget->wclass = wclass;
     widget->pick_id=PICKID; // < Id of this widget in the picking offscreen
-    widget->pick_color = malloc(sizeof(ei_color_t));//< pick_id encoded as a color
+    widget->pick_color = SAFE_MALLOC(sizeof(ei_color_t));//< pick_id encoded as a color
     widget->pick_color->red=(uint8_t)( PICKID & 0xFF);
     widget->pick_color->green=(uint8_t)((PICKID >> 8) & 0xFF);
     widget->pick_color->blue=(uint8_t)((PICKID >> 16) & 0xFF);
@@ -53,7 +53,12 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 
 
 
-    widget->content_rect=NULL;	///< See ei_widget_get_content_rect. By defaults, points to the screen_location.
+    widget->content_rect=SAFE_MALLOC(sizeof(ei_rect_t));
+    widget->content_rect->size.width=0;
+    widget->content_rect->size.height=0;
+    widget->content_rect->top_left.x=0;
+    widget->content_rect->top_left.y=0;
+    ///< See ei_widget_get_content_rect. By defaults, points to the screen_location.
 
     widget->callback= NULL;
 
@@ -67,48 +72,24 @@ void			ei_widget_destroy		(ei_widget_t		widget)
 {
     //détruit les enfants
 
-    ei_widget_t prec=widget->parent;
-    ei_widget_t suiv=widget->next_sibling;
-    if (prec->children_head!=widget)
-    {
-        prec=prec->children_head;
-        while (prec->next_sibling!=widget)
-        {
-            prec=prec->next_sibling;
-        }
-        prec->next_sibling=suiv;
-        if(suiv==NULL)
-        {
-            prec->parent->children_tail=prec;
-        }
-    }
-    else
-    {
-        prec->children_head=suiv;
-        if(suiv==NULL)
-        {
-            prec->children_tail=NULL;
-        }
-    }
+    supprime_de_ses_freres(widget);
     while(widget->children_head){
         ei_widget_t prochain = widget->children_head->next_sibling;
         ei_widget_destroy(widget->children_head);
         widget->children_head=prochain;
     }
 
-
     ei_geometrymanager_unmap(widget);
-//    (*(widget->wclass->releasefunc))(widget); // ici libère la mémoire
+    if (widget->destructor)
+    widget->destructor(widget);
+    //(*(widget->wclass->releasefunc))(widget); // ici libère la mémoire
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
 
 bool	 		ei_widget_is_displayed		(ei_widget_t		widget)
 {
-    // verifie si geom param est nul
-    // condition suffisante mais pas nécéssaire car il existe d'autres cas où le widget est pas display mais a des
-    // geomparam
-    if (!widget->geom_params){
+    if (widget->geom_params){
         return true;
     }
     return false;
