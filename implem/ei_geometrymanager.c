@@ -79,10 +79,6 @@ void			ei_geometrymanager_unmap	(ei_widget_t widget)
     if (widget->geom_params)
     {
         widget->geom_params->manager->releasefunc(widget);
-        free(widget->geom_params->manager);
-        free(widget->geom_params->x);
-        free(widget->geom_params->y);
-        free(widget->geom_params->rel_x);
         free(widget->geom_params->rel_y);
         free(widget->geom_params->width);
         free(widget->geom_params->height);
