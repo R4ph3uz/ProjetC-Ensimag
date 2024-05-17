@@ -81,7 +81,7 @@ void			ei_entry_give_focus		(ei_widget_t		widget)
         ei_unbind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,old_entry); // si on clique e dehors
         ei_unbind(ei_ev_app,NULL, "all", animation_cursor,NULL);
         ei_unbind(ei_ev_keydown, NULL, "all", handle_tab_entry, old_entry);
-//        hw_event_cancel_app(get_id_animation());
+        hw_event_cancel_app(get_id_animation());
     }
 
 
@@ -101,7 +101,7 @@ void			ei_entry_give_focus		(ei_widget_t		widget)
     USER_P->is_double_click_event = false;
     USER_P->param= entry;
 
-//    set_id_animation( hw_event_schedule_app(750,USER_P));
+    set_id_animation( hw_event_schedule_app(600,USER_P));
     ei_bind(ei_ev_app,NULL, "all", animation_cursor,NULL);
     ei_bind(ei_ev_keydown, NULL, "all", handle_tab_entry, entry);
 }

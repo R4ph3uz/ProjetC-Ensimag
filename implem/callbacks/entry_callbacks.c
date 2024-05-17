@@ -110,7 +110,7 @@ bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user
     ei_unbind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors
     ei_unbind(ei_ev_app,NULL, "all", animation_cursor,NULL);
     set_entry_focus(NULL);
-//    hw_event_cancel_app(get_id_animation());
+    hw_event_cancel_app(get_id_animation());
     entry->focus=false;
     return true;
 
@@ -412,7 +412,7 @@ bool animation_cursor(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
         ei_entry_t entry = (ei_entry_t)app_event->param;
         if (entry){
             entry->is_focus_visible = !entry->is_focus_visible ;
-            set_id_animation( hw_event_schedule_app(750,event->param.application.user_param));
+            set_id_animation( hw_event_schedule_app(600,event->param.application.user_param));
             return true;
         }
 
