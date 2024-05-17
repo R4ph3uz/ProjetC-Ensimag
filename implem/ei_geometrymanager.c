@@ -92,14 +92,13 @@ void			ei_geometrymanager_unmap	(ei_widget_t widget)
         free(widget->geom_params);
         widget->geom_params=NULL;
     }
+
+
     widget->screen_location.size.height=0;
     widget->screen_location.size.width=0;
     widget->screen_location.top_left.x=0;
     widget->screen_location.top_left.y=0;
-    widget->content_rect->size.height=0;
-    widget->content_rect->size.width=0;
-    widget->content_rect->top_left.x=0;
-    widget->content_rect->top_left.y=0;
+    *widget->content_rect=widget->screen_location;
 
 }
 
@@ -109,10 +108,15 @@ ei_geometrymanager_t*	ei_widget_get_geom_manager	(ei_widget_t widget)
 {
     if (widget->geom_params)
     {
-        return widget->geom_params->manager;
+        if (widget->geom_params->manager) {
+            return widget->geom_params->manager;
+        }
+        else
+            return NULL;
     }
     else
     {
+
         return NULL;
     }
 }
@@ -136,6 +140,7 @@ ei_geom_param_t		ei_widget_get_geom_params	(ei_widget_t widget)
 void			ei_widget_set_geom_params	(ei_widget_t widget, ei_geom_param_t geom_param)
 {
     widget->geom_params=geom_param;
+
 }
 
 

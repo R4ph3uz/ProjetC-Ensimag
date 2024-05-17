@@ -92,7 +92,7 @@ bool	 		ei_widget_is_displayed		(ei_widget_t		widget)
     // verifie si geom param est nul
     // condition suffisante mais pas nécéssaire car il existe d'autres cas où le widget est pas display mais a des
     // geomparam
-    if (!widget->geom_params){
+    if (widget->geom_params){
         return true;
     }
     return false;
