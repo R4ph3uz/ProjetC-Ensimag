@@ -177,6 +177,7 @@ void draw_button(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_
         ei_draw_polygon(surface, conc2, nb_concat, color_plus_fonce, clipper);
     }
     else if(relief== ei_relief_none){
+        free(conc1);
         conc1 = rounded_frame(&rectangle, radius, full, &nb_points1);
     }
 

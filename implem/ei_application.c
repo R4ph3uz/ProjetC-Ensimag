@@ -200,7 +200,7 @@ void ei_app_run(void)
         ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
         hw_surface_update_rects(ROOT_SURFACE,NULL);
     }
-    //free(new_event);
+    free(new_event);
     hw_quit();
 }
 

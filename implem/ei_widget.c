@@ -82,16 +82,13 @@ void			ei_widget_destroy		(ei_widget_t		widget)
     ei_geometrymanager_unmap(widget);
     if (widget->destructor)
     widget->destructor(widget);
-//    (*(widget->wclass->releasefunc))(widget); // ici libère la mémoire
+    //(*(widget->wclass->releasefunc))(widget); // ici libère la mémoire
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
 
 bool	 		ei_widget_is_displayed		(ei_widget_t		widget)
 {
-    // verifie si geom param est nul
-    // condition suffisante mais pas nécéssaire car il existe d'autres cas où le widget est pas display mais a des
-    // geomparam
     if (widget->geom_params){
         return true;
     }

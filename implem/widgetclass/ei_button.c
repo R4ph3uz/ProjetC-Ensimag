@@ -35,21 +35,20 @@ void button_releasefunc(ei_widget_t widget) {
 
 void button_setdefaultsfunc(ei_widget_t widget) {
     ei_button_t button = (ei_button_t) widget;
-    button->color=malloc(sizeof(ei_color_t));
+    button->color=SAFE_MALLOC(sizeof(ei_color_t));
 
-    button->border_width=malloc(sizeof(int));
-    button->corner_radius = malloc(sizeof(int));
-    button->relief=malloc(sizeof(ei_relief_t));
-    button->text = malloc(sizeof(ei_string_t));
-    button->text_font = malloc(sizeof(ei_font_t));
-    button->text_color = malloc(sizeof(ei_color_t));
-    button->text_anchor = malloc(sizeof(ei_anchor_t));
-    button->img = malloc(sizeof(ei_surface_t));
-    button->img_rect = malloc(sizeof(ei_rect_ptr_t));
-    button->img_anchor = malloc(sizeof(ei_anchor_t));
-    // que mettre au callback ?
-    button->callback=malloc(sizeof(ei_callback_t));
-    button->user_param =malloc(sizeof(ei_user_param_t));
+    button->border_width=SAFE_MALLOC(sizeof(int));
+    button->corner_radius = SAFE_MALLOC(sizeof(int));
+    button->relief=SAFE_MALLOC(sizeof(ei_relief_t));
+    button->text = SAFE_MALLOC(sizeof(ei_string_t));
+    button->text_font = SAFE_MALLOC(sizeof(ei_font_t));
+    button->text_color = SAFE_MALLOC(sizeof(ei_color_t));
+    button->text_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
+    button->img = SAFE_MALLOC(sizeof(ei_surface_t));
+    button->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
+    button->img_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
+    button->callback=SAFE_MALLOC(sizeof(ei_callback_t));
+    button->user_param =SAFE_MALLOC(sizeof(ei_user_param_t));
 
     button->widget.requested_size.width = 100;
     button->widget.requested_size.height =100;

@@ -39,11 +39,11 @@ void remove_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t e
         && parcours->eventtype==eventtype
         && callback==parcours->callback
         && user_param == parcours->user_param) {
-        ei_linked_tag_t* temp = LIST_CALLBACK;
+        list_callback* temp = LIST_CALLBACK;
         LIST_CALLBACK = LIST_CALLBACK->next;
+            if (user_param!= parcours->user_param)
+                fprintf(stderr, "C'EST PAS LE MEME USER PARAM");
         free(temp);
-        if (user_param!= parcours->user_param)
-            fprintf(stderr, "C'EST PAS LE MEME USER PARAM");
         return;
     }
 
