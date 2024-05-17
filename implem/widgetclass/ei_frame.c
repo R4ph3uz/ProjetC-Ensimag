@@ -89,19 +89,115 @@ void frame_drawfunc(ei_widget_t widget,
         // Si il a du texte a afficher (pour l'instant ignoré)
         int width, height;
         hw_text_compute_size(*frame->text, *frame->text_font, &width,&height);
-        uint32_t decal_x = widget->content_rect->size.width/2-width/2;
-        uint32_t decal_y = widget->content_rect->size.height/2-height/2;
+        uint32_t decal_x =0;
+        uint32_t decal_y =0;
+        if (!frame->text_anchor)
+        {
+            decal_x = widget->content_rect->size.width/2-width/2;
+            decal_y = widget->content_rect->size.height/2-height/2;
+        }
+        else if (*frame->text_anchor==ei_anc_north)
+        {
+            decal_x = widget->content_rect->size.width/2-width/2;
+        }
+        else if (*frame->text_anchor==ei_anc_northeast)
+        {
+            decal_x = widget->content_rect->size.width-width;
+        }
+        else if (*frame->text_anchor==ei_anc_west)
+        {
+            decal_y = widget->content_rect->size.height/2-height/2;
+        }
+        else if (*frame->text_anchor==ei_anc_center)
+        {
+            decal_x = widget->content_rect->size.width/2-width/2;
+            decal_y = widget->content_rect->size.height/2-height/2;
+        }
+        else if (*frame->text_anchor==ei_anc_east)
+        {
+            decal_x = widget->content_rect->size.width-width;
+            decal_y = widget->content_rect->size.height/2-height/2;
+        }
+        else if (*frame->text_anchor==ei_anc_southwest)
+        {
+            decal_y = widget->content_rect->size.height-height;
+        }
+        else if (*frame->text_anchor==ei_anc_south)
+        {
+            decal_x = widget->content_rect->size.width/2-width/2;
+            decal_y = widget->content_rect->size.height-height;
+        }
+        else if (*frame->text_anchor==ei_anc_southeast)
+        {
+            decal_x = widget->content_rect->size.width-width;
+            decal_y = widget->content_rect->size.height-height;
+        }
+
+
+
+
+
         ei_point_t place = {widget->content_rect->top_left.x+decal_x,widget->content_rect->top_left.y+decal_y};
         hw_surface_lock(surface);
         ei_draw_text(surface, &place, *frame->text, *frame->text_font, *frame->text_color, clipper);
         hw_surface_unlock(surface);
 
     }
-    if(frame->img){
-        // Si il y a un image a afficher (pour l'instant ignoré)
+    if(frame->img)
+    {
+        ei_point_t place = {0,0};
+        ei_rect_t rect=hw_surface_get_rect(*frame->img);
+        if(!frame->img_anchor)
+        {
+            place.x=widget->content_rect->top_left.x+(int)((float)(widget->content_rect->size.width)/2)-(int)((float)rect.size.width/2);
+            place.y=widget->content_rect->top_left.y+(int)((float)(widget->content_rect->size.height)/2)-(int)((float)rect.size.height/2);
+        }
+        else if (*frame->img_anchor==ei_anc_northwest)
+        {
+            place.x=widget->content_rect->top_left.x;
+            place.y=widget->content_rect->top_left.y;
 
-            // Si il y a un image a afficher (pour l'instant ignoré)
-        ei_point_t place = {widget->content_rect->top_left.x,widget->content_rect->top_left.y};
+        }
+        else if (*frame->img_anchor==ei_anc_north)
+        {
+            place.x=widget->content_rect->top_left.x;
+            place.y=widget->content_rect->top_left.y+(int)((float)(widget->content_rect->size.height)/2)-(int)((float)rect.size.height/2);
+        }
+        else if (*frame->img_anchor==ei_anc_northeast)
+        {
+            place.x=widget->content_rect->top_left.x;
+            place.y=widget->content_rect->top_left.y+(int)((float)(widget->content_rect->size.height))-(int)((float)rect.size.height);
+        }
+        else if (*frame->img_anchor==ei_anc_west)
+        {
+            place.x=widget->content_rect->top_left.x+(int)((float)(widget->content_rect->size.width)/2)-(int)((float)rect.size.width/2);
+            place.y=widget->content_rect->top_left.y;
+        }
+        else if (*frame->img_anchor==ei_anc_center)
+        {
+            place.x=widget->content_rect->top_left.x+(int)((float)(widget->content_rect->size.width)/2)-(int)((float)rect.size.width/2);
+            place.y=widget->content_rect->top_left.y+(int)((float)(widget->content_rect->size.height)/2)-(int)((float)rect.size.height/2);
+        }
+        else if (*frame->img_anchor==ei_anc_east)
+        {
+            place.x=widget->content_rect->top_left.x+(int)((float)(widget->content_rect->size.width)/2)-(int)((float)rect.size.width/2);
+            place.y=widget->content_rect->top_left.y+(int)((float)(widget->content_rect->size.height))-(int)((float)rect.size.height);
+        }
+        else if (*frame->img_anchor==ei_anc_southwest)
+        {
+            place.x=widget->content_rect->top_left.x+(int)((float)(widget->content_rect->size.width))-(int)((float)rect.size.width);
+            place.y=widget->content_rect->top_left.y;
+        }
+        else if (*frame->img_anchor==ei_anc_south)
+        {
+            place.x=widget->content_rect->top_left.x+(int)((float)(widget->content_rect->size.width))-(int)((float)rect.size.width);
+            place.y=widget->content_rect->top_left.y+(int)((float)(widget->content_rect->size.height)/2)-(int)((float)rect.size.height/2);
+        }
+        else
+        {
+            place.x=widget->content_rect->top_left.x+(int)((float)(widget->content_rect->size.width))-(int)((float)rect.size.width);
+            place.y=widget->content_rect->top_left.y+(int)((float)(widget->content_rect->size.height))-(int)((float)rect.size.height);
+        }
         if(frame->img_rect == NULL) {
             frame->img_rect = malloc(sizeof(ei_rect_ptr_t));
             *frame->img_rect = malloc(sizeof(ei_rect_t));
@@ -156,10 +252,10 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     ei_fontstyle_t style = ei_style_normal;
     *frame->text_font = hw_text_font_create(name, style, 20);
     *frame->text_color= (ei_color_t) {0,0,0};
-    *frame->text_anchor =ei_anc_northwest;
+    *frame->text_anchor =ei_anc_center;
     frame->img = NULL;
     frame->img_rect = NULL;
-    frame->img_anchor = NULL;
+    *frame->img_anchor = ei_anc_center;
 }
 
 /*--------------------------------------------------------------------------------*/
