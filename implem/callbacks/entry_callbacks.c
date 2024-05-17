@@ -612,17 +612,26 @@ bool controlx(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
 bool controlv(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
     ei_entry_t entry = (ei_entry_t) user_param;
     if (ei_event_has_ctrl(event) && event->param.key_code=='v') {
-        fprintf(stderr,"dans controle-v texte copié %s / position %i\n",TEXTE_COPIE,entry->position);
+        if(entry->is_in_selection){
+            int32_t pos1 = (int32_t) fminf((float) entry->debut_selection,
+                                           (float) entry->fin_selection);
+            int32_t pos2 = (int32_t) fmaxf((float) entry->debut_selection,
+                                           (float) entry->fin_selection);
+            char* text =entry->text;
+            char* text2= cut_text(text,pos1,pos2);
+            ei_entry_set_text((ei_widget_t) entry,text2);
+            entry->is_in_selection=false;
+            entry->position=entry->debut_selection=entry->fin_selection=pos1;
+        }
         char* text = entry->text;
+        fprintf(stderr,"dans controle-v texte copié %s / position %i\n",TEXTE_COPIE,entry->position);
         if(!TEXTE_COPIE){
             return false;
         }
         else{
-            for(int i=0; i<(int)strlen(TEXTE_COPIE);i++){
-                char* text2 = insert_char(text,TEXTE_COPIE[i],entry->position);
+            char* text2 = insert_word(text,TEXTE_COPIE,entry->position);
                 ei_entry_set_text((ei_widget_t) entry, text2);
-                entry->position++;
-            }
+                entry->position+=strlen(TEXTE_COPIE);
             return true;
         }
     }

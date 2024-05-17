@@ -30,6 +30,34 @@ char*  insert_char(char* text, char character, uint8_t where) {
 
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
+char* insert_word(char* text, const char* word, uint8_t where) {
+    // Taille initiale du texte et du mot à insérer
+    int taille_text = strlen(text);
+    int taille_word = strlen(word);
+    // Nouvelle taille après insertion du mot
+    int nouvelle_taille = taille_text + taille_word;
+
+    // Allocation de mémoire pour la nouvelle chaîne de caractères
+    char* res = malloc(sizeof(char) * (nouvelle_taille + 1)); // +1 pour le caractère nul de fin
+
+    // Copier la partie du texte avant l'insertion
+    strncpy(res, text, where);
+
+    // Copier le mot à insérer
+    strncpy(res + where, word, taille_word);
+
+    // Copier la partie restante du texte après l'insertion
+    strcpy(res + where + taille_word, text + where);
+
+    // Libérer la mémoire du texte original
+    free(text);
+
+    // Retourner la nouvelle chaîne de caractères
+    return res;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------------*/
+
 char * delete_char(char *text, uint8_t where) {
     int taille = strlen(text)-1;
     if(0<where && where <=taille+1 ) {

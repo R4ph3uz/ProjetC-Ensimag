@@ -22,6 +22,14 @@ char* restrict_text(char* text, uint8_t taille);
  * @return
  */
 char* insert_char(char* text, char character, uint8_t where);
+/**
+ * @brief
+ * @param text texte auquel on ajoute un mot, malloc un nouveau text de la bonne taille
+ * @param character charactere à insérer dans le texte
+ * @param where indice (en partant du debut ou ajouter le caractère
+ * @return
+ */
+char* insert_word(char* text, const char* word, uint8_t where);
 
 /**
  * @brief
