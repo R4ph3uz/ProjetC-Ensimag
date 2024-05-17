@@ -60,21 +60,30 @@ void handle_double_click(ei_entry_t entry, ei_event_t* event){
 
 bool entry_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_entry_t entry = (ei_entry_t) widget;
+    entry->fin_selection=entry->debut_selection;
     entry->position = find_position_cursor_selection_entry(entry, event->param.mouse.where);
     entry->debut_selection = find_position_cursor_selection_entry(entry,event->param.mouse.where);
     ei_bind(ei_ev_mouse_move, NULL, "all", entry_selection_mouse_move, entry);
     ei_bind(ei_ev_mouse_buttonup, NULL, "all", entry_up_click_handler, entry);
 
     handle_double_click(entry, event);
-    if(entry->focus == false){
+    if(!entry->focus){
         ei_entry_give_focus((ei_widget_t) entry );
         entry->debut_selection = entry->position;
         entry->fin_selection=entry->position;
         entry->is_in_selection = false;
     }
-
-
     // faire un truc si shift click
+    if(entry->focus && !entry->is_in_selection && ei_event_has_shift(event)){
+        int32_t pos1 = (int32_t) fminf((float) entry->debut_selection,
+                                       (float) entry->fin_selection);
+        int32_t pos2 = (int32_t) fmaxf((float) entry->debut_selection,
+                                       (float) entry->fin_selection);
+        entry->debut_selection = pos1;
+        entry->fin_selection=pos2;
+        entry->is_in_selection = true;
+    }
+
     return true;
 }
 
@@ -273,15 +282,17 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
     }
     else {
         //min entre debut selection et fin selection
-        int pos1 = (uint8_t) fminf((float) entry->debut_selection,
+        int32_t pos1 = (int32_t) fminf((float) entry->debut_selection,
                                    (float) entry->fin_selection);
-        int pos2 = (uint8_t) fmaxf((float) entry->debut_selection,
+        int32_t pos2 = (int32_t) fmaxf((float) entry->debut_selection,
                                    (float) entry->fin_selection);
         if (event->type == ei_ev_text_input){
+            entry->position=pos1;
             char *new = cut_text(text, pos1, pos2);
             char* text2 = insert_char(new, event->param.text, entry->position);
             ei_entry_set_text((ei_widget_t) entry, text2);
             entry->position += 1;
+            entry->debut_selection=entry->fin_selection =entry->position;
             entry->is_in_selection = false;
         }
         if (event->type == ei_ev_keydown && event->param.key_code == SDLK_DELETE) {
@@ -371,6 +382,10 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                     entry->fin_selection = entry->position;
                 }
             }
+            else{
+                entry->position=(int32_t) strlen(text);
+                entry->debut_selection=entry->fin_selection=(int32_t) strlen(text);
+            }
         }
     }
 
@@ -403,6 +418,7 @@ bool entry_selection_mouse_move(ei_widget_t widget, ei_event_t* event, ei_user_p
     ei_entry_t entry = user_param;
     entry->is_in_selection = true;
     entry->fin_selection = find_position_cursor_selection_entry(entry,event->param.mouse.where);
+    entry->position=entry->fin_selection;
 
     if (event->param.mouse.where.x < entry->widget.content_rect->top_left.x){
         if (entry->decal_x > 0 ){
@@ -514,7 +530,6 @@ bool controlc(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
                 strcpy(TEXTE_COPIE, new_text);
             }
             free(new_text);
-            fprintf(stderr,"dans controle-c texte copié %s / pos1 %i / pos2 %i\n",TEXTE_COPIE,pos1,pos2);
             return true;
         } else {
             return false;
