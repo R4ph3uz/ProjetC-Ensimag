@@ -70,4 +70,12 @@ void find_word(char* text, int where, int* debut, int* fin);
  */
 char* texte_selectionne(char* text, int32_t debut, int32_t fin);
 
+/**
+ * Fonction pour trouver la prochaine position dans la chaîne  après avoir maintenu control
+ * @param string la chaîne de caractères à analyser
+ * @param position la position de départ dans la chaîne
+ * @param direction la direction de parcours (1 pour avancer, -1 pour reculer)
+ * @return la nouvelle position dans la chaîne selon les critères spécifiés
+ */
+int bypass_control(const char *string, int position, int direction);
 #endif //PROJETC_IG_TEXT_UTILS_H

@@ -142,12 +142,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             if (ei_event_has_ctrl(event)){
                 char ch = text[entry->position];
                 int pos1 =entry->position;
-                int pos2 =pos1;
-                while (((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')) && (entry->position<(int32_t) strlen(text))) {
-                    pos2++;
-                    entry->position++;
-                    ch=text[entry->position];
-                }
+                int pos2 = bypass_control(entry->text,entry->position,1);
                 char *new = cut_text(text, pos1, pos2);
                 ei_entry_set_text((ei_widget_t)entry,new);
                 entry->debut_selection = (int32_t) fminf((float)pos1,(float)pos2);
@@ -168,17 +163,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             if (ei_event_has_ctrl(event)) {
                 char ch = text[entry->position-1];
                 int pos1 =entry->position;
-                int pos2 =pos1;
-                while(ch==' '){ // supprime tous les espaces après le mot
-                    pos2--;
-                    entry->position--;
-                    ch=text[entry->position-1];
-                }// puis supprime le mot
-                while (((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9' )) && (pos2>0)) {
-                    pos2--;
-                    entry->position--;
-                    ch=text[entry->position-1];
-                }
+                int pos2 = bypass_control(entry->text,entry->position,-1);
                 char *new = cut_text(text, pos2, pos1);
                 ei_entry_set_text((ei_widget_t)entry,new);
                 entry->debut_selection = (int32_t) fminf((float)pos1,(float)pos2);
@@ -227,19 +212,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             if (entry->position > 0){
                 entry->position -= 1;
                 if (ei_event_has_ctrl(event)){
-                    char* rest_text = restrict_text(text,entry->position);
-                    char ch = rest_text[(int32_t) strlen(rest_text)-1];
-                    while(ch==' ' && entry->position>0){
-                        entry->position--;
-                        entry->fin_selection= entry->position;
-                        ch=rest_text[entry->position-1];
-                    }
-                    while (((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')) &&
-                             entry->position>0 && entry->position<(int32_t) strlen(text)){
-                        entry->position-=1;
-                        entry->fin_selection= entry->position;
-                        ch=rest_text[entry->position-1];
-                    }
+                    entry->fin_selection = entry->position = bypass_control(entry->text,entry->position,-1);
                 }
                 // pour les buttons LSHIFT et RSHIFT enfoncés
                 if(ei_event_has_shift(event)){
@@ -262,17 +235,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 entry->position +=1;
                 //boutton control enfoncé
                 if (ei_event_has_ctrl(event)){
-                    char ch = text[entry->position];
-                    while(ch==' '){
-                        entry->fin_selection= entry->position;
-                        entry->position++;
-                        ch=text[entry->position];
-                    }
-                    while (((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')) && (entry->position<(int32_t) strlen(text))) {
-                        entry->fin_selection= entry->position;
-                        entry->position++;
-                        ch=text[entry->position];
-                    }
+                    entry->fin_selection = entry->position = bypass_control(entry->text,entry->position,1);
                 }
                 // pour les bouttons LSHIFT et RSHIFT enfoncés
                 if(ei_event_has_shift(event)){
@@ -331,19 +294,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 entry->position -= 1;
                 //boutton control enfoncé
                 if (ei_event_has_ctrl(event)) {
-                    char *rest_text = restrict_text(text, entry->position);
-                    char ch = rest_text[(int32_t) strlen(rest_text) - 1];
-                    while (ch == ' ' && entry->position > 0) {
-                        entry->position--;
-                        entry->fin_selection = entry->position;
-                        ch = rest_text[entry->position - 1];
-                    }
-                    while (((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')) &&
-                           entry->position > 0 && entry->position < (int32_t) strlen(text)) {
-                        entry->position -= 1;
-                        entry->fin_selection = entry->position;
-                        ch = rest_text[entry->position - 1];
-                    }
+                    entry->fin_selection = entry->position= bypass_control(entry->text,entry->position,-1);
                 }
                 // pour les bouttons LSHIFT et RSHIFT enfoncés
                 if (ei_event_has_shift(event)) {

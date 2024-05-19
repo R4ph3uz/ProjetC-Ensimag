@@ -155,3 +155,40 @@ char* texte_selectionne(char* text, int32_t debut, int32_t fin){
     res[taille_cut] = '\0';
     return res;
 }
+
+/*--------------------------------------------------------------------------------------------------------------------------*/
+
+int bypass_control(const char *string, int position, int direction) {
+    int len = strlen(string);
+
+    // Vérification des bornes de la position initiale
+    if (position < 0 || position >= len) {
+        return position; // Position initiale hors des limites, renvoie la position initiale
+    }
+    if (direction != 1 && direction != -1) {
+        return -1; // Direction invalide
+    }
+
+    // Gestion des cas où la direction dépasse les limites de la chaîne
+    if ((position == 0 && direction == -1) || (position == len - 1 && direction == 1)) {
+        return position; // Ne pas dépasser les limites, renvoie la position initiale
+    }
+
+    // Avancer ou reculer pour sauter les espaces initiaux
+    while (position >= 0 && position < len && string[position] == ' ') {
+        position += direction;
+    }
+
+    // Avancer ou reculer pour passer les caractères alphanumériques
+    while (position >= 0 && position < len && isalnum(string[position])) {
+        position += direction;
+    }
+
+    // Gestion des cas où on a dépassé les limites après les boucles
+    if (position < 0 || position > len) {
+        position -= direction; // Revient à la dernière position valide
+    }
+
+    // Retourner la position finale
+    return position;
+}

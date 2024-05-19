@@ -14,7 +14,7 @@ set(HEADER_DIRS				"${ROOT_DIR}/api")
 set(TEST_DIR				"${ROOT_DIR}/tests")
 set(DOCS_DIR				"${ROOT_DIR}/docs")
 set(SRC					"${ROOT_DIR}/implem")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -Wextra")
 set(LIB_FLAGS				-lfreeimage -lSDL2 -lSDL2_ttf -lSDL2_gfx )
 
 if(IG_ASAN)
