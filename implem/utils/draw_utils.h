@@ -12,6 +12,14 @@ typedef enum rounded_frame_part {
     high
 } rounded_frame_part;
 
+
+/**
+ * @brief take the rectangle and create an array of point corresponding to the rectangle
+ * @param rectangle
+ * @return array of 4 points corresponding to the rectangle
+ */
+ei_point_t* rect_to_point(ei_rect_t rectangle) ;
+
 /**
  * \brief	Create a tab of points representing an arc
  *
