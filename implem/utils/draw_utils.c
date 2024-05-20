@@ -19,39 +19,50 @@ ei_point_t* rect_to_point(ei_rect_t rectangle) {
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 
-ei_point_t* polygon_arc(ei_point_t centre,
+size_t get_polygon_arc_size(
                         uint32_t rayon,
                         uint32_t angle_debut,
-                        uint32_t angle_fin,
-                        size_t* size_tableau)
+                        uint32_t angle_fin)
 {
-    if(rayon == 0){
-        *size_tableau = 1;
-        ei_point_t* points = SAFE_MALLOC(sizeof(ei_point_t ));
-        points[0] = centre;
-        return points;
+    if(rayon==0) {
+        return 1;
     }
     // Convert angles to radians
     double start_rad = angle_debut * M_PI / 180.0;
     double end_rad = angle_fin * M_PI / 180.0;
 
     // Calculate the number of points
-    *size_tableau = (uint32_t)ceil(fabs(end_rad - start_rad) / (2 * M_PI / 360) +1);
+    return (uint32_t)ceil(fabs(end_rad - start_rad) / (2 * M_PI / 360) / 4 + 1);
 
-    // Allocate memory for the points
-    ei_point_t* points = SAFE_MALLOC(*size_tableau * sizeof(ei_point_t));
-    if (!points) {
-        return NULL;
+}
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+void polygon_arc(ei_point_t centre,
+                        uint32_t rayon,
+                        uint32_t angle_debut,
+                        uint32_t angle_fin,
+                        ei_point_t* tab
+                        )
+{
+    if(rayon == 0){
+        tab[0] = centre;
+        return;
     }
+    // Convert angles to radians
+    double start_rad = angle_debut * M_PI / 180.0;
+    double end_rad = angle_fin * M_PI / 180.0;
+
+    // Calculate the number of points
+    size_t size_tableau = (uint32_t)ceil(fabs(end_rad - start_rad) / (2 * M_PI / 360) / 4 + 1);
 
     // Generate the points
-    for (uint32_t i = 0; i < *size_tableau ; i++) {
-        double angle = start_rad + (end_rad - start_rad) * i / (*size_tableau - 2);
-        points[i].x = centre.x + rayon * cos(angle);
-        points[i].y = centre.y + rayon * sin(angle);
-    }
+    for (uint32_t i = 0; i < size_tableau ; i++) {
+        double angle = start_rad + (end_rad - start_rad) * i / (size_tableau - 1);
 
-    return points;
+        tab[i].x = centre.x + rayon * cos(angle);
+        tab[i].y = centre.y + rayon * sin(angle);
+    }
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------*/
@@ -60,85 +71,60 @@ ei_point_t* rounded_frame(ei_rect_t* rectangle,
                             uint32_t rayon,
                             rounded_frame_part part,
                             size_t* nb_concat
-                            )
-{
-    ei_point_t* points, *points1 , *points2 ,*points3;
-    ei_point_t* conc1 , *conc2 , *conc3 ;
-    size_t nb_points1, nb_points2, nb_points3, nb_points;
-    ei_point_t top_left, top_right, bottom_right, bottom_left;
-
-    top_left= ei_point_add(rectangle->top_left, ei_point(rayon,rayon));
-    top_right = ei_point(rectangle->top_left.x+rectangle->size.width-rayon, rectangle->top_left.y+rayon);
-    bottom_left = ei_point(rectangle->top_left.x+rayon, rectangle->top_left.y+rectangle->size.height-rayon);
-    bottom_right= ei_point(rectangle->top_left.x+rectangle->size.width-rayon, rectangle->top_left.y+rectangle->size.height-rayon);
+                            ) {
+    // calculate the new rectangle to draw the arc at the correct places
+    ei_point_t top_left= ei_point_add(rectangle->top_left, ei_point(rayon,rayon));
+    ei_point_t top_right = ei_point(rectangle->top_left.x+rectangle->size.width-rayon, rectangle->top_left.y+rayon);
+    ei_point_t bottom_left = ei_point(rectangle->top_left.x+rayon, rectangle->top_left.y+rectangle->size.height-rayon);
+    ei_point_t bottom_right= ei_point(rectangle->top_left.x+rectangle->size.width-rayon, rectangle->top_left.y+rectangle->size.height-rayon);
 
 
 
     if(part==full) {
-        points1 = polygon_arc(top_left, rayon, 180, 270, &nb_points1);
-        points2 = polygon_arc(bottom_right, rayon, 0, 90, &nb_points2);
-        points3 = polygon_arc(bottom_left, rayon, 90, 180, &nb_points3);
-        points = polygon_arc(top_right, rayon, 270, 360, &nb_points);
-        conc1 = concatene_points(points1, points, nb_points1, nb_points);
+        size_t size = get_polygon_arc_size(rayon, 180, 270);
+        ei_point_t* res = SAFE_MALLOC(sizeof(ei_point_t)* size*4);
+        // Si ils font bien tous la même taille (par symetrie)
+        polygon_arc(top_left, rayon, 180, 270, res);
+        polygon_arc(top_right, rayon, 270, 360, &res[size]);
+        polygon_arc(bottom_right, rayon, 0, 90, &res[size*2]);
+        polygon_arc(bottom_left, rayon, 90, 180, &res[size*3]);
 
-        conc2 = concatene_points(conc1, points2, nb_points1+nb_points, nb_points2);
-        conc3 = concatene_points(conc2, points3, nb_points1+nb_points+ nb_points2, nb_points3);
-        *nb_concat = nb_points1+nb_points+ nb_points2 + nb_points3;
-        free(points1);
-        free(points2);
-        free(points3);
-        free(points);
-        free(conc1);
-        free(conc2);
-        return conc3;
+        *nb_concat = size*4;
+        return res;
     }
     if(part==high){
-        points3 = polygon_arc(bottom_left, rayon, 135, 180, &nb_points3);
-        points1 = polygon_arc(top_left, rayon, 180, 270, &nb_points1);
-        points = polygon_arc(top_right, rayon, 270, 315, &nb_points);
-        int h;
+        size_t size_bottom_left = get_polygon_arc_size(rayon, 135, 180);
+        size_t size_top_left = get_polygon_arc_size(rayon, 180, 270);
+        size_t size_top_right = get_polygon_arc_size(rayon, 270, 315);
+        int total_size = size_bottom_left + size_top_left + size_top_right+ 2;
+        ei_point_t* res = SAFE_MALLOC(sizeof(ei_point_t)*total_size);
+        polygon_arc(bottom_left, rayon, 135, 180, res);
+        polygon_arc(top_left, rayon, 180, 270, &res[size_bottom_left]);
+        polygon_arc(top_right, rayon, 270, 315, &res[size_bottom_left + size_top_left]);
 
-        h= (rectangle->size.width > rectangle->size.height ) ? rectangle->size.height /2 : rectangle->size.width/2;
-        *nb_concat = nb_points1+nb_points+nb_points3+2;
-        conc1 = concatene_points(points3, points1, nb_points3, nb_points1);
-        conc2 = concatene_points(conc1, points, nb_points1+nb_points3, nb_points);
-        ei_point_t* intermediaire = SAFE_MALLOC(sizeof(ei_point_t)*2);
-        intermediaire[1] = (ei_point_t){rectangle->top_left.x+h,rectangle->top_left.y+h};
-        intermediaire[0] = (ei_point_t){rectangle->top_left.x-h +rectangle->size.width ,rectangle->top_left.y-h+rectangle->size.height};
-
-
-        conc3 = concatene_points(conc2,intermediaire, nb_points1+nb_points+nb_points3, 2);
-        free(points1);
-        free(points3);
-        free(points);
-        free(conc1);
-        free(conc2);
-        free(intermediaire);
-        return conc3;
+        int h = (rectangle->size.width > rectangle->size.height ) ? rectangle->size.height /2 : rectangle->size.width/2;
+        res[total_size-1] = (ei_point_t){rectangle->top_left.x+h,rectangle->top_left.y+h};
+        res[total_size-2] = (ei_point_t){rectangle->top_left.x-h +rectangle->size.width ,rectangle->top_left.y-h+rectangle->size.height};
+        *nb_concat = total_size;
+        return res;
     }
 
-    points = polygon_arc(top_right, rayon, 315, 360, &nb_points);
-    points2 = polygon_arc(bottom_right, rayon, 0, 90, &nb_points2);
-    points3 = polygon_arc(bottom_left, rayon, 90, 135, &nb_points3);
-
-    conc1 = concatene_points(points, points2, nb_points, nb_points2);
-    conc2 = concatene_points(conc1, points3, nb_points2+nb_points, nb_points3);
-    *nb_concat = nb_points+ nb_points2 + nb_points3+2;
+    //if part is low
+    size_t size_top_right = get_polygon_arc_size(rayon, 315, 360);
+    size_t size_bottom_right = get_polygon_arc_size(rayon, 0, 90);
+    size_t size_bottom_left = get_polygon_arc_size(rayon, 90, 135);
+    int total_size = size_bottom_left + size_bottom_right + size_top_right+ 2;
+    ei_point_t* res = SAFE_MALLOC(sizeof(ei_point_t)*total_size);
+    polygon_arc(top_right, rayon, 315, 360, res);
+    polygon_arc(bottom_right, rayon, 0, 90, &res[size_top_right]);
+    polygon_arc(bottom_left, rayon, 90, 135, &res[size_top_right+ size_bottom_right]);
 
     int h= (rectangle->size.width > rectangle->size.height ) ? rectangle->size.height /2 : rectangle->size.width/2;
+    res[total_size-2] = (ei_point_t){rectangle->top_left.x+h,rectangle->top_left.y+h};
+    res[total_size-1] = (ei_point_t){rectangle->top_left.x-h +rectangle->size.width ,rectangle->top_left.y-h+rectangle->size.height};
 
-    ei_point_t* intermediaire = SAFE_MALLOC(sizeof(ei_point_t)*2);
-    intermediaire[0] = (ei_point_t){rectangle->top_left.x+h,rectangle->top_left.y+h};
-    intermediaire[1] = (ei_point_t){rectangle->top_left.x-h +rectangle->size.width ,rectangle->top_left.y-h+rectangle->size.height};
-
-    conc3 = concatene_points(conc2,intermediaire, nb_points+nb_points3+nb_points2, 2);
-    free(points);
-    free(points2);
-    free(points3);
-    free(conc1);
-    free(conc2);
-    free(intermediaire);
-    return conc3;
+    *nb_concat = total_size;
+    return res;
 
 }
 
@@ -157,9 +143,9 @@ void draw_button(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_
 
     ei_rect_t nouveau_rect = rectangle;
 
-
-    conc3 = rounded_frame(&nouveau_rect, radius, low, &nb_concat);
     conc2 = rounded_frame(&nouveau_rect, radius, high, &nb_concat);
+    conc3 = rounded_frame(&nouveau_rect, radius, low, &nb_concat);
+
 
     //calculating the new reduced rect to have a relief
     nouveau_rect.size.width -= nouveau_rect.size.height/10;
@@ -204,34 +190,28 @@ ei_point_t* demi_rounded_frame(ei_rect_t* rectangle,
                             size_t* nb_concat
                             )
 {
-    ei_point_t* points, *points1 , *points2 ,*points3;
-
-    ei_point_t* conc1 , *conc2 , *conc3 ;
-
-    size_t nb_points1, nb_points2, nb_points3, nb_points;
-
     ei_point_t top_left, top_right, bottom_right, bottom_left;
+
     top_left= rectangle->top_left;
     top_right = (ei_point_t){top_left.x+rectangle->size.width, top_left.y};
     bottom_left = (ei_point_t){top_left.x, top_left.y+rectangle->size.height};
     bottom_right= (ei_point_t){top_right.x, bottom_left.y};
 
-    ei_point_t top_left_corrected = {top_left.x +rayon, top_left.y+rayon};
+    ei_point_t top_left_corrected = (ei_point_t){top_left.x +rayon, top_left.y+rayon};
     ei_point_t top_right_corrected = (ei_point_t){top_left.x+rectangle->size.width-rayon, top_left.y+rayon};
 
+    size_t size_top_left = get_polygon_arc_size(rayon, 180, 270);
+    size_t size_top_right= get_polygon_arc_size(rayon, 180, 270);
+    size_t total_size = size_top_left + size_top_right+ 2;
+    ei_point_t* res = SAFE_MALLOC(sizeof(ei_point_t)*total_size);
 
-    points1 = polygon_arc(top_left_corrected, rayon, 180, 270, &nb_points1);
-    points = polygon_arc(top_right_corrected, rayon, 270, 360, &nb_points);
-    conc1 = concatene_points(points1, points, nb_points1, nb_points);
+    polygon_arc(top_left_corrected, rayon, 180, 270, res);
+    polygon_arc(top_right_corrected, rayon, 270, 360, &res[size_top_left]);
+    res[total_size-2] = bottom_right;
+    res[total_size-1] = bottom_left;
 
-    conc2 = concatene_points(conc1, &bottom_right, nb_points1+nb_points, 1);
-    conc3 = concatene_points(conc2, &bottom_left, nb_points1+nb_points+ 1, 1);
-    *nb_concat = nb_points1+nb_points + 2;
-    free(conc1);
-    free(conc2);
-    free(points1);
-    free(points);
-    return conc3;
+    *nb_concat = total_size;
+    return res;
 
 }
 

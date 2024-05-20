@@ -21,20 +21,31 @@ typedef enum rounded_frame_part {
 ei_point_t* rect_to_point(ei_rect_t rectangle) ;
 
 /**
+ * @brief
+ * @param rayon Rayon de l'arc
+ * @param angle_debut Angle du debut de l'arc (en degré)
+ * @param angle_fin Angle de fin de l'arc (en degré)
+ * @return le nombre de point nécéssaire pour tracer l'arc de cercle
+ */
+size_t get_polygon_arc_size(uint32_t rayon,
+                        uint32_t angle_debut,
+                        uint32_t angle_fin);
+
+/**
  * \brief	Create a tab of points representing an arc
  *
  * @param	centre	Centre de l'arc
  * @param   rayon   Rayon de l'arc
- * @param	angle_debut		angle du début
- * @param	angle_fin		angle de la fin
- * @param	size_tableau taille du tableau de fin (pour connaitre la taille du tableau après avoir appelé la fonction)
+ * @param	angle_debut		Angle du debut de l'arc (en degré)
+ * @param	angle_fin		Angle de fin de l'arc (en degré)
+ * @param	tab tableau dans lequel ajouter les éléments (le tableau doit deja avoir été alloué avec la taille nécéssaire)
  *
 */
-ei_point_t* polygon_arc(ei_point_t centre,
+void polygon_arc(ei_point_t centre,
                         uint32_t rayon,
                         uint32_t angle_debut,
                         uint32_t angle_fin,
-                        size_t* size_tableau);
+                        ei_point_t* tab);
 
 
 
