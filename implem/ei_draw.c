@@ -57,7 +57,7 @@ void	ei_fill			(ei_surface_t		surface,
                             const ei_rect_t*	clipper)
 {
     ei_rect_t rect = hw_surface_get_rect(surface);
-    ei_point_t* points= malloc(sizeof(ei_point_t)*4);
+    ei_point_t* points= SAFE_MALLOC(sizeof(ei_point_t)*4);
     points[0]= ei_point(rect.top_left.x, rect.top_left.y);
     points[1]= ei_point(rect.top_left.x+ rect.size.width-1, rect.top_left.y);
     points[2]= ei_point(rect.top_left.x+ rect.size.width-1, rect.top_left.y+ rect.size.height-1);

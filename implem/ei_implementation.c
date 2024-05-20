@@ -7,7 +7,7 @@
 
 void ei_placer_runfunc(ei_widget_t widget)
 {
-    ei_rect_t* newscreen=malloc(sizeof (ei_rect_t));
+    ei_rect_t* newscreen=SAFE_MALLOC(sizeof (ei_rect_t));
     if(!widget->geom_params){
         return;
     }
@@ -109,7 +109,7 @@ ei_rect_t* intersection_rectangle(ei_rect_t rect1,ei_rect_t rect2) {
         return NULL;
     } else {
         // Construct and return the intersection rectangle
-        ei_rect_t* intersection_rect = malloc(sizeof(ei_rect_t));
+        ei_rect_t* intersection_rect = SAFE_MALLOC(sizeof(ei_rect_t));
         if (intersection_rect == NULL) {
             // Allocation failed
             return NULL;
@@ -143,7 +143,7 @@ ei_rect_t* union_rectangle(ei_rect_t rect1, ei_rect_t rect2)
     int h = (y1 + h1 > y2 + h2) ? (y1 + h1 - y) : (y2 + h2 - y);
 
     // Allocate memory for the union rectangle
-    ei_rect_t* rect = malloc(sizeof(ei_rect_t));
+    ei_rect_t* rect = SAFE_MALLOC(sizeof(ei_rect_t));
     if (!rect) {
         return NULL;
     }
@@ -162,7 +162,7 @@ ei_rect_t* union_rectangle(ei_rect_t rect1, ei_rect_t rect2)
 uint32_t	ei_impl_map_rgba(ei_surface_t surface, ei_color_t color){
     int ir,ig,ib,ia;
     hw_surface_get_channel_indices( surface, &ir, &ig, &ib, &ia);
-    uint8_t* res = malloc(sizeof(uint8_t)*4);
+    uint8_t* res = SAFE_MALLOC(sizeof(uint8_t)*4);
     res[ir] = color.red;
     res[ig] = color.green;
     res[ib] = color.blue;

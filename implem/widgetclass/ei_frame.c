@@ -52,7 +52,7 @@ void frame_drawfunc(ei_widget_t widget,
     int top_left_y = widget->content_rect->top_left.y;
 
 
-    ei_point_t* points = malloc(4*sizeof(ei_point_t));
+    ei_point_t* points = SAFE_MALLOC(4*sizeof(ei_point_t));
     points[0] = (ei_point_t) {top_left_x, top_left_y };
     points[1] = (ei_point_t) {top_left_x+widget->content_rect->size.width, top_left_y };
     points[2] = (ei_point_t) {top_left_x+widget->content_rect->size.width, top_left_y+widget->content_rect->size.height };
@@ -68,7 +68,7 @@ void frame_drawfunc(ei_widget_t widget,
             draw_button(surface, frame->widget.screen_location, 0, *frame->color, *frame->relief, clipper);
         }
         else{
-            ei_point_t* border = malloc(4*sizeof(ei_point_t));
+            ei_point_t* border = SAFE_MALLOC(4*sizeof(ei_point_t));
             border[0] = (ei_point_t) {top_left_x-*frame->border_width, top_left_y -*frame->border_width};
             border[1] = (ei_point_t) {top_left_x+widget->content_rect->size.width+*frame->border_width, top_left_y-*frame->border_width };
             border[2] = (ei_point_t) {top_left_x+widget->content_rect->size.width+*frame->border_width, top_left_y+widget->content_rect->size.height+*frame->border_width };
@@ -201,8 +201,8 @@ void frame_drawfunc(ei_widget_t widget,
             place.y=widget->content_rect->top_left.y+(int)((float)(widget->content_rect->size.height))-(int)((float)rect.size.height);
         }
         if(frame->img_rect == NULL) {
-            frame->img_rect = malloc(sizeof(ei_rect_ptr_t));
-            *frame->img_rect = malloc(sizeof(ei_rect_t));
+            frame->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
+            *frame->img_rect = SAFE_MALLOC(sizeof(ei_rect_t));
             **frame->img_rect = hw_surface_get_rect(*frame->img);
         }
 
@@ -232,16 +232,16 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     ei_frame_t frame = (ei_frame_t) widget;
 
     /* Suite spécifique à une  frame*/
-    frame->color = malloc(sizeof(ei_color_t));
-    frame->relief = malloc(sizeof(ei_relief_t));
-    frame->text = malloc(sizeof(ei_string_t));
-    frame->text_font = malloc(sizeof(ei_font_t));
-    frame->text_color = malloc(sizeof(ei_color_t));
-    frame->text_anchor = malloc(sizeof(ei_anchor_t));
-    frame->img = malloc(sizeof(ei_surface_t));
-    frame->img_rect = malloc(sizeof(ei_rect_ptr_t));
-    frame->img_anchor = malloc(sizeof(ei_anchor_t));
-    frame->border_width = malloc(sizeof(int));
+    frame->color = SAFE_MALLOC(sizeof(ei_color_t));
+    frame->relief = SAFE_MALLOC(sizeof(ei_relief_t));
+    frame->text = SAFE_MALLOC(sizeof(ei_string_t));
+    frame->text_font = SAFE_MALLOC(sizeof(ei_font_t));
+    frame->text_color = SAFE_MALLOC(sizeof(ei_color_t));
+    frame->text_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
+    frame->img = SAFE_MALLOC(sizeof(ei_surface_t));
+    frame->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
+    frame->img_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
+    frame->border_width = SAFE_MALLOC(sizeof(int));
     frame->color->alpha = 255;
     frame->color->red = 149;
     frame->color->green = 149;
@@ -264,7 +264,7 @@ void frame_setdefaultsfunc(ei_widget_t widget)
 
 ei_widgetclass_t* create_frame_widgetclass()
 {
-    ei_widgetclass_t* res = malloc(sizeof(ei_widgetclass_t));
+    ei_widgetclass_t* res = SAFE_MALLOC(sizeof(ei_widgetclass_t));
     res->allocfunc = frame_allocfunc;
     res->releasefunc = frame_releasefunc;
     res->drawfunc = frame_drawfunc;

@@ -41,13 +41,13 @@ void entry_setdefaultsfunc(ei_widget_t widget){
     ei_entry_t entry = (ei_entry_t) widget;
 
     /* Suite spécifique à une  entry*/
-    entry->color = malloc(sizeof(ei_color_t));
-    entry->requested_char_size = malloc(sizeof(int));
-    entry->text_font = malloc(sizeof(ei_font_t));
-    entry->text_color = malloc(sizeof(ei_color_t));
-    entry->border_width = malloc(sizeof(int));
-    entry->focus=malloc(sizeof(bool));
-    entry->text= malloc(sizeof(char));
+    entry->color = SAFE_MALLOC(sizeof(ei_color_t));
+    entry->requested_char_size = SAFE_MALLOC(sizeof(int));
+    entry->text_font = SAFE_MALLOC(sizeof(ei_font_t));
+    entry->text_color = SAFE_MALLOC(sizeof(ei_color_t));
+    entry->border_width = SAFE_MALLOC(sizeof(int));
+    entry->focus=SAFE_MALLOC(sizeof(bool));
+    entry->text= SAFE_MALLOC(sizeof(char));
     entry->color->alpha = 255;
     entry->color->blue = 255;
     entry->color->green = 255;
@@ -80,7 +80,7 @@ void entry_drawfunc(ei_widget_t widget,
     int top_left_x = widget->content_rect->top_left.x;
     int top_left_y = widget->content_rect->top_left.y;
 
-    ei_point_t* points = malloc(4*sizeof(ei_point_t));
+    ei_point_t* points = SAFE_MALLOC(4*sizeof(ei_point_t));
     points[0] = (ei_point_t) {top_left_x, top_left_y };
     points[1] = (ei_point_t) {top_left_x+widget->content_rect->size.width, top_left_y };
     points[2] = (ei_point_t) {top_left_x+widget->content_rect->size.width, top_left_y+widget->content_rect->size.height };
@@ -90,7 +90,7 @@ void entry_drawfunc(ei_widget_t widget,
     hw_surface_lock(surface);
     hw_surface_lock(pick_surface);
     if(entry->border_width!=NULL) { // doit etre fait avant de dessiner la entry (vu que en dessous
-        ei_point_t* border = malloc(4*sizeof(ei_point_t));
+        ei_point_t* border = SAFE_MALLOC(4*sizeof(ei_point_t));
         if (entry->focus)
             *entry->border_width = 2;
         else
@@ -154,7 +154,7 @@ void entry_drawfunc(ei_widget_t widget,
             ei_draw_text(surface,place_cursor, cursor_text, *entry->text_font,(ei_color_t){0,0,0,255} , clipper );
 
         if(entry->is_in_selection){
-            ei_point_t* rect = malloc(sizeof(ei_point_t)* 4);
+            ei_point_t* rect = SAFE_MALLOC(sizeof(ei_point_t)* 4);
             int l_rect_bleu_x,r_rect_bleu_x;
             int size_text,h;
             hw_text_compute_size(restrict_text(entry->text,fminf(entry->debut_selection,entry->fin_selection)),*entry->text_font,&size_text,&h);
@@ -186,7 +186,7 @@ void entry_geomnotifyfunc(ei_widget_t widget){
 /*---------------------------------------------------------------------------------------------------------------------*/
 
 ei_widgetclass_t* create_entry_widgetclass(){
-    ei_widgetclass_t* res = malloc(sizeof(ei_widgetclass_t));
+    ei_widgetclass_t* res = SAFE_MALLOC(sizeof(ei_widgetclass_t));
     res->allocfunc = entry_allocfunc;
     res->releasefunc = entry_releasefunc;
     res->drawfunc = entry_drawfunc;

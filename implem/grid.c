@@ -13,7 +13,7 @@
 /*-------------------------------------------------------------------------------------------------------*/
 
 void ei_grid_runfunc(ei_widget_t widget) {
-    ei_rect_t *newscreen = malloc(sizeof(ei_rect_t));
+    ei_rect_t *newscreen = SAFE_MALLOC(sizeof(ei_rect_t));
     if (!widget->geom_params) {
         return;
     }
@@ -95,7 +95,7 @@ void		grid	(ei_widget_t		widget,
         widget->geom_params = SAFE_MALLOC(sizeof(ei_impl_geom_param_t));
 
         widget->geom_params->manager = create_grid_gm();
-        widget->geom_params->is_reconfigurable = malloc(sizeof(bool));
+        widget->geom_params->is_reconfigurable = SAFE_MALLOC(sizeof(bool));
         *widget->geom_params->is_reconfigurable=SAFE_MALLOC(sizeof(bool));
         widget->geom_params->anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
         if (anchor) {

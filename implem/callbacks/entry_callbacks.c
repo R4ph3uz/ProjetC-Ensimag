@@ -37,7 +37,7 @@ void set_id_animation(void* id) {
  * @return nothing
  */
 void handle_double_click(ei_entry_t entry, ei_event_t* event){
-    entry_app_event *user_p = malloc(sizeof(entry_app_event));
+    entry_app_event *user_p = SAFE_MALLOC(sizeof(entry_app_event));
     user_p->is_animation_event = false;
     user_p->is_double_click_event = true;
     user_p->param= entry;

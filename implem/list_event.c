@@ -9,19 +9,19 @@ list_callback* LIST_CALLBACK = NULL;
 
 void add_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t eventtype, void* user_param) {
     if (LIST_CALLBACK == NULL) {
-        LIST_CALLBACK = malloc(sizeof(list_callback));
+        LIST_CALLBACK = SAFE_MALLOC(sizeof(list_callback));
         LIST_CALLBACK->callback = callback;
         LIST_CALLBACK->eventtype = eventtype;
-        LIST_CALLBACK->tag = malloc(sizeof(char)*(strlen(tag)+1));
+        LIST_CALLBACK->tag = SAFE_MALLOC(sizeof(char)*(strlen(tag)+1));
         strcpy(LIST_CALLBACK->tag, tag);
         LIST_CALLBACK->user_param = user_param;
         LIST_CALLBACK->next = NULL;
     }
     else {
-        list_callback* temp = malloc(sizeof(list_callback));
+        list_callback* temp = SAFE_MALLOC(sizeof(list_callback));
         temp->callback = callback;
         temp->eventtype = eventtype;
-        temp->tag = malloc(sizeof(char)*(strlen(tag)+1));
+        temp->tag = SAFE_MALLOC(sizeof(char)*(strlen(tag)+1));
         strcpy(temp->tag, tag);
         temp->next = LIST_CALLBACK;
         temp->user_param = user_param;

@@ -8,7 +8,7 @@
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
 char* restrict_text(char* text, uint8_t taille) {
-    char* res = malloc(sizeof(char)*(taille+1) ) ;
+    char* res = SAFE_MALLOC(sizeof(char)*(taille+1) ) ;
     strncpy(res, text, taille);
     res[taille] = '\0';
     return res;
@@ -17,7 +17,7 @@ char* restrict_text(char* text, uint8_t taille) {
 /*--------------------------------------------------------------------------------------------------------------------------*/
 char*  insert_char(char* text, char character, uint8_t where) {
     int taille = (int) strlen(text)+1;
-    char* res = malloc(sizeof(char)*(taille+1));
+    char* res = SAFE_MALLOC(sizeof(char)*(taille+1));
 
     strncpy(res,text,where);
     res[where] = character;
@@ -38,7 +38,7 @@ char* insert_word(char* text, const char* word, uint8_t where) {
     int nouvelle_taille = taille_text + taille_word;
 
     // Allocation de mémoire pour la nouvelle chaîne de caractères
-    char* res = malloc(sizeof(char) * (nouvelle_taille + 1)); // +1 pour le caractère nul de fin
+    char* res = SAFE_MALLOC(sizeof(char) * (nouvelle_taille + 1)); // +1 pour le caractère nul de fin
 
     // Copier la partie du texte avant l'insertion
     strncpy(res, text, where);
@@ -61,7 +61,7 @@ char* insert_word(char* text, const char* word, uint8_t where) {
 char * delete_char(char *text, uint8_t where) {
     int taille = strlen(text)-1;
     if(0<where && where <=taille+1 ) {
-        char* res =malloc(sizeof(char)*(taille+1));
+        char* res =SAFE_MALLOC(sizeof(char)*(taille+1));
 
         strncpy(res,text,where-1);
         for(int i = where-1; i< taille;i++)
@@ -76,7 +76,7 @@ char * delete_char(char *text, uint8_t where) {
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
 int find_selection_entry(ei_entry_t entry, ei_point_t position) {
-    char* temp = malloc(sizeof(char)*(strlen(entry->text)+1));
+    char* temp = SAFE_MALLOC(sizeof(char)*(strlen(entry->text)+1));
     int width,height;
     int i;
     for(i = 0 ; i < strlen(entry->text); i++) {
@@ -99,7 +99,7 @@ int find_selection_entry(ei_entry_t entry, ei_point_t position) {
 /*--------------------------------------------------------------------------------------------------------------------------*/
 char* cut_text(char* text, uint8_t debut, uint8_t fin) {
     int taille_cut = fin-debut;
-    char* res = malloc(sizeof(char)*(strlen(text)-taille_cut+1) ) ;
+    char* res = SAFE_MALLOC(sizeof(char)*(strlen(text)-taille_cut+1) ) ;
     strncpy(res,text,debut);
     for(int i = fin; i < strlen(text); i++)
         res[i-taille_cut] = text[i];
@@ -110,7 +110,7 @@ char* cut_text(char* text, uint8_t debut, uint8_t fin) {
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
 int find_position_cursor_selection_entry(ei_entry_t entry, ei_point_t position) {
-    char* temp = malloc(sizeof(char)*(strlen(entry->text)+1));
+    char* temp = SAFE_MALLOC(sizeof(char)*(strlen(entry->text)+1));
     int width,height;
     for(int i = 0 ; i < strlen(entry->text); i++) {
         temp[i] = entry->text[i];
@@ -149,7 +149,7 @@ void find_word(char* text, int where, int* debut, int*fin){
 
 char* texte_selectionne(char* text, int32_t debut, int32_t fin){
     int taille_cut = fin-debut;
-    char* res = malloc(sizeof(char)*(strlen(text)-taille_cut+1) ) ;
+    char* res = SAFE_MALLOC(sizeof(char)*(strlen(text)-taille_cut+1) ) ;
     for(int i = debut; i < fin; i++)
         res[i-debut] = text[i];
     res[taille_cut] = '\0';

@@ -210,8 +210,8 @@ void button_drawfunc(ei_widget_t widget,
             place.y=widget->content_rect->top_left.y+(int)((float)(widget->content_rect->size.height))-(int)((float)rect.size.height);
         }
         if(button->img_rect == NULL) {
-            button->img_rect = malloc(sizeof(ei_rect_ptr_t));
-            *button->img_rect = malloc(sizeof(ei_rect_t));
+            button->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
+            *button->img_rect = SAFE_MALLOC(sizeof(ei_rect_t));
             **button->img_rect = hw_surface_get_rect(*button->img);
         }
 
@@ -235,7 +235,7 @@ void button_geomnotifyfunc(ei_widget_t widget) {
 /*--------------------------------------------------------------------------------*/
 
 ei_widgetclass_t* create_button_widgetclass() {
-    ei_widgetclass_t* res = malloc(sizeof(ei_widgetclass_t));
+    ei_widgetclass_t* res = SAFE_MALLOC(sizeof(ei_widgetclass_t));
     res->allocfunc = button_allocfunc;
     res->releasefunc = button_releasefunc;
     res->drawfunc = button_drawfunc;

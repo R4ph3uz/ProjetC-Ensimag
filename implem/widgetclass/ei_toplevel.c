@@ -62,7 +62,7 @@ void toplevel_drawfunc(ei_widget_t widget,
 /*-----------------------------------------------------------------------------------------------*/
 
 void toplevel_geomnotifyfunc(ei_widget_t widget) {
-    widget->content_rect = malloc(sizeof(ei_rect_t ));
+    widget->content_rect = SAFE_MALLOC(sizeof(ei_rect_t ));
     widget->content_rect->top_left.x=widget->screen_location.top_left.x;
     widget->content_rect->top_left.y=widget->screen_location.top_left.y+30;
     widget->content_rect->size.width=widget->screen_location.size.width;
@@ -74,13 +74,13 @@ void toplevel_geomnotifyfunc(ei_widget_t widget) {
 
 void toplevel_setdefaultsfunc(ei_widget_t widget) {
     ei_toplevel_t top_level = (ei_toplevel_t) widget;
-    top_level->color = malloc(sizeof(ei_color_t));
-    top_level->border_width = malloc(sizeof(int));
-    top_level->title = malloc(sizeof(ei_string_t));
-    top_level->closable = malloc(sizeof(bool));
-    top_level->resizable = malloc(sizeof(ei_axis_set_t));
-    top_level->min_size = malloc(sizeof(ei_size_t*));
-    (*top_level->min_size)= malloc(sizeof(ei_size_t));
+    top_level->color = SAFE_MALLOC(sizeof(ei_color_t));
+    top_level->border_width = SAFE_MALLOC(sizeof(int));
+    top_level->title = SAFE_MALLOC(sizeof(ei_string_t));
+    top_level->closable = SAFE_MALLOC(sizeof(bool));
+    top_level->resizable = SAFE_MALLOC(sizeof(ei_axis_set_t));
+    top_level->min_size = SAFE_MALLOC(sizeof(ei_size_t*));
+    (*top_level->min_size)= SAFE_MALLOC(sizeof(ei_size_t));
     *top_level->border_width= 1;
     *top_level->closable = true;
     *top_level->resizable = ei_axis_both;
@@ -97,7 +97,7 @@ void toplevel_setdefaultsfunc(ei_widget_t widget) {
 /*-----------------------------------------------------------------------------------------------*/
 
 ei_widgetclass_t* create_toplevel_widgetclass(){
-    ei_widgetclass_t* res = malloc(sizeof(ei_widgetclass_t));
+    ei_widgetclass_t* res = SAFE_MALLOC(sizeof(ei_widgetclass_t));
     res->allocfunc = toplevel_allocfunc;
     res->releasefunc = toplevel_releasefunc;
     res->drawfunc = toplevel_drawfunc;

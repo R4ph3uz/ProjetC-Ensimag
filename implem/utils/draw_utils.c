@@ -9,7 +9,7 @@
 /*-------------------------------------------------------------------------------------------------------------------------*/
 
 ei_point_t* rect_to_point(ei_rect_t rectangle) {
-    ei_point_t* res = malloc(sizeof(ei_point_t)*4);
+    ei_point_t* res = SAFE_MALLOC(sizeof(ei_point_t)*4);
     res[0] = rectangle.top_left;
     res[1] = ei_point_add(rectangle.top_left, (ei_point_t){rectangle.size.width-1, 0});
     res[2] = ei_point_add(rectangle.top_left, (ei_point_t){rectangle.size.width-1, rectangle.size.height-1});
@@ -102,7 +102,7 @@ ei_point_t* rounded_frame(ei_rect_t* rectangle,
         *nb_concat = nb_points1+nb_points+nb_points3+2;
         conc1 = concatene_points(points3, points1, nb_points3, nb_points1);
         conc2 = concatene_points(conc1, points, nb_points1+nb_points3, nb_points);
-        ei_point_t* intermediaire = malloc(sizeof(ei_point_t)*2);
+        ei_point_t* intermediaire = SAFE_MALLOC(sizeof(ei_point_t)*2);
         intermediaire[1] = (ei_point_t){rectangle->top_left.x+h,rectangle->top_left.y+h};
         intermediaire[0] = (ei_point_t){rectangle->top_left.x-h +rectangle->size.width ,rectangle->top_left.y-h+rectangle->size.height};
 

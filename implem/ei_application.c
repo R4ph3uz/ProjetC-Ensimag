@@ -182,7 +182,7 @@ void ei_app_run(void)
                      temp->geom_params->manager->runfunc(temp);
                      ei_rect_t* test2  = intersection_rectangle(hw_surface_get_rect(ROOT_SURFACE),temp->screen_location );
                      rect_after = *test2;
-                     list_rect = malloc(sizeof(ei_linked_rect_t));
+                     list_rect = SAFE_MALLOC(sizeof(ei_linked_rect_t));
                      list_rect->rect = rect_after;
                      ei_linked_rect_t list;
                      list.rect = rect_before;
