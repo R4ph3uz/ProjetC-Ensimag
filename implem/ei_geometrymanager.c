@@ -39,7 +39,6 @@ void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_locati
             }
         }
     }
-    free(new_screen_location);
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
