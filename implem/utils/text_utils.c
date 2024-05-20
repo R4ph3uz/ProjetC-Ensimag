@@ -158,37 +158,43 @@ char* texte_selectionne(char* text, int32_t debut, int32_t fin){
 
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
-int bypass_control(const char *string, int position, int direction) {
-    int len = strlen(string);
+int bypass_control(const char* string, int position, int direction) {
+    const int len = strlen(string);
 
-    // Vérification des bornes de la position initiale
-    if (position < 0 || position >= len) {
-        return position; // Position initiale hors des limites, renvoie la position initiale
+    if(direction==1) {
+        if (position<0)
+            return 0;
+        if (position>len)
+            return len;
+        while (position >= 0 && position <= len && isspace(string[position])) {
+            position += direction;
+            if (position >=len)
+                return len;
+        }
+        while (position >= 0 && position <= len && isalnum(string[position])) {
+            position += direction;
+            if (position>=len)
+                return len;
+        }
+        return position;
     }
-    if (direction != 1 && direction != -1) {
-        return -1; // Direction invalide
+    if (direction == -1){
+        if (position<0)
+            return 0;
+        if (position>len)
+            return len;
+        while (position >= 0 && position <= len && isspace(string[position-1])) {
+            position += direction;
+            if (position <= 0)
+                return 0;
+        }
+        while (position >= 0 && position <= len && isalnum(string[position-1])) {
+            position += direction;
+            if (position <= 0)
+                return 0;
+        }
+        return position;
     }
-
-    // Gestion des cas où la direction dépasse les limites de la chaîne
-    if ((position == 0 && direction == -1) || (position == len - 1 && direction == 1)) {
-        return position; // Ne pas dépasser les limites, renvoie la position initiale
-    }
-
-    // Avancer ou reculer pour sauter les espaces initiaux
-    while (position >= 0 && position < len && string[position] == ' ') {
-        position += direction;
-    }
-
-    // Avancer ou reculer pour passer les caractères alphanumériques
-    while (position >= 0 && position < len && isalnum(string[position])) {
-        position += direction;
-    }
-
-    // Gestion des cas où on a dépassé les limites après les boucles
-    if (position < 0 || position > len) {
-        position -= direction; // Revient à la dernière position valide
-    }
-
-    // Retourner la position finale
-    return position;
+    fprintf(stderr,"vous ne pouvez pas vous déplacer autrement que gauche ou droit (-1 ou 1).");
+    return -1;
 }
