@@ -16,7 +16,7 @@
 
 #define SAFE_MALLOC(size) \
     ({ \
-        void *ptr = SAFE_MALLOC(size); \
+        void *ptr = malloc(size); \
         if (!ptr) { \
             fprintf(stderr, "Memory allocation failed, exiting application.\n"); \
             exit(EXIT_FAILURE);\

@@ -52,7 +52,7 @@ void toplevel_drawfunc(ei_widget_t widget,
         void* test= hw_text_font_create("misc/font.ttf",ei_style_normal,20);
         ei_rect_t* text_clipper = intersection_rectangle(*clipper, top_level->widget.screen_location);
         ei_draw_text(surface, &place, *top_level->title, test, blanc, text_clipper);
-
+        free(test);
     }
 
 

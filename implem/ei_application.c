@@ -216,6 +216,8 @@ void ei_app_invalidate_rect(const ei_rect_t* rect)
 
 void ei_app_free(void)
 {
+    free_list_callback();
+    ei_widget_destroy(ROOT_WIDGET);
     free(ROOT_WIDGET);
     free(ROOT_SURFACE);
     free(PICKING_SURFACE);

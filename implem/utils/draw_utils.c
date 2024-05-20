@@ -265,7 +265,6 @@ ei_point_t* circle(ei_point_t centre, int radius, size_t* size_tableau)
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
 void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_t color, ei_rect_t* clipper, bool isPicking, ei_axis_set_t* resizable ) {
-;   ei_point_t* carre_bas_droite = SAFE_MALLOC(sizeof(ei_point_t)*4);
     ei_point_t* border_line = SAFE_MALLOC(sizeof(ei_point_t)*5);
     size_t nb_concat;
     const ei_color_t red = (ei_color_t){230, 40, 40, 255};
@@ -293,7 +292,7 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
     //carre en bas a droite pour rezise la toplevel
     const ei_rect_t carre_bas_droite_rect = ei_rect((ei_point_t){ content_rect.top_left.x+ content_rect.size.width-10,content_rect.top_left.y + content_rect.size.height-10 },
                                                     (ei_size_t){10,10});
-    carre_bas_droite = rect_to_point(carre_bas_droite_rect);
+    ei_point_t* carre_bas_droite = rect_to_point(carre_bas_droite_rect);
 
     // point rouge pour fermer la toplevel
     size_t nb_circle;
@@ -315,9 +314,10 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
         }
     }
 
-    free(circle_p);
-    free(content_rect_points);
-    free(carre_bas_droite);
+    free(border_line);
     free(top_bar);
+    free(content_rect_points);
+    free(circle_p);
+    free(carre_bas_droite);
 }
 

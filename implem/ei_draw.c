@@ -63,7 +63,7 @@ void	ei_fill			(ei_surface_t		surface,
     points[2]= ei_point(rect.top_left.x+ rect.size.width-1, rect.top_left.y+ rect.size.height-1);
     points[3]= ei_point(rect.top_left.x, rect.top_left.y+ rect.size.height-1);
     ei_draw_polygon(surface, points,4, *color, clipper);
-
+    free(points);
 
 }
 

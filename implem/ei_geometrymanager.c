@@ -87,6 +87,9 @@ void			ei_geometrymanager_unmap	(ei_widget_t widget)
         free(widget->geom_params->rel_height);
         free(widget->geom_params->rel_width);
         free(widget->geom_params->anchor);
+        free(widget->geom_params->is_reconfigurable);
+        free(widget->geom_params->x);
+        free(widget->geom_params->y);
         free(widget->geom_params);
         widget->geom_params=NULL;
     }
