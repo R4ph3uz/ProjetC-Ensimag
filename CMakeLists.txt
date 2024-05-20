@@ -114,6 +114,11 @@ target_link_libraries(frame		ei ${PLATFORM_LIB_FLAGS})
 add_executable(button			${TEST_DIR}/button.c)
 target_link_libraries(button		ei ${PLATFORM_LIB_FLAGS})
 
+# target test_button
+
+add_executable(test_button			${TEST_DIR}/test_button.c)
+target_link_libraries(test_button		ei ${PLATFORM_LIB_FLAGS})
+
 # target hello_world
 
 add_executable(hello_world		${TEST_DIR}/hello_world.c)
@@ -158,6 +163,14 @@ target_link_libraries(ext_testgm	testgm ei ${PLATFORM_LIB_FLAGS})
 
 add_executable(parsing			${TEST_DIR}/parsing.c)
 target_link_libraries(parsing		ei ${PLATFORM_LIB_FLAGS})
+
+
+add_custom_target(clean-all
+		COMMAND ${CMAKE_BUILD_TOOL} clean
+		COMMAND ${CMAKE_COMMAND} -E rm -rf CMakeCache.txt CMakeFiles
+		COMMAND ${CMAKE_COMMAND} -E rm -rf Makefile cmake_install.cmake
+)
+
 
 # target to build the documentation
 
