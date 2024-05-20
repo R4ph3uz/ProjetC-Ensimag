@@ -167,9 +167,13 @@ target_link_libraries(parsing		ei ${PLATFORM_LIB_FLAGS})
 
 add_custom_target(clean-all
 		COMMAND ${CMAKE_BUILD_TOOL} clean
-		COMMAND ${CMAKE_COMMAND} -E rm -rf CMakeCache.txt CMakeFiles
-		COMMAND ${CMAKE_COMMAND} -E rm -rf Makefile cmake_install.cmake
+		COMMAND ${CMAKE_COMMAND} -E rm -rf CMakeCache.txt CMakeFiles Makefile cmake_install.cmake
+		COMMAND ${CMAKE_COMMAND} -E rm -rf ${PROJECT_BINARY_DIR}/*.o
+		COMMAND ${CMAKE_COMMAND} -E rm -rf ${PROJECT_BINARY_DIR}/*.exe
+		COMMAND ${CMAKE_COMMAND} -E rm -rf ${ROOT_DIR}/.git
+		COMMAND ${CMAKE_COMMAND} -E rm -rf ${ROOT_DIR}/.vscode
 )
+
 
 
 # target to build the documentation
