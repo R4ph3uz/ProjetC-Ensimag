@@ -80,7 +80,6 @@ list_callback* get_list_callback(void) {
 void free_list_callback() {
     while(LIST_CALLBACK!=NULL) {
         list_callback* temp = LIST_CALLBACK->next;
-        free(LIST_CALLBACK->user_param);
         free(LIST_CALLBACK);
         LIST_CALLBACK = temp;
     }

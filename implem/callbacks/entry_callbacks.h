@@ -143,8 +143,16 @@ ei_widget_t dfs_find_last_before_entry(ei_entry_t entry,ei_widget_t node, ei_wid
  */
 ei_widget_t dfs_find_last_except_entry(ei_entry_t entry,ei_widget_t node, ei_widget_t* temp);
 
+/**
+ * renvoie l'entry qui a le focus
+ * @return l'entry qui est focus
+ */
 ei_entry_t get_entry_focus(void);
 
+/**
+ * mets le focus à l'entry donnée en paramètres
+ * @param entry entry à mettre le focus
+ */
 void set_entry_focus(ei_entry_t entry);
 
 #endif //ENTRY_CALLBACKS_H

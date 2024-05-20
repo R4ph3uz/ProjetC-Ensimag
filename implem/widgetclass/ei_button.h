@@ -29,19 +29,32 @@ typedef struct{
 
 typedef ei_impl_button_t* ei_button_t;
 
+/**
+ * alloc func de button
+ */
 ei_widget_t button_allocfunc();
 
+/**
+ * release func de button
+ */
 void button_releasefunc(ei_widget_t widget);
-
+/**
+ * setdefault func de button
+ */
 void button_setdefaultsfunc(ei_widget_t widget);
 
+/**
+ * dessine le button
+ */
 void button_drawfunc(ei_widget_t widget,
                     ei_surface_t surface,
                     ei_surface_t pick_surface,
                     ei_rect_t* clipper);
 
 void button_geomnotifyfunc(ei_widget_t widget);
-
+/**
+ * crée un boutton
+ */
 ei_widgetclass_t* create_button_widgetclass();
 
 

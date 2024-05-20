@@ -14,6 +14,7 @@
 #include "ei_widget.h"
 #include "ei_geometrymanager.h"
 
+//gère si les malloc fail
 #define SAFE_MALLOC(size) \
     ({ \
         void *ptr = malloc(size); \
@@ -24,6 +25,7 @@
         ptr; \
     })
 
+//gère si les calloc fail
 #define SAFE_CALLOC(size) \
     ({ \
         void *ptr = calloc(size,1); \

@@ -123,17 +123,11 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
     char* text = (char*) ei_entry_get_text(user_param);
     if(entry->is_in_selection == false){ // on n'est pas en selection
         if(event->type==ei_ev_text_input){
-            if(text && (int32_t) strlen(text)+1 <= *entry->requested_char_size){
                 text = insert_char(text, event->param.text, entry->position );
                 ei_entry_set_text((ei_widget_t)entry,text);
                 entry->position+=1;
                 entry->debut_selection=entry->position; // mais dans le doute si au prochain on entre en selection je sauvegarde cette position
                 return true;
-            }
-            else{
-                //on laisse le texte comme ceci
-                return false;
-            }
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_DELETE) {
             //touch suppr
