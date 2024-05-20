@@ -95,6 +95,8 @@ set(LIB_EI_SOURCES
 		${SRC}/utils/text_utils.c
 		${SRC}/grid.c
 		${SRC}/grid.h
+		${SRC}/invalidated_rect_list.c
+		${SRC}/invalidated_rect_list.h
 )
 
 add_library(ei STATIC			${LIB_EI_SOURCES})

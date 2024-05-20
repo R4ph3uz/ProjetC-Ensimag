@@ -1,4 +1,7 @@
 #include "ei_geometrymanager.h"
+
+#include <ei_application.h>
+
 #include "ei_implementation.h"
 
 /*-------------------------------------------------------------------------------------------------------*/
@@ -25,6 +28,8 @@ void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_locati
             widget->screen_location.top_left.y != new_screen_location->top_left.y))
     {
         // widget->screen_location=*new_screen_location;
+        ei_app_invalidate_rect(intersection_rectangle(widget->screen_location, widget->parent->screen_location));
+        ei_app_invalidate_rect(intersection_rectangle(*new_screen_location, widget->parent->screen_location));
         memcpy(&widget->screen_location,new_screen_location,sizeof(widget->screen_location));
         // Il faut schedule un redraw  d'après la doc, a voir comment faire vu que pour l'instant, cette fonction est appeler par draw , donc jsp trop
         widget->wclass->geomnotifyfunc(widget);
@@ -34,7 +39,7 @@ void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_locati
             while(enfant!=NULL)
             {
                 if (enfant->geom_params)
-                enfant->geom_params->manager->runfunc(enfant);
+                    enfant->geom_params->manager->runfunc(enfant);
                 enfant=enfant->next_sibling;
             }
         }

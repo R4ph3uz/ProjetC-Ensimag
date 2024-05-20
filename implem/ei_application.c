@@ -17,6 +17,7 @@
 #include "callbacks/toplevel_callbacks.h"
 #include "widgetclass/ei_entry.h"
 #include "grid.h"
+#include "invalidated_rect_list.h"
 
 /* ----------------------------------------------------------------- */
 
@@ -157,12 +158,12 @@ void ei_app_run(void)
                 break;
             list_call = list_call->next;
         }
-
+        ei_linked_rect_t* list_rect = NULL;
+        ei_rect_t * union_rect = NULL;
         if(((isModified||isModified1) )||CHANGEMENT_PREMIER_PLAN) {
 
 
-            ei_rect_t * union_rect = NULL;
-             ei_linked_rect_t* list_rect;
+
              if(widget == ROOT_WIDGET){
                  list_rect = NULL;
              }
@@ -197,8 +198,10 @@ void ei_app_run(void)
              }
 
         }
-        ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
+        ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),union_rect);
         hw_surface_update_rects(ROOT_SURFACE,NULL);
+        //hw_surface_update_rects(ROOT_SURFACE,get_invalidated_rect_list()); //with invalidated rect (seem slower)
+        reinitialize_invalidated_rect_list();
     }
     free(new_event);
     hw_quit();
@@ -209,6 +212,13 @@ void ei_app_run(void)
 
 void ei_app_invalidate_rect(const ei_rect_t* rect)
 {
+    if(rect) {
+        ei_linked_rect_t* list = get_invalidated_rect_list();
+        ei_linked_rect_t* new_head = malloc(sizeof(ei_linked_rect_t));
+        new_head->rect= *rect;
+        new_head->next = list;
+        set_invalidated_rect_list(new_head);
+    }
 
 }
 
