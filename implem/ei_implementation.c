@@ -68,8 +68,6 @@ void ei_placer_runfunc(ei_widget_t widget)
         newscreen->top_left.y = y- (int) (newscreen->size.height);
     }
     ei_geometry_run_finalize(widget,newscreen);
-
-
 }
 
 /*-------------------------------------------------------------------------------------------------------*/

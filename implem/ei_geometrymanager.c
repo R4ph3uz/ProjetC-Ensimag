@@ -24,7 +24,8 @@ void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_locati
             widget->screen_location.top_left.x != new_screen_location->top_left.x) || (
             widget->screen_location.top_left.y != new_screen_location->top_left.y))
     {
-        widget->screen_location=*new_screen_location;
+        // widget->screen_location=*new_screen_location;
+        memcpy(&widget->screen_location,new_screen_location,sizeof(widget->screen_location));
         // Il faut schedule un redraw  d'après la doc, a voir comment faire vu que pour l'instant, cette fonction est appeler par draw , donc jsp trop
         widget->wclass->geomnotifyfunc(widget);
         if (widget->children_tail)
@@ -38,6 +39,7 @@ void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_locati
             }
         }
     }
+    free(new_screen_location);
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
