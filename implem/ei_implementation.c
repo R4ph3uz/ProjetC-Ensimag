@@ -195,10 +195,10 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
             if (clipper) { // Si le clipper n'est pas nul ( nul SSI clipper déja nul avant ou que l'intersection précedente est vide )
                 ei_impl_widget_draw_children(actuel, surface, pick_surface, clipper); // On appelle recursivement la fonciton sur l'enfant
             }
-            if (free_bool && clipper) {
-                SAFE_FREE(clipper);
-            }
             actuel = actuel->next_sibling;
+            // if (free_bool && clipper) {
+            //     SAFE_FREE(clipper);
+            // }
         }
     }
     if (!strcmp(widget->wclass->name, "toplevel")){
