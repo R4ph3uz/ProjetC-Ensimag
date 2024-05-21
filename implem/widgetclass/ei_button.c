@@ -49,8 +49,6 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     button->img = SAFE_MALLOC(sizeof(ei_surface_t));
     button->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
     button->img_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
-    button->callback=SAFE_MALLOC(sizeof(ei_callback_t));
-    button->user_param =SAFE_MALLOC(sizeof(ei_user_param_t));
 
     button->widget.requested_size.width = 100;
     button->widget.requested_size.height =100;

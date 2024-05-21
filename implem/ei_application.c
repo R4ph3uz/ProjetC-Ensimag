@@ -234,6 +234,8 @@ void ei_app_free(void)
 {
     free_list_callback();
     ei_widget_destroy(ROOT_WIDGET);
+    ei_free_geometrymanager();
+    ei_free_widgetclass();
     hw_surface_free(ROOT_SURFACE);
     hw_surface_free(PICKING_SURFACE);
 }
