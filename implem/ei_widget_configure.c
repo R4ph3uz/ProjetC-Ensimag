@@ -130,7 +130,8 @@ void			ei_button_configure		(ei_widget_t		widget,
             *button->text =  SAFE_MALLOC(sizeof(char)*30);
         }
         if(*text == NULL){
-            button->text = NULL;
+            SAFE_FREE(*button->text);
+            SAFE_FREE(button->text);
         }
         else{
             strcpy(*button->text,*text);
