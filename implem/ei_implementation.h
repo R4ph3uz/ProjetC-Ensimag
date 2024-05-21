@@ -132,6 +132,8 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
  */
 uint32_t	ei_impl_map_rgba(ei_surface_t surface, ei_color_t color);
 
+
+
 /**
  * @brief	Calcule le rectangle d'union de deux rectangles
  *
@@ -139,6 +141,9 @@ uint32_t	ei_impl_map_rgba(ei_surface_t surface, ei_color_t color);
  * @param	rect2	Deuxième rectangle
  */
 ei_rect_t* union_rectangle(ei_rect_t rect1, ei_rect_t rect2);
+
+
+
 
 /**
  * \brief	Fields common to all geometry managers. Every geometry manager specializes this by adding its own fields.
@@ -157,10 +162,16 @@ typedef struct ei_impl_geom_param_t {
     bool *           is_reconfigurable; //True si la width/height dépend de la requested size
 } ei_impl_geom_param_t;
 
+
+
+
 /**
  * \brief	Returns the pick surface
  */
 ei_surface_t get_pick_surface(void);
+
+
+
 
 /**
  * @brief	Calcule le rectangle d'intersection de deux rectangles
@@ -169,6 +180,8 @@ ei_surface_t get_pick_surface(void);
  * @param	rect2	Deuxième rectangle
  */
 ei_rect_t* intersection_rectangle(ei_rect_t rect1 , ei_rect_t rect2);
+
+
 /**
  * @brief	Crée un geometry manager de type placer
  */
@@ -176,14 +189,14 @@ ei_geometrymanager_t* create_placer_gm(void);
 
 
 /**
- * @brief	Supprime le widget parmis ses freres et soeur
+ * @brief	Supprime le widget parmis ses frères et soeur
  *
  * @param	widget le widget
  */
 void supprime_de_ses_freres(ei_widget_t widget);
 
 /**
- * @brief	place le widget a la fin de la liste de freres
+ * @brief	place le widget a la fin de la liste de frères
  *
  * @param	widget le widget
  */
