@@ -129,17 +129,6 @@ void ei_app_run(void)
         bool isModified1 = false;
         bool isModified = false;
 
-        if(widget && widget->callback && new_event->type==ei_ev_mouse_buttonup ) {
-            list_widget_callback* temp = widget->callback;
-            while(temp!=NULL){
-                if(temp->eventtype == new_event->type){
-                    isModified1 = isModified1 || (*temp->callback)(widget, new_event,widget->user_data);
-                }
-                temp=temp->next;
-            }
-        }
-
-
         //parcourir la liste des callbacks et appeler si le bon type de widget et le bon type d'event
         list_callback* list_call = get_list_callback();
         while(list_call!=NULL) {
@@ -158,6 +147,17 @@ void ei_app_run(void)
                 break;
             list_call = list_call->next;
         }
+
+        if(widget && widget->callback && new_event->type==ei_ev_mouse_buttonup ) {
+            list_widget_callback* temp = widget->callback;
+            while(temp!=NULL){
+                if(temp->eventtype == new_event->type){
+                    isModified1 = isModified1 || (*temp->callback)(widget, new_event,widget->user_data);
+                }
+                temp=temp->next;
+            }
+        }
+
         ei_linked_rect_t* list_rect = NULL;
         ei_rect_t * union_rect = NULL;
         if(((isModified||isModified1) )||CHANGEMENT_PREMIER_PLAN) {
