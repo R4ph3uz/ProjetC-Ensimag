@@ -48,13 +48,24 @@ bool toplevel_up_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_pa
 
 bool toplevel_mouse_mouve_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_toplevel_t toplevel = (ei_toplevel_t) user_param;
+    ei_anchor_t *anchor=widget->geom_params->anchor;
     if (*toplevel->resizable==ei_axis_x ||*toplevel->resizable==ei_axis_both)
     {
+        int ancien = *toplevel->widget.geom_params->width;
         *toplevel->widget.geom_params->width =(int) fmax((*toplevel->min_size)->width , *toplevel->widget.geom_params->width+ event->param.mouse.where.x - toplevel->whereButtonDown.x)  ;
+        if ((*anchor==ei_anc_northeast) || (*anchor==ei_anc_east) || (*anchor==ei_anc_southeast))
+            *toplevel->widget.geom_params->x+=*toplevel->widget.geom_params->width- ancien ;
+        if ((*anchor==ei_anc_north) || (*anchor==ei_anc_center) || (*anchor==ei_anc_south))
+            *toplevel->widget.geom_params->x+=(*toplevel->widget.geom_params->width- ancien)/2 ;
     }
     if (*toplevel->resizable==ei_axis_y ||*toplevel->resizable==ei_axis_both)
     {
+        int ancien = *toplevel->widget.geom_params->height;
         *toplevel->widget.geom_params->height =(int) fmax((*toplevel->min_size)->height , *toplevel->widget.geom_params->height+ event->param.mouse.where.y - toplevel->whereButtonDown.y)  ;
+        if ((*anchor==ei_anc_southeast) || (*anchor==ei_anc_south) || (*anchor==ei_anc_southwest))
+            *toplevel->widget.geom_params->y+=*toplevel->widget.geom_params->height- ancien ;
+        if ((*anchor==ei_anc_west) || (*anchor==ei_anc_center) || (*anchor==ei_anc_east))
+            *toplevel->widget.geom_params->y+=(*toplevel->widget.geom_params->height- ancien)/2 ;
     }
     toplevel->whereButtonDown = event->param.mouse.where;
 
