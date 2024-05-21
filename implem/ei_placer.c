@@ -17,6 +17,7 @@ void		ei_place	(ei_widget_t		widget,
                          float*			rel_y,
                          float*			rel_width,
                          float*			rel_height) {
+
     if (widget->geom_params && (strcmp(widget->geom_params->manager->name,"placer")!=0))
     {
         //Si il y a un geometry manager différent de placer, supprime ce geometry manager via unmap

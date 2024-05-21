@@ -65,17 +65,8 @@ void ei_grid_runfunc(ei_widget_t widget) {
 /*-------------------------------------------------------------------------------------------------------*/
 void ei_grid_releasefunc(ei_widget_t widget)
 {
-    if (widget->children_head!=NULL)
-    {
-        ei_widget_t children;
-        children=widget->children_head;
-        while (children!=widget->children_tail)
-        {
-            ei_geometrymanager_unmap(children);
-            children=children->next_sibling;
-        }
-        ei_geometrymanager_unmap(children);
-    }
+
+
 }
 /*-------------------------------------------------------------------------------------------------------*/
 
@@ -94,7 +85,7 @@ void		grid	(ei_widget_t		widget,
     if (widget->geom_params==NULL) {
         widget->geom_params = SAFE_MALLOC(sizeof(ei_impl_geom_param_t));
 
-        widget->geom_params->manager = create_grid_gm();
+        widget->geom_params->manager = ei_geometrymanager_from_name("grid");
         widget->geom_params->is_reconfigurable = SAFE_MALLOC(sizeof(bool));
         *widget->geom_params->is_reconfigurable=SAFE_MALLOC(sizeof(bool));
         widget->geom_params->anchor = SAFE_MALLOC(sizeof(ei_anchor_t));

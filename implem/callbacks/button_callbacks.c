@@ -42,7 +42,10 @@ bool button_mouse_move(ei_widget_t widget, ei_event_t* event, ei_user_param_t us
     }
     else{
         button->is_clicked = false;
-        *button->relief = ei_relief_raised;
+        if (button->relief)
+        {
+            *button->relief = ei_relief_raised;
+        }
     }
 
     return true;

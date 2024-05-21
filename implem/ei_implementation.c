@@ -86,17 +86,7 @@ void ei_placer_runfunc(ei_widget_t widget)
 
 void ei_placer_releasefunc(ei_widget_t widget)
 {
-    if (widget->children_head!=NULL) // Si widget a un enfant ou +
-    {
-        ei_widget_t children;
-        children=widget->children_head;
-        while (children!=widget->children_tail) //Pour chacun de ses enfants
-        {
-            ei_geometrymanager_unmap(children); //Appelle a unmap sur cet enfant
-            children=children->next_sibling;
-        }
-        ei_geometrymanager_unmap(children);
-    }
+    
 
 }
 

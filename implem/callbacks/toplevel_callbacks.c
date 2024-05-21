@@ -3,6 +3,7 @@
 #include "ei_event.h"
 #include "ei_types.h"
 #include <math.h>
+#include "ei_placer.h"
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -49,6 +50,19 @@ bool toplevel_up_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_pa
 bool toplevel_mouse_mouve_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_toplevel_t toplevel = (ei_toplevel_t) user_param;
     ei_anchor_t *anchor=widget->geom_params->anchor;
+
+    //place la toplevel si elle est manager par autre chose que placer
+    if (strcmp(widget->geom_params->manager->name   , "placer") != 0)
+    {
+        ei_place			(toplevel, NULL,
+                             &(int){widget->content_rect->top_left.x-widget->parent->content_rect->top_left.x},
+                             &(int){widget->content_rect->top_left.y-widget->parent->content_rect->top_left.y-30},
+                             &(int){widget->content_rect->size.width},
+                             &(int){widget->content_rect->size.height},
+                             NULL, NULL,
+                             NULL, NULL);
+    }
+
     if (*toplevel->resizable==ei_axis_x ||*toplevel->resizable==ei_axis_both)
     {
         int ancien = *toplevel->widget.geom_params->width;
@@ -87,6 +101,19 @@ bool toplevel_move_up_click_handler(ei_widget_t widget, ei_event_t* event, ei_us
 
 bool toplevel_move_mouse_mouve_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_toplevel_t toplevel = (ei_toplevel_t) user_param;
+
+    //place la toplevel si elle est manager par autre chose que placer
+    if (strcmp(widget->geom_params->manager->name   , "placer") != 0)
+    {
+        ei_place			(toplevel, NULL,
+                             &(int){widget->content_rect->top_left.x-widget->parent->content_rect->top_left.x},
+                             &(int){widget->content_rect->top_left.y-widget->parent->content_rect->top_left.y-30},
+                             &(int){widget->content_rect->size.width},
+                             &(int){widget->content_rect->size.height},
+                             NULL, NULL,
+                             NULL, NULL);
+    }
+
         *toplevel->widget.geom_params->x += event->param.mouse.where.x - toplevel->whereButtonDown.x  ;
         *toplevel->widget.geom_params->y += event->param.mouse.where.y - toplevel->whereButtonDown.y;
     toplevel->whereButtonDown = event->param.mouse.where;
