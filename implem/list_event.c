@@ -58,8 +58,8 @@ void remove_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t e
             if (user_param!= parcours->next->user_param)
                 fprintf(stderr, "C'EST PAS LE MEME USER PARAM 2");
             parcours->next = parcours->next->next;
-
-            free(temp); // Besoin de free les sous structures (je pense pas)?
+            free(temp->tag);
+            free(temp);
             return;
         }
         parcours = parcours->next;

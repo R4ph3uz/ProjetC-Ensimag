@@ -36,6 +36,8 @@
         ptr; \
     })
 
+#define SAFE_FREE(ptr) if (ptr) { free(ptr); ptr = NULL; }
+
 /**
  * @brief	unmap le widget et ses enfants pour le geometry manager placer
  *
@@ -87,6 +89,9 @@ typedef struct ei_impl_widget_t {
 	/* Callback Management */
     list_widget_callback* callback; ///< if the widget have a callback just for him
 
+    /*Champ*/
+    bool isChildIgnoreAddInvalidateRect;
+
 } ei_impl_widget_t;
 
 
@@ -97,7 +102,7 @@ typedef struct ei_impl_widget_t {
  * 		the widget's content_rect.
  *
  * @param	widget		The widget which children are drawn.
- * @param	surface		A locked surface where to draw the widget's children.
+ * @param	surface		A locked surface where to draw the widget's childre n.
  * @param	pick_surface	The picking offscreen.
  * @param	clipper		If not NULL, the drawing is restricted within this rectangle
  *				(expressed in the surface reference frame).

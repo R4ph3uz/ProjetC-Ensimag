@@ -18,22 +18,22 @@ ei_widget_t frame_allocfunc()
 
 void frame_releasefunc(ei_widget_t widget)
 {
-//    ei_impl_frame_t* frame = (ei_impl_frame_t*) widget;
-//    free(frame->color);
-//    free(frame->border_width);
-//    free(frame->relief);
-//    free(frame->text);
-//    free(frame->text_font);
-//    free(frame->text_color);
-//    free(frame->text_anchor);
-//    free(frame->img);
-//    free(frame->img_rect);
-//    free(frame->img_anchor);
-//
-//    // free trucs spécifique aux widgets ?
-//
-//
-//    free(frame);
+    ei_impl_frame_t* frame = (ei_impl_frame_t*) widget;
+    SAFE_FREE(frame->color);
+    SAFE_FREE(frame->border_width);
+    SAFE_FREE(frame->relief);
+    SAFE_FREE(frame->text);
+    SAFE_FREE(frame->text_font);
+    SAFE_FREE(frame->text_color);
+    SAFE_FREE(frame->text_anchor);
+    SAFE_FREE(frame->img);
+    SAFE_FREE(frame->img_rect);
+    SAFE_FREE(frame->img_anchor);
+
+    // free trucs spécifique aux widgets ?
+
+
+    SAFE_FREE(frame);
 }
 
 
