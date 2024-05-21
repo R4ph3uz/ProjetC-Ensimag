@@ -31,7 +31,7 @@ void button_releasefunc(ei_widget_t widget) {
     SAFE_FREE(button->img_anchor);
 
     SAFE_FREE(button->callback);
-    SAFE_FREE(button->user_param);
+    SAFE_FREE(button);
 }
 
 /*--------------------------------------------------------------------------------*/
@@ -42,11 +42,9 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     button->border_width=SAFE_MALLOC(sizeof(int));
     button->corner_radius = SAFE_MALLOC(sizeof(int));
     button->relief=SAFE_MALLOC(sizeof(ei_relief_t));
-    button->text = SAFE_MALLOC(sizeof(ei_string_t));
     button->text_color = SAFE_MALLOC(sizeof(ei_color_t));
     button->text_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
     button->text_font=SAFE_MALLOC(sizeof(ei_font_t));
-    button->img = SAFE_MALLOC(sizeof(ei_surface_t));
     button->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
     button->img_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
 
@@ -226,6 +224,8 @@ void button_drawfunc(ei_widget_t widget,
 /*--------------------------------------------------------------------------------*/
 
 void button_geomnotifyfunc(ei_widget_t widget) {
+    if(&widget->screen_location!=widget->content_rect)
+        SAFE_FREE(widget->content_rect);
     widget->content_rect=&widget->screen_location;
 }
 
