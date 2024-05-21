@@ -51,14 +51,14 @@ int main(int argc, char** argv)
 	ei_toplevel_configure		(window, &(ei_size_t){320,240},
 					      	 &(ei_color_t){0xA0,0xA0,0xA0, 0xff},
 						 &(int){2},
-						 &(ei_string_t){"Hello World"}, NULL, NULL, NULL);
+						 &(ei_string_t){"♥♥♥♥"}, NULL, NULL, NULL);
 	ei_place_xy			(window, 30, 10);
     window2 = ei_widget_create	("toplevel", ei_app_root_widget(), NULL, NULL);
 	ei_toplevel_configure		(window2, &(ei_size_t){320,240},
 					      	 &(ei_color_t){0xA0,0xA0,0xA0, 0xff},
 						 &(int){2},
-						 &(ei_string_t){"Hello World2222"}, NULL, NULL, NULL);
-	ei_place_xy			(window2, 30, 10);
+						 &(ei_string_t){"♣♣♣♣"}, NULL, NULL, NULL);
+	ei_place_xy			(window2, 30, 100);
 
 	/* Create, configure and place a button as a descendant of the toplevel window. */
 	top2 = ei_widget_create	("toplevel", window, NULL, NULL);
