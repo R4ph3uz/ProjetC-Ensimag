@@ -73,9 +73,9 @@ void			ei_entry_give_focus		(ei_widget_t		widget)
     ei_entry_t old_entry = get_entry_focus();
     if(old_entry){
         old_entry->focus = false;
-        ei_unbind(ei_ev_keydown,NULL,  "entry",controlc, old_entry);
-        ei_unbind(ei_ev_keydown,NULL,  "entry",controlx, old_entry);
-        ei_unbind(ei_ev_keydown,NULL,  "entry",controlv, old_entry);
+        ei_unbind(ei_ev_keydown,NULL,  "all",controlc, old_entry);
+        ei_unbind(ei_ev_keydown,NULL,  "all",controlx, old_entry);
+        ei_unbind(ei_ev_keydown,NULL,  "all",controlv, old_entry);
         ei_unbind(ei_ev_keydown,NULL,"all",entry_write,old_entry); // keystroke
         ei_unbind(ei_ev_text_input,NULL,"all",entry_write,old_entry); // texte collé ?
         ei_unbind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,old_entry); // si on clique e dehors
@@ -89,10 +89,10 @@ void			ei_entry_give_focus		(ei_widget_t		widget)
     set_entry_focus(entry);
     entry->is_in_selection =true;
     entry->debut_selection =  0;
-    entry->fin_selection = strlen(entry->text );
-    ei_bind(ei_ev_keydown,NULL,  "entry",controlc, entry);
-    ei_bind(ei_ev_keydown,NULL,  "entry",controlx, entry);
-    ei_bind(ei_ev_keydown,NULL,  "entry",controlv, entry);
+    entry->fin_selection = (int32_t) strlen(entry->text);
+    ei_bind(ei_ev_keydown,NULL,  "all",controlc, entry);
+    ei_bind(ei_ev_keydown,NULL,  "all",controlx, entry);
+    ei_bind(ei_ev_keydown,NULL,  "all",controlv, entry);
     ei_bind(ei_ev_keydown,NULL,"all",entry_write,entry); // keystroke
     ei_bind(ei_ev_text_input,NULL,"all",entry_write,entry); // texte collé ?
     ei_bind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors

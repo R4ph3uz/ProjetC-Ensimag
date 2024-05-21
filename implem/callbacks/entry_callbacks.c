@@ -102,9 +102,9 @@ bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user
 
     }
 
-    ei_unbind(ei_ev_keydown,NULL,  "entry",controlc, entry);
-    ei_unbind(ei_ev_keydown,NULL,  "entry",controlx, entry);
-    ei_unbind(ei_ev_keydown,NULL,  "entry",controlv, entry);
+    ei_unbind(ei_ev_keydown,NULL,  "all",controlc, entry);
+    ei_unbind(ei_ev_keydown,NULL,  "all",controlx, entry);
+    ei_unbind(ei_ev_keydown,NULL,  "all",controlv, entry);
     ei_unbind(ei_ev_keydown,NULL,"all",entry_write,entry); // keystroke
     ei_unbind(ei_ev_text_input,NULL,"all",entry_write,entry); // texte collé ?
     ei_unbind(ei_ev_mouse_buttondown,NULL,"all",entry_down_click_handler_all,entry); // si on clique e dehors
@@ -541,7 +541,6 @@ bool controlx(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
                 TEXTE_COPIE = SAFE_REALLOC(TEXTE_COPIE,sizeof(char)*strlen(new_text));
                 strcpy(TEXTE_COPIE,new_text);
             }
-            fprintf(stderr,"dans controle-x texte copié %s / pos1 %i / pos2 %i\n",TEXTE_COPIE,pos1,pos2);
             free(new_text);
             free(text);
             return true;
@@ -569,7 +568,6 @@ bool controlv(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
             entry->position=entry->debut_selection=entry->fin_selection=pos1;
         }
         char* text = entry->text;
-        fprintf(stderr,"dans controle-v texte copié %s / position %i\n",TEXTE_COPIE,entry->position);
         if(!TEXTE_COPIE){
             return false;
         }
