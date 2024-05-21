@@ -11,6 +11,9 @@ bool up_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
 {
     ei_button_t button = (ei_button_t) widget;
     *button->relief = ei_relief_raised;
+        if(widget->callback){
+            (*widget->callback)(widget, event,widget->user_data);
+        }
     ei_unbind(ei_ev_mouse_move, NULL, "all", button_mouse_move,button);
     ei_unbind(ei_ev_mouse_buttonup, NULL, "all",up_click_handler_outside, button);
     return true;

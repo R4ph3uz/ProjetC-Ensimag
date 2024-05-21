@@ -89,7 +89,7 @@ typedef struct ei_impl_widget_t {
 	ei_rect_t*		content_rect;	///< See ei_widget_get_content_rect. By defaults, points to the screen_location.
 
 	/* Callback Management */
-    list_widget_callback* callback; ///< if the widget have a callback just for him
+    ei_callback_t callback; ///< if the widget have a callback just for him
 
     /*Champ*/
     bool isChildIgnoreAddInvalidateRect;

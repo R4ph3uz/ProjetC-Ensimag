@@ -18,19 +18,7 @@ void		ei_bind			(ei_eventtype_t		eventtype,
         add_list_callback(callback, tag, eventtype, user_param);
     }
     else {
-        //assiger au widget le callback et l'eventtype
-        list_widget_callback* list_cb= SAFE_MALLOC(sizeof(list_widget_callback));
-        list_cb->callback = callback;
-        list_cb->eventtype = eventtype;
-        list_cb->user_param = user_param;
-        list_cb->next=NULL;
-        if(widget->callback == NULL){
-            widget->callback = list_cb;
-        }
-        else{
-           list_cb->next=widget->callback;
-           widget->callback=list_cb;
-        }
+        widget->callback = callback;
     }
 }
 
@@ -45,11 +33,9 @@ void		ei_unbind		(ei_eventtype_t		eventtype,
     if(tag) {
         remove_list_callback(callback, tag, eventtype, user_param);
     }
-    else
-        while(widget->callback !=NULL){
-            list_widget_callback* temp = widget->callback;
-            widget->callback = widget->callback->next;
-            SAFE_FREE(temp);
-        }
+    else {
+        widget->callback =NULL;
+    }
+
 }
 

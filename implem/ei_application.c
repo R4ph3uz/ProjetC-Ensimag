@@ -155,20 +155,10 @@ void ei_app_run(void)
             list_call = list_call->next;
         }
 
-        if(widget && widget->callback && new_event->type==ei_ev_mouse_buttonup ) {
-            list_widget_callback* temp = widget->callback;
-            while(temp!=NULL){
-                if(temp->eventtype == new_event->type){
-                    isModified1 = isModified1 || (*temp->callback)(widget, new_event,widget->user_data);
-                }
-                if (isModified1)
-                    break;
-                temp=temp->next;
-            }
-        }
+
 
         ei_rect_t * union_rect = NULL;
-        if(((isModified||isModified1) )||CHANGEMENT_PREMIER_PLAN) {
+        if(((isModified) )||CHANGEMENT_PREMIER_PLAN) {
 
 
 

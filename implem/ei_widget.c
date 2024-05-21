@@ -5,6 +5,7 @@
 #include "pick_event.h"
 #include "ei_application.h"
 #include "list_event.h"
+#include "callbacks/entry_callbacks.h"
 /*-------------------------------------------------------------------------------------------------------*/
 
 static uint32_t PICKID=0;
@@ -81,11 +82,17 @@ void			ei_widget_destroy		(ei_widget_t		widget)
     ei_app_invalidate_rect(&widget->screen_location);
     ei_geometrymanager_unmap(widget);
     SAFE_FREE(widget->pick_color);
+    widget->callback = NULL;
 //    ei_unbind(ei_ev_mouse_buttondown, widget, NULL, NULL,NULL);
     if(widget->content_rect!=&widget->screen_location)
         SAFE_FREE(widget->content_rect);
     if (widget->destructor)
         widget->destructor(widget);
+
+    //set entry focus a null si on destroy l'entry
+    if((ei_widget_t)get_entry_focus() == widget) {
+        set_entry_focus(NULL);
+    }
     (*(widget->wclass->releasefunc))(widget); // ici libère la mémoire
 }
 
