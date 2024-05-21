@@ -63,7 +63,7 @@ void toplevel_drawfunc(ei_widget_t widget,
 /*-----------------------------------------------------------------------------------------------*/
 
 void toplevel_geomnotifyfunc(ei_widget_t widget) {
-    if(&widget->screen_location==widget->content_rect)
+    if(!widget->content_rect || &widget->screen_location==widget->content_rect)
         widget->content_rect = SAFE_MALLOC(sizeof(ei_rect_t ));
     widget->content_rect->top_left.x=widget->screen_location.top_left.x;
     widget->content_rect->top_left.y=widget->screen_location.top_left.y+30;
