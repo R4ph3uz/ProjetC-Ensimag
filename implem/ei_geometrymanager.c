@@ -29,8 +29,12 @@ void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_locati
     {
         // widget->screen_location=*new_screen_location;
         if(!widget->isChildIgnoreAddInvalidateRect){
-            ei_app_invalidate_rect(intersection_rectangle(widget->screen_location, widget->parent->screen_location));
-            ei_app_invalidate_rect(intersection_rectangle(*new_screen_location, widget->parent->screen_location));
+            ei_rect_t* rectangle_intersecte = intersection_rectangle(widget->screen_location, widget->parent->screen_location);
+            ei_app_invalidate_rect(rectangle_intersecte);
+            SAFE_FREE(rectangle_intersecte);
+            ei_rect_t* rectangle_intersecte2 =intersection_rectangle(*new_screen_location, widget->parent->screen_location);
+            ei_app_invalidate_rect(rectangle_intersecte2);
+            SAFE_FREE(rectangle_intersecte2);
         }
         else{
             widget->isChildIgnoreAddInvalidateRect = false;
@@ -71,6 +75,18 @@ void			ei_geometrymanager_register	(ei_geometrymanager_t* geometrymanager)
 
 /*-------------------------------------------------------------------------------------------------------*/
 
+void			ei_free_geometrymanager	()
+{
+    while(LISTE_GEOMETRYMANAGER!=NULL) {
+        ei_geometrymanager_t* temp= LISTE_GEOMETRYMANAGER;
+        LISTE_GEOMETRYMANAGER=LISTE_GEOMETRYMANAGER->next;
+        free(temp);
+    }
+}
+
+/*-------------------------------------------------------------------------------------------------------*/
+
+
 ei_geometrymanager_t*	ei_geometrymanager_from_name	(ei_geometrymanager_name_t name)
 {
     ei_geometrymanager_t* actual = LISTE_GEOMETRYMANAGER;
@@ -92,16 +108,17 @@ void			ei_geometrymanager_unmap	(ei_widget_t widget)
     if (widget->geom_params) //si il a un manager
     { //free et supprimme ce qui est associé a geom params
         widget->geom_params->manager->releasefunc(widget);
-        free(widget->geom_params->rel_y);
-        free(widget->geom_params->width);
-        free(widget->geom_params->height);
-        free(widget->geom_params->rel_height);
-        free(widget->geom_params->rel_width);
-        free(widget->geom_params->anchor);
-        free(widget->geom_params->is_reconfigurable);
-        free(widget->geom_params->x);
-        free(widget->geom_params->y);
-        free(widget->geom_params);
+        SAFE_FREE(widget->geom_params->rel_y);
+        SAFE_FREE(widget->geom_params->rel_x);
+        SAFE_FREE(widget->geom_params->width);
+        SAFE_FREE(widget->geom_params->height);
+        SAFE_FREE(widget->geom_params->rel_height);
+        SAFE_FREE(widget->geom_params->rel_width);
+        SAFE_FREE(widget->geom_params->anchor);
+        SAFE_FREE(widget->geom_params->is_reconfigurable);
+        SAFE_FREE(widget->geom_params->x);
+        SAFE_FREE(widget->geom_params->y);
+        SAFE_FREE(widget->geom_params);
         widget->geom_params=NULL;
     }
 
