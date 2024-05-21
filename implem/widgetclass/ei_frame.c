@@ -222,8 +222,6 @@ void frame_drawfunc(ei_widget_t widget,
 
 void frame_geomnotifyfunc(ei_widget_t widget)
 {
-    if(&widget->screen_location!=widget->content_rect)
-        SAFE_FREE(widget->content_rect);
     widget->content_rect=&widget->screen_location;
 }
 
@@ -236,9 +234,11 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     /* Suite spécifique à une  frame*/
     frame->color = SAFE_MALLOC(sizeof(ei_color_t));
     frame->relief = SAFE_MALLOC(sizeof(ei_relief_t));
+    frame->text = SAFE_MALLOC(sizeof(ei_string_t));
     frame->text_font = SAFE_MALLOC(sizeof(ei_font_t));
     frame->text_color = SAFE_MALLOC(sizeof(ei_color_t));
     frame->text_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
+    frame->img = SAFE_MALLOC(sizeof(ei_surface_t));
     frame->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
     frame->img_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
     frame->border_width = SAFE_MALLOC(sizeof(int));
