@@ -21,9 +21,9 @@ bool up_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
 bool down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param)
 {
     ei_button_t button = (ei_button_t) widget;
-    ei_bind(ei_ev_mouse_move, NULL, "all", button_mouse_move,button);
     *button->relief = ei_relief_sunken;
     button->is_clicked = true;
+    ei_bind(ei_ev_mouse_move, NULL, "all", button_mouse_move,button);
     return true;
 }
 
@@ -42,10 +42,8 @@ bool button_mouse_move(ei_widget_t widget, ei_event_t* event, ei_user_param_t us
     }
     else{
         button->is_clicked = false;
-        if (button->relief)
-        {
+        if(button->relief)
             *button->relief = ei_relief_raised;
-        }
     }
 
     return true;
