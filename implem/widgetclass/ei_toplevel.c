@@ -53,6 +53,7 @@ void toplevel_drawfunc(ei_widget_t widget,
         ei_rect_t* text_clipper = intersection_rectangle(*clipper, top_level->widget.screen_location);
         ei_draw_text(surface, &place, *top_level->title, test, blanc, text_clipper);
         free(test);
+        SAFE_FREE(text_clipper);
     }
 
 
@@ -62,7 +63,8 @@ void toplevel_drawfunc(ei_widget_t widget,
 /*-----------------------------------------------------------------------------------------------*/
 
 void toplevel_geomnotifyfunc(ei_widget_t widget) {
-    widget->content_rect = SAFE_MALLOC(sizeof(ei_rect_t ));
+    if(&widget->screen_location==widget->content_rect)
+        widget->content_rect = SAFE_MALLOC(sizeof(ei_rect_t ));
     widget->content_rect->top_left.x=widget->screen_location.top_left.x;
     widget->content_rect->top_left.y=widget->screen_location.top_left.y+30;
     widget->content_rect->size.width=widget->screen_location.size.width;
