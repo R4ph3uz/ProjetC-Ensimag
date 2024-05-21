@@ -9,12 +9,16 @@
 
 bool toplevel_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_toplevel_t toplevel = (ei_toplevel_t) widget;
+
+    //On est sur le rond rouge
     if (event->param.mouse.where.x>widget->content_rect->top_left.x+6  && event->param.mouse.where.x<widget->content_rect->top_left.x+20 && event->param.mouse.where.y>widget->content_rect->top_left.y-17  && event->param.mouse.where.y<widget->content_rect->top_left.y-3)
     {
-        // sur la partie rouge
+
         ei_widget_destroy(widget);
         return true;
     }
+
+    //On est sur la barre du toplevel
    if(event->param.mouse.where.y < widget->content_rect->top_left.y ) {
 
         toplevel->whereButtonDown = event->param.mouse.where;
@@ -22,6 +26,8 @@ bool toplevel_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_
         ei_bind(ei_ev_mouse_buttonup, NULL, "all", toplevel_move_up_click_handler, toplevel);
         return true;
     }
+
+    //On est sur le petit carré du toplevel
     if(event->param.mouse.where.y > widget->content_rect->top_left.y+ widget->content_rect->size.height-10 &&
         event->param.mouse.where.x > widget->content_rect->top_left.x+ widget->content_rect->size.width-10 &&
             *toplevel->resizable!= 0){
@@ -36,7 +42,7 @@ bool toplevel_down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-
+// On enléve le click lorsque l'on est sur le petit carré
 bool toplevel_up_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_toplevel_t toplevel = (ei_toplevel_t) user_param;
     ei_unbind(ei_ev_mouse_move, NULL, "all", toplevel_mouse_mouve_handler, toplevel);
@@ -46,7 +52,7 @@ bool toplevel_up_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_pa
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-
+        // On se déplace lorsque l'on est sur le petit carré
 bool toplevel_mouse_mouve_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_toplevel_t toplevel = (ei_toplevel_t) user_param;
     ei_anchor_t *anchor=widget->geom_params->anchor;
@@ -88,7 +94,7 @@ bool toplevel_mouse_mouve_handler(ei_widget_t widget, ei_event_t* event, ei_user
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-
+        //On arrete de cliquer lorsque l'on est sur la barre de la toplevel
 bool toplevel_move_up_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_toplevel_t toplevel = (ei_toplevel_t) user_param;
     ei_unbind(ei_ev_mouse_move, NULL, "all", toplevel_move_mouse_mouve_handler, toplevel);
@@ -98,7 +104,7 @@ bool toplevel_move_up_click_handler(ei_widget_t widget, ei_event_t* event, ei_us
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-
+        //on se deplace lorsque l'on est sur le barre de la toplevel
 bool toplevel_move_mouse_mouve_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param) {
     ei_toplevel_t toplevel = (ei_toplevel_t) user_param;
 
