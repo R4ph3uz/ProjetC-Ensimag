@@ -24,7 +24,6 @@ char*  insert_char(char* text, char character, uint8_t where) {
     for(int i = where+1; i< taille;i++)
         res[i] = text[i-1];
     res[taille] = '\0';
-    free(text);
     return res;
 }
 
@@ -48,9 +47,6 @@ char* insert_word(char* text, const char* word, uint8_t where) {
 
     // Copier la partie restante du texte après l'insertion
     strcpy(res + where + taille_word, text + where);
-
-    // Libérer la mémoire du texte original
-    free(text);
 
     // Retourner la nouvelle chaîne de caractères
     return res;
