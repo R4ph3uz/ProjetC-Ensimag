@@ -232,6 +232,14 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
             ei_draw_polygon(get_pick_surface(), carre_bas_droite, 4, *widget->pick_color, clipper);
 
         }
+        ei_point_t* border_line = SAFE_MALLOC(sizeof(ei_point_t)*5);
+        ei_rect_t content_rect = *widget->content_rect;
+        border_line[0] = content_rect.top_left;
+        border_line[1]= (ei_point_t){content_rect.top_left.x+ content_rect.size.width-1, content_rect.top_left.y };
+        border_line[2] = (ei_point_t){content_rect.top_left.x+ content_rect.size.width-1, content_rect.top_left.y + content_rect.size.height-1};
+        border_line[3]= (ei_point_t){content_rect.top_left.x, content_rect.top_left.y + content_rect.size.height-1 };
+        border_line[4] = content_rect.top_left;
+        ei_draw_polyline(surface, border_line, 5, color_plus_fonce,clipper);
     }
 }
 
