@@ -224,6 +224,7 @@ void ei_app_invalidate_rect(const ei_rect_t* rect)
 
 void ei_app_free(void)
 {
+    free_text_copie();
     free_list_callback();
     ei_widget_destroy(ROOT_WIDGET);
     ei_free_geometrymanager();
