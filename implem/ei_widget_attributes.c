@@ -90,6 +90,8 @@ const ei_rect_t*	ei_widget_get_content_rect	(ei_widget_t		widget)
 
 void	 		ei_widget_set_content_rect	(ei_widget_t		widget, const ei_rect_t*	content_rect)
 {
+    if(widget->content_rect!=&widget->screen_location)
+        SAFE_FREE(widget->content_rect);
     if(widget->content_rect==NULL)
     {
         widget->content_rect=SAFE_MALLOC(sizeof(ei_rect_t));
