@@ -94,9 +94,8 @@ set(LIB_EI_SOURCES
 		${SRC}/callbacks/entry_callbacks.c
 		${SRC}/utils/text_utils.c
 		${SRC}/grid.c
-		${SRC}/grid.h
 		${SRC}/invalidated_rect_list.c
-		${SRC}/invalidated_rect_list.h
+		${SRC}/widgetclass/radiobutton.c
 )
 
 add_library(ei STATIC			${LIB_EI_SOURCES})
