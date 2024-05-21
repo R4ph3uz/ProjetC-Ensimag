@@ -202,7 +202,7 @@ void ei_app_run(void)
         reinitialize_invalidated_rect_list();
     }
     free(new_event);
-    hw_quit();
+
 }
 
 
@@ -230,6 +230,7 @@ void ei_app_free(void)
     ei_free_widgetclass();
     hw_surface_free(ROOT_SURFACE);
     hw_surface_free(PICKING_SURFACE);
+    hw_quit();
 }
 
 /* ----------------------------------------------------------------- */
