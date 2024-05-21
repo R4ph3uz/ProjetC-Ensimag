@@ -123,10 +123,6 @@ ei_rect_t* intersection_rectangle(ei_rect_t rect1,ei_rect_t rect2) {
     } else {
         // Construct and return the intersection rectangle
         ei_rect_t* intersection_rect = SAFE_MALLOC(sizeof(ei_rect_t));
-        if (intersection_rect == NULL) {
-            // Allocation failed
-            return NULL;
-        }
         intersection_rect->top_left.x = x_tl;
         intersection_rect->top_left.y = y_tl;
         intersection_rect->size.width = width;
@@ -200,14 +196,16 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
             if (!widget->parent) // Si le widget est la root
             {
                 clipper=actuel->parent->content_rect; // le clipper est le content rect de la root
+                if(clipper)
+                    ei_impl_widget_draw_children(actuel, surface, pick_surface, clipper); // On appelle recursivement la fonciton sur l'enfant
             }
             else if(clipper) { //Si un clipper existe déja
                 //le nouveau clipper est l'intersection de ce clipper et du content rect du parent
                 clipper=intersection_rectangle(*clipper,*actuel->parent->content_rect);
-            }
-            if (clipper) { // Si le clipper n'est pas nul ( nul SSI clipper déja nul avant ou que l'intersection précedente est vide )
-                ei_impl_widget_draw_children(actuel, surface, pick_surface, clipper); // On appelle recursivement la fonciton sur l'enfant
-
+                if (clipper){
+                    ei_impl_widget_draw_children(actuel, surface, pick_surface, clipper);
+                    SAFE_FREE(clipper);
+                }
             }
             actuel = actuel->next_sibling;
         }
