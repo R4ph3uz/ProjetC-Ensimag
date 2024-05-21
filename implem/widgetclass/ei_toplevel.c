@@ -21,7 +21,8 @@ void toplevel_releasefunc(ei_widget_t widget){
     SAFE_FREE(top_level->title);
     SAFE_FREE(top_level->closable);
     SAFE_FREE(top_level->resizable);
-    SAFE_FREE((*top_level->min_size));
+    // if(*top_level->min_size)
+    //     SAFE_FREE((*top_level->min_size));
     SAFE_FREE(top_level->min_size);
     SAFE_FREE(top_level);
 }
