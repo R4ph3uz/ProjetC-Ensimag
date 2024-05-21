@@ -222,6 +222,8 @@ void frame_drawfunc(ei_widget_t widget,
 
 void frame_geomnotifyfunc(ei_widget_t widget)
 {
+    if(&widget->screen_location!=widget->content_rect)
+        SAFE_FREE(widget->content_rect);
     widget->content_rect=&widget->screen_location;
 }
 

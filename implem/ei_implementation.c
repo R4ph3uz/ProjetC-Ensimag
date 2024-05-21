@@ -123,10 +123,6 @@ ei_rect_t* intersection_rectangle(ei_rect_t rect1,ei_rect_t rect2) {
     } else {
         // Construct and return the intersection rectangle
         ei_rect_t* intersection_rect = SAFE_MALLOC(sizeof(ei_rect_t));
-        if (intersection_rect == NULL) {
-            // Allocation failed
-            return NULL;
-        }
         intersection_rect->top_left.x = x_tl;
         intersection_rect->top_left.y = y_tl;
         intersection_rect->size.width = width;

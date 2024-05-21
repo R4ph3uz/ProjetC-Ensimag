@@ -54,11 +54,7 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 
 
 
-    widget->content_rect=SAFE_MALLOC(sizeof(ei_rect_t));
-    widget->content_rect->size.width=0;
-    widget->content_rect->size.height=0;
-    widget->content_rect->top_left.x=0;
-    widget->content_rect->top_left.y=0;
+    widget->content_rect=NULL;
     ///< See ei_widget_get_content_rect. By defaults, points to the screen_location.
 
     widget->callback= NULL;
@@ -83,8 +79,11 @@ void			ei_widget_destroy		(ei_widget_t		widget)
     }
     ei_app_invalidate_rect(&widget->screen_location);
     ei_geometrymanager_unmap(widget);
+    SAFE_FREE(widget->pick_color);
     if (widget->destructor)
         widget->destructor(widget);
+    if(widget->content_rect!=&widget->screen_location)
+        SAFE_FREE(widget->content_rect);
     (*(widget->wclass->releasefunc))(widget); // ici libère la mémoire
 }
 

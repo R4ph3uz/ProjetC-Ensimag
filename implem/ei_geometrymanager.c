@@ -119,7 +119,6 @@ void			ei_geometrymanager_unmap	(ei_widget_t widget)
         SAFE_FREE(widget->geom_params->x);
         SAFE_FREE(widget->geom_params->y);
         SAFE_FREE(widget->geom_params);
-        widget->geom_params=NULL;
     }
 
 
@@ -127,7 +126,9 @@ void			ei_geometrymanager_unmap	(ei_widget_t widget)
     widget->screen_location.size.width=0;
     widget->screen_location.top_left.x=0;
     widget->screen_location.top_left.y=0;      //remet  a 0 la screen location
-    *widget->content_rect=widget->screen_location;
+    if(widget->content_rect!=&widget->screen_location)
+        SAFE_FREE(widget->content_rect);
+    widget->content_rect=&widget->screen_location;
 
 }
 
