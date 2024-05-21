@@ -97,10 +97,12 @@ void ei_app_run(void)
 
         ei_rect_t rect_before;
         ei_rect_t rect_after;
+
+        // Si il y a un event
         if(new_event->type == ei_ev_mouse_buttondown || new_event->type == ei_ev_mouse_buttonup )
         {
             ei_widget_t precwid=widget;
-            widget= ei_widget_pick(&(new_event->param.mouse.where)); //widget est le widget sur lequel on vient de cliquer
+            widget= ei_widget_pick(&(new_event->param.mouse.where)); //widget devient le widget sur lequel on vient de cliquer
             widget_last_child=widget;
 
             //Si le widget n'est pas la root et est différent du widget précedent
