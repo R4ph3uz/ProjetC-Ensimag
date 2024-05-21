@@ -124,11 +124,12 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
     char* text = (char*) ei_entry_get_text(user_param);
     if(entry->is_in_selection == false){ // on n'est pas en selection
         if(event->type==ei_ev_text_input){
-                text = insert_char(text, event->param.text, entry->position );
-                ei_entry_set_text((ei_widget_t)entry,text);
-                entry->position+=1;
-                entry->debut_selection=entry->position; // mais dans le doute si au prochain on entre en selection je sauvegarde cette position
-                return true;
+            text = insert_char(text, event->param.text, entry->position );
+            ei_entry_set_text((ei_widget_t)entry,text);
+            entry->position+=1;
+            entry->debut_selection=entry->position; // mais dans le doute si au prochain on entre en selection je sauvegarde cette position
+            SAFE_FREE(text);
+            return true;
         }
         if(event->type == ei_ev_keydown && event->param.key_code==SDLK_DELETE) {
             //touch suppr
@@ -140,6 +141,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 int pos2 = bypass_control(entry->text,entry->position,1);
                 char *new = cut_text(text, pos1, pos2);
                 ei_entry_set_text((ei_widget_t)entry,new);
+                free(new);
                 entry->debut_selection = (int32_t) fminf((float)pos1,(float)pos2);
                 entry->fin_selection = (int32_t) fminf((float)pos1,(float)pos2);
                 entry->position = (int32_t) fminf((float)pos1,(float)pos2);
@@ -147,6 +149,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             else{ // supprime qu'un seul caractere
                 char* new = delete_char(text, entry->position+1);
                 ei_entry_set_text((ei_widget_t)entry,new);
+                free(new);
                 entry->debut_selection=entry->position;
             }
             return true;
@@ -161,6 +164,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 int pos2 = bypass_control(entry->text,entry->position,-1);
                 char *new = cut_text(text, pos2, pos1);
                 ei_entry_set_text((ei_widget_t)entry,new);
+                free(new);
                 entry->debut_selection = (int32_t) fminf((float)pos1,(float)pos2);
                 entry->fin_selection = (int32_t) fminf((float)pos1,(float)pos2);
                 entry->position = (int32_t) fminf((float)pos1,(float)pos2);
@@ -169,10 +173,12 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                     int old_width, old_height;
                     char* old_text = restrict_text(text, entry->position+1);
                     hw_text_compute_size(old_text, *entry->text_font, &old_width, &old_height);
+                    free(old_text);
                     int decalage = entry->decal_x-old_width+entry->widget.screen_location.size.width;
 
                     int width, height;
                     char* text_rest = restrict_text(new, entry->position);
+                    free(text_rest);
                     hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
                     entry->decal_x = width-entry->widget.screen_location.size.width +decalage;
                     if (width <entry->widget.screen_location.size.width )
@@ -181,19 +187,23 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             }
             else{
                 char* new = delete_char(text, entry->position);
-                ei_entry_set_text((ei_widget_t)entry,new);
-                if (strcmp(text, new)!=0)
+                if (strcmp(text, new)!=0){
+                    ei_entry_set_text((ei_widget_t)entry,new);
                     entry->position-=1;
+                    SAFE_FREE(new);
+                }
                 //calcul nouveau decalage
                 if (entry->decal_x > 0){
                     int old_width, old_height;
                     char* old_text = restrict_text(text, entry->position+1);
                     hw_text_compute_size(old_text, *entry->text_font, &old_width, &old_height);
+                    SAFE_FREE(old_text);
                     int decalage = entry->decal_x-old_width+entry->widget.screen_location.size.width;
 
                     int width, height;
                     char* text_rest = restrict_text(new, entry->position);
                     hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
+                    SAFE_FREE(text_rest);
                     entry->decal_x = width-entry->widget.screen_location.size.width +decalage;
                     if (width <entry->widget.screen_location.size.width )
                         entry->decal_x =0;
@@ -262,13 +272,16 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             entry->position += 1;
             entry->debut_selection=entry->fin_selection =entry->position;
             entry->is_in_selection = false;
+            free(new);
+            free(text2);
             return true;
         }
         if (event->type == ei_ev_keydown && event->param.key_code == SDLK_DELETE) {
             // touche suppr si en selection
             char *new = cut_text(text, pos1, pos2);
-            free(text);
             ei_entry_set_text((ei_widget_t) entry, new);
+            SAFE_FREE(text);
+            SAFE_FREE(new);
             entry->position = pos1;
             entry->is_in_selection = false;
             entry->debut_selection = entry->position;
@@ -278,8 +291,9 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
         if (event->type == ei_ev_keydown && event->param.key_code == SDLK_BACKSPACE) {
             // touch backspace
             char *new = cut_text(text, pos1, pos2);
-            free(text);
             ei_entry_set_text((ei_widget_t) entry, new);
+            free(text);
+            free(new);
             entry->position = pos1;
             entry->is_in_selection = false;
             return true;
@@ -321,22 +335,12 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 entry->position +=1;
                 //boutton control enfoncé
                 if (ei_event_has_ctrl(event)){
-                    char ch = text[entry->position];
-                    while(ch==' '){
-                        entry->fin_selection= entry->position;
-                        entry->position++;
-                        ch=text[entry->position];
-                    }
-                    while (((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')) && (entry->position<(int32_t) strlen(text))) {
-                        entry->fin_selection= entry->position;
-                        entry->position++;
-                        ch=text[entry->position];
-                    }
+                    pos2= entry->position = bypass_control(text,entry->position,1);
                 }
                 // pour les bouttons LSHIFT et RSHIFT enfoncés
                 if(ei_event_has_shift(event)){
                     entry->fin_selection = entry->position;
-                    return false;
+                    return true;
                 }
                 else {
                     entry->position = pos2;
@@ -500,11 +504,11 @@ bool controlc(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
                                        (float) entry->fin_selection);
             char *text = entry->text;
             char *new_text = texte_selectionne(text, pos1, pos2);
-            if (!TEXTE_COPIE) {
-                TEXTE_COPIE = SAFE_MALLOC(sizeof(char) * strlen(new_text));
+            if (TEXTE_COPIE==NULL) {
+                TEXTE_COPIE = SAFE_MALLOC(sizeof(char) * (strlen(new_text)+1));
                 strcpy(TEXTE_COPIE, new_text);
             } else {
-                TEXTE_COPIE = SAFE_REALLOC(TEXTE_COPIE, sizeof(char) * strlen(new_text));
+                TEXTE_COPIE = SAFE_REALLOC(TEXTE_COPIE, sizeof(char) * (strlen(new_text)+1));
                 strcpy(TEXTE_COPIE, new_text);
             }
             free(new_text);
@@ -528,20 +532,22 @@ bool controlx(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
             int pos2 = (uint8_t) fmaxf((float) entry->debut_selection,
                                        (float) entry->fin_selection);
             char* new_text = texte_selectionne(text,pos1,pos2);
-            char *new = cut_text(text, pos1, pos2);
+            char* new = cut_text(text, pos1, pos2);
             ei_entry_set_text((ei_widget_t) entry, new);
+            free(new);
             entry->position = pos1;
             entry->is_in_selection = false;
             entry->debut_selection = entry->position;
             entry->fin_selection = entry->position;
-            if(!TEXTE_COPIE){
-                TEXTE_COPIE=SAFE_MALLOC(sizeof(char)*strlen(new_text));
+            if(TEXTE_COPIE==NULL){
+                TEXTE_COPIE=SAFE_MALLOC(sizeof(char)*(strlen(new_text)+1));
                 strcpy(TEXTE_COPIE,new_text);
             }
             else{
-                TEXTE_COPIE = SAFE_REALLOC(TEXTE_COPIE,sizeof(char)*strlen(new_text));
+                TEXTE_COPIE = SAFE_REALLOC(TEXTE_COPIE,sizeof(char)*(strlen(new_text)+1));
                 strcpy(TEXTE_COPIE,new_text);
             }
+
             free(new_text);
             free(text);
             return true;
@@ -574,14 +580,21 @@ bool controlv(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
         }
         else{
             char* text2 = insert_word(text,TEXTE_COPIE,entry->position);
-                ei_entry_set_text((ei_widget_t) entry, text2);
-                entry->position+=strlen(TEXTE_COPIE);
+            ei_entry_set_text((ei_widget_t) entry, text2);
+            free(text2);
+            entry->position+=strlen(TEXTE_COPIE);
             return true;
         }
     }
     else
         return false;
 }
+/*------------------------------------------------------------------------------------------------------------------*/
+
+void free_text_copie() {
+    SAFE_FREE(TEXTE_COPIE);
+}
+
 /*------------------------------------------------------------------------------------------------------------------*/
 
 ei_widget_t dfs_find_last_before_entry(ei_entry_t entry,ei_widget_t node, ei_widget_t* temp){

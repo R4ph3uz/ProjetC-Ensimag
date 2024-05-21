@@ -12,6 +12,7 @@ typedef struct entry_app_event{
     void* param;
 }entry_app_event;
 
+void free_text_copie();
 
 void free_userp();
 
