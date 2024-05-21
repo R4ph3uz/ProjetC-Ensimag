@@ -28,7 +28,6 @@ void entry_releasefunc(ei_widget_t widget){
     SAFE_FREE(entry->text_color);
     SAFE_FREE(entry->requested_char_size);
     SAFE_FREE(entry->text);
-    SAFE_FREE(entry->widget.content_rect);
     SAFE_FREE(entry);
 }
 
