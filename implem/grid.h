@@ -5,19 +5,7 @@
 #include "ei_types.h"
 #include <stdlib.h>
 /**
- * \brief	Configures the geometry of a widget using the "placer" geometry manager.
- *
- *		The placer computes a widget's geometry relative to its parent *content_rect*.
- *
- * 		If the widget was already managed by the "placer", then this calls simply updates
- *		the placer parameters: arguments that are not NULL replace previous values.
- *		Arguments that are NULL don't change the current value of the parameter.
- *
- * 		When the arguments are passed as NULL, the placer uses default values (detailed in
- *		the argument descriptions below). If no size is provided (either absolute or
- *		relative), then either the requested size of the widget is used if one was provided,
- *		or the default size is used.
- *
+ * \brief	Grid ne fonctionne pas, c'est juste un geometry_manager test
  * @param	widget		The widget to place.
  * @param	anchor		How to anchor the widget to the position defined by the placer
  *				(defaults to ei_anc_northwest).
