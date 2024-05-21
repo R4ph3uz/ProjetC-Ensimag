@@ -7,14 +7,25 @@
 
 void ei_placer_runfunc(ei_widget_t widget)
 {
-    ei_rect_t* newscreen=SAFE_MALLOC(sizeof (ei_rect_t));
+    ei_rect_t* newscreen=SAFE_MALLOC(sizeof (ei_rect_t));   //Nouvelle localisation de l'ecran
     if(!widget->geom_params){
         return;
     }
-    int res=(int)((float)*widget->geom_params->height + *(widget->geom_params->rel_height) * (float)(widget->parent->content_rect->size.height));
-    newscreen->size.height =res ;
-    int res2=(int)((float)*widget->geom_params->width + *(widget->geom_params->rel_width) * (float)(widget->parent->content_rect->size.width));
-    newscreen->size.width = res2;
+
+    int height= *widget->geom_params->height ;
+    float rel_height= *(widget->geom_params->rel_height);
+    int parent_height= widget->parent->content_rect->size.height;
+
+    int width= *widget->geom_params->width ;
+    float rel_width= *(widget->geom_params->rel_width);
+    int parent_width= widget->parent->content_rect->size.width;
+
+    int new_height=(int)((float)height + rel_height * (float)parent_height);
+    newscreen->size.height =new_height ;
+
+    int new_width=(int)((float)width + rel_width * (float)parent_width);
+    newscreen->size.width =new_width ;
+
     int x =(int)(widget->parent->content_rect->top_left.x
             + *widget->geom_params->x+(int)((float)(widget->parent->content_rect->size.width)
             * *(widget->geom_params->rel_x)));
@@ -22,7 +33,7 @@ void ei_placer_runfunc(ei_widget_t widget)
             + (int)((float)(widget->parent->content_rect->size.height)
             * *(widget->geom_params->rel_y)));
 
-    if (*widget->geom_params->anchor==ei_anc_northwest)
+    if (*widget->geom_params->anchor==ei_anc_northwest) //localisation du top left en fonction de l'ancre
     {
         newscreen->top_left.x = x;
         newscreen->top_left.y = y;
@@ -74,17 +85,18 @@ void ei_placer_runfunc(ei_widget_t widget)
 
 void ei_placer_releasefunc(ei_widget_t widget)
 {
-    if (widget->children_head!=NULL)
+    if (widget->children_head!=NULL) // Si widget a un enfant ou +
     {
         ei_widget_t children;
         children=widget->children_head;
-        while (children!=widget->children_tail)
+        while (children!=widget->children_tail) //Pour chacun de ses enfants
         {
-            ei_geometrymanager_unmap(children);
+            ei_geometrymanager_unmap(children); //Appelle a unmap sur cet enfant
             children=children->next_sibling;
         }
         ei_geometrymanager_unmap(children);
     }
+
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
@@ -181,18 +193,19 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
                          ei_rect_t*		clipper) {
     (*(widget->wclass->drawfunc))(widget,surface,pick_surface,clipper);
         ei_widget_t actuel = widget->children_head;
-    if (actuel!=NULL) {
-        while(actuel!=NULL) {
-            // verifier surface
-            if (!widget->parent)
+    if (actuel!=NULL) { //Si widget a des enfants
+        while(actuel!=NULL) { //Pour chaque enfant
+
+            if (!widget->parent) // Si le widget est la root
             {
-                clipper=actuel->parent->content_rect;
+                clipper=actuel->parent->content_rect; // le clipper est le content rect de la root
             }
-            else if(clipper) {
+            else if(clipper) { //Si un clipper existe déja
+                //le nouveau clipper est l'intersection de ce clipper et du content rect du parent
                 clipper=intersection_rectangle(*clipper,*actuel->parent->content_rect);
             }
-            if (clipper) {
-                ei_impl_widget_draw_children(actuel, surface, pick_surface, clipper);
+            if (clipper) { // Si le clipper n'est pas nul ( nul SSI clipper déja nul avant ou que l'intersection précedente est vide )
+                ei_impl_widget_draw_children(actuel, surface, pick_surface, clipper); // On appelle recursivement la fonciton sur l'enfant
 
             }
             actuel = actuel->next_sibling;
@@ -215,28 +228,28 @@ ei_geometrymanager_t* create_placer_gm(){
 /*-------------------------------------------------------------------------------------------------------*/
 void supprime_de_ses_freres(ei_widget_t widget)
 {
-    if(widget->parent){
+    if(widget->parent){ //Si widget != Root (normalement on appelle pas cette fonction sur la root)
         ei_widget_t prec=widget->parent;
-        ei_widget_t suiv=widget->next_sibling;
-        if (prec->children_head!=widget)
+        ei_widget_t suiv=widget->next_sibling; //suiv est le widget frere de widget
+        if (prec->children_head!=widget) //Si le widget n'est pas le premier fils de son frère
         {
             prec=prec->children_head;
-            while (prec->next_sibling!=widget)
+            while (prec->next_sibling!=widget) //Cherche widget dans ses freres
             {
-                prec=prec->next_sibling;
+                prec=prec->next_sibling; //trouve le widget precedent a widget
             }
-            prec->next_sibling=suiv;
-            if(suiv==NULL)
+            prec->next_sibling=suiv; // suiv devient le frére de prec
+            if(suiv==NULL) // Si widget est le dernier fils de son parent
             {
-                prec->parent->children_tail=prec;
+                prec->parent->children_tail=prec; //La tail devient prec
             }
         }
-        else
+        else // si widget est le premier fils de son pere
         {
-            prec->children_head=suiv;
-            if(suiv==NULL)
+            prec->children_head=suiv; //le premier fils devient suiv
+            if(suiv==NULL)// si suiv nul
             {
-                prec->children_tail=NULL;
+                prec->children_tail=NULL; //actualise la tail
             }
         }
     }
@@ -244,10 +257,10 @@ void supprime_de_ses_freres(ei_widget_t widget)
 /*-------------------------------------------------------------------------------------------------------*/
 
 void place_a_la_fin(ei_widget_t widget2) {
-    if (widget2->parent->children_tail == NULL) {
+    if (widget2->parent->children_tail == NULL) { //si le parent n'as pas d'enfant
         widget2->parent->children_tail = widget2;
         widget2->parent->children_head = widget2;
-    } else {
+    } else { //si le parent a des enfants
         widget2->parent->children_tail->next_sibling = widget2;
         widget2->parent->children_tail = widget2;
         widget2->next_sibling = NULL;
