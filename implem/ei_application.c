@@ -164,16 +164,12 @@ void ei_app_run(void)
             }
         }
 
-        ei_linked_rect_t* list_rect = NULL;
         ei_rect_t * union_rect = NULL;
         if(((isModified||isModified1) )||CHANGEMENT_PREMIER_PLAN) {
 
 
 
-             if(widget == ROOT_WIDGET){
-                 list_rect = NULL;
-             }
-             else if (ROOT_WIDGET->children_tail){
+             if (ROOT_WIDGET->children_tail){
                  //find the closest parent that is a top level, if there is none then update everything
                  ei_widget_t temp = ROOT_WIDGET->children_tail;
                  while(temp->parent!=NULL){
@@ -183,26 +179,19 @@ void ei_app_run(void)
                      temp = temp->parent;
                  }
 
-                 if(temp->parent && temp->geom_params){
-                     ei_rect_t* test  = intersection_rectangle(hw_surface_get_rect(ROOT_SURFACE),temp->screen_location );
-                     rect_before = *test;
-                     temp->geom_params->manager->runfunc(temp);
-                     ei_rect_t* test2  = intersection_rectangle(hw_surface_get_rect(ROOT_SURFACE),temp->screen_location );
-                     rect_after = *test2;
-                     list_rect = SAFE_MALLOC(sizeof(ei_linked_rect_t));
-                     list_rect->rect = rect_after;
-                     ei_linked_rect_t list;
-                     list.rect = rect_before;
-                     list.next = NULL;
-                     list_rect->next = &list;
-                     union_rect = union_rectangle(rect_before, rect_after);
-                 }
-                 else{
-                     list_rect= NULL;
-                 }
+//                 if(temp->parent && temp->geom_params){
+//                     ei_rect_t* test  = intersection_rectangle(hw_surface_get_rect(ROOT_SURFACE),temp->screen_location );
+//                     rect_before = *test;
+//                     temp->geom_params->manager->runfunc(temp);
+//                     ei_rect_t* test2  = intersection_rectangle(hw_surface_get_rect(ROOT_SURFACE),temp->screen_location );
+//                     rect_after = *test2;
+//                     ei_linked_rect_t list;
+//                     list.rect = rect_before;
+//                     list.next = NULL;
+//                     union_rect = union_rectangle(rect_before, rect_after);
+//                 }
 
              }
-
         }
         ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
         hw_surface_update_rects(ROOT_SURFACE,get_invalidated_rect_list());
