@@ -22,16 +22,14 @@ ei_widget_t entry_allocfunc(){
 
 void entry_releasefunc(ei_widget_t widget){
     ei_impl_entry_t* entry = (ei_impl_entry_t*) widget;
-    free(entry->color);
-    free(entry->border_width);
-    free(entry->text_font);
-    free(entry->text_color);
-    free(entry->requested_char_size);
-    free(entry->text);
-//    free(entry->focus);
-    // free trucs spécifique aux widgets ?
-
-    free(entry);
+    SAFE_FREE(entry->color);
+    SAFE_FREE(entry->border_width);
+    SAFE_FREE(entry->text_font);
+    SAFE_FREE(entry->text_color);
+    SAFE_FREE(entry->requested_char_size);
+    SAFE_FREE(entry->text);
+    SAFE_FREE(entry->widget.content_rect);
+    SAFE_FREE(entry);
 }
 
 /*---------------------------------------------------------------------------------------------------------------------*/
