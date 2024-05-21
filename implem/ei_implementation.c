@@ -182,23 +182,24 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
         ei_widget_t actuel = widget->children_head;
     if (actuel!=NULL) { //Si widget a des enfants
         while(actuel!=NULL) { //Pour chaque enfant
+            ei_rect_t* new_clipper ;
             bool free_bool = false;
             if (!widget->parent) // Si le widget est la root
             {
                 clipper=actuel->parent->content_rect; // le clipper est le content rect de la root
+                if (clipper) { // Si le clipper n'est pas nul ( nul SSI clipper déja nul avant ou que l'intersection précedente est vide )
+                    ei_impl_widget_draw_children(actuel, surface, pick_surface, clipper); // On appelle recursivement la fonciton sur l'enfant
+                }
             }
             else if(clipper) { //Si un clipper existe déja
                 //le nouveau clipper est l'intersection de ce clipper et du content rect du parent
-                clipper=intersection_rectangle(*clipper,*actuel->parent->content_rect);
-                free_bool=true;
-            }
-            if (clipper) { // Si le clipper n'est pas nul ( nul SSI clipper déja nul avant ou que l'intersection précedente est vide )
-                ei_impl_widget_draw_children(actuel, surface, pick_surface, clipper); // On appelle recursivement la fonciton sur l'enfant
+                new_clipper=intersection_rectangle(*clipper,*actuel->parent->content_rect);
+                if (new_clipper) { // Si le clipper n'est pas nul ( nul SSI clipper déja nul avant ou que l'intersection précedente est vide )
+                    ei_impl_widget_draw_children(actuel, surface, pick_surface, new_clipper); // On appelle recursivement la fonciton sur l'enfant
+                }
+                free(new_clipper);
             }
             actuel = actuel->next_sibling;
-            // if (free_bool && clipper) {
-            //     SAFE_FREE(clipper);
-            // }
         }
     }
     if (!strcmp(widget->wclass->name, "toplevel")){
