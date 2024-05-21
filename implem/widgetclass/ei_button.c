@@ -28,6 +28,8 @@ void button_releasefunc(ei_widget_t widget) {
     SAFE_FREE(button->text_anchor);
     if(button->img)
         hw_surface_free(button->img);
+    if(button->img_rect && *button->img_rect)
+        SAFE_FREE(*button->img_rect)
     SAFE_FREE(button->img_rect);
     SAFE_FREE(button->img_anchor);
 
@@ -46,7 +48,6 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     button->text_font = SAFE_MALLOC(sizeof(ei_font_t));
     button->text_color = SAFE_MALLOC(sizeof(ei_color_t));
     button->text_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
-    button->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
     button->img_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
 
     button->widget.requested_size.width = 100;

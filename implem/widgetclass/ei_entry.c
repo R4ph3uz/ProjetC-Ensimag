@@ -43,17 +43,14 @@ void entry_setdefaultsfunc(ei_widget_t widget){
     entry->text_font = SAFE_MALLOC(sizeof(ei_font_t));
     entry->text_color = SAFE_MALLOC(sizeof(ei_color_t));
     entry->border_width = SAFE_MALLOC(sizeof(int));
-    entry->focus=SAFE_MALLOC(sizeof(bool));
     entry->text= SAFE_MALLOC(sizeof(char));
     entry->color->alpha = 255;
     entry->color->blue = 255;
     entry->color->green = 255;
     entry->color->red= 255;
     *entry->border_width = 1;
-    ei_const_string_t name = "misc/font.ttf";
-    ei_fontstyle_t style = ei_style_normal;
-    *entry->text_font = hw_text_font_create(name, style, 20);
-    *entry->text_color= (ei_color_t) {0,0,0,255};
+    *entry->text_font = ei_default_font;
+    *entry->text_color= ei_font_default_color;
     *entry->requested_char_size= 100;
     entry->focus=false;
     entry->position= 0 ;
@@ -108,18 +105,21 @@ void entry_drawfunc(ei_widget_t widget,
         char* entry_text_restreint = restrict_text(entry->text,entry->position);
         int width, height;
         hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
+        SAFE_FREE(entry_text_restreint);
         if(width > entry->widget.content_rect->size.width + entry->decal_x) { // si dépasse a droite
             entry->decal_x = width-entry->widget.content_rect->size.width;
         }
         if (width < entry->decal_x) { //si dépasse a gauche
             entry_text_restreint = restrict_text(entry->text,entry->position);
             hw_text_compute_size(entry_text_restreint, *entry->text_font,&width, &height);
+            SAFE_FREE(entry_text_restreint);
             entry->decal_x = width;
         }
         ei_point_t place = {entry->widget.content_rect->top_left.x-entry->decal_x,entry->widget.content_rect->top_left.y};
         ei_rect_t clipper_text = entry->widget.screen_location;
         ei_rect_t *clip = intersection_rectangle(clipper_text,*clipper);
         ei_draw_text(surface, &place, entry->text, *entry->text_font, *entry->text_color, clip);
+        SAFE_FREE(clip);
     }
     // place une border autour de l'entry
     if(entry->focus) {
@@ -136,6 +136,7 @@ void entry_drawfunc(ei_widget_t widget,
                 entry->widget.content_rect->top_left.x - entry->decal_x + width -5,
                 entry->widget.content_rect->top_left.y - 5,
             };
+            SAFE_FREE(entry_text_restreint);
         }
         else
         //No text
@@ -154,20 +155,26 @@ void entry_drawfunc(ei_widget_t widget,
             ei_point_t* rect = SAFE_MALLOC(sizeof(ei_point_t)* 4);
             int l_rect_bleu_x,r_rect_bleu_x;
             int size_text,h;
-            hw_text_compute_size(restrict_text(entry->text,fminf(entry->debut_selection,entry->fin_selection)),*entry->text_font,&size_text,&h);
+            char* restricted_text = restrict_text(entry->text,(uint8_t) fminf((float)entry->debut_selection,(float)entry->fin_selection));
+            hw_text_compute_size(restricted_text,*entry->text_font,&size_text,&h);
             l_rect_bleu_x=entry->widget.content_rect->top_left.x-entry->decal_x+size_text;
             rect[0] = ei_point(l_rect_bleu_x , entry->widget.content_rect->top_left.y); // top left
             rect[1] = ei_point(l_rect_bleu_x, entry->widget.content_rect->top_left.y + entry->widget.content_rect->size.height); //bottom left
+            SAFE_FREE(restricted_text);
 
-            hw_text_compute_size(restrict_text(entry->text,fmaxf(entry->debut_selection,entry->fin_selection)),*entry->text_font,&size_text,&h);
+            char* restricted_text2 =restrict_text(entry->text,(uint8_t) fmaxf((float)entry->debut_selection,(float)entry->fin_selection));
+            hw_text_compute_size(restricted_text2,*entry->text_font,&size_text,&h);
             r_rect_bleu_x=entry->widget.content_rect->top_left.x-entry->decal_x+size_text;
             rect[2] = ei_point(r_rect_bleu_x, entry->widget.content_rect->top_left.y + entry->widget.content_rect->size.height);
             rect[3] = ei_point(r_rect_bleu_x, entry->widget.content_rect->top_left.y);
+            SAFE_FREE(restricted_text2);
 
             ei_color_t select_color = (ei_color_t) {25, 25, 200, 100};
             ei_draw_polygon(surface, rect ,4, select_color, &entry->widget.screen_location);
+            SAFE_FREE(rect);
         }
     }
+    SAFE_FREE(points);
 
     hw_surface_unlock(pick_surface);
     hw_surface_unlock(surface);

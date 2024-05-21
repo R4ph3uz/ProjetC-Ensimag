@@ -16,14 +16,14 @@ ei_widget_t toplevel_allocfunc() {
 
 void toplevel_releasefunc(ei_widget_t widget){
     ei_impl_toplevel_t* top_level = (ei_impl_toplevel_t*) widget;
-    free(top_level->color);
-    free(top_level->border_width);
-    free(top_level->title);
-    free(top_level->closable);
-    free(top_level->resizable);
-    free(top_level->min_size);
-    // free trucs spécifique aux widgets ?
-    free(top_level);
+    SAFE_FREE(top_level->color);
+    SAFE_FREE(top_level->border_width);
+    SAFE_FREE(top_level->title);
+    SAFE_FREE(top_level->closable);
+    SAFE_FREE(top_level->resizable);
+    SAFE_FREE((*top_level->min_size));
+    SAFE_FREE(top_level->min_size);
+    SAFE_FREE(top_level);
 }
 
 
@@ -49,10 +49,8 @@ void toplevel_drawfunc(ei_widget_t widget,
         int32_t decal_y = -25;
         ei_point_t place = {widget->content_rect->top_left.x+decal_x,widget->content_rect->top_left.y+decal_y};
         ei_color_t	blanc	= { 0xdf, 0xdf, 0xdf, 0xff };
-        void* test= hw_text_font_create("misc/font.ttf",ei_style_normal,20);
         ei_rect_t* text_clipper = intersection_rectangle(*clipper, top_level->widget.screen_location);
-        ei_draw_text(surface, &place, *top_level->title, test, blanc, text_clipper);
-        free(test);
+        ei_draw_text(surface, &place, *top_level->title, ei_default_font, blanc, text_clipper);
         SAFE_FREE(text_clipper);
     }
 

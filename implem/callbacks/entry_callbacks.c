@@ -111,6 +111,7 @@ bool entry_down_click_handler_all(ei_widget_t widget, ei_event_t* event, ei_user
     ei_unbind(ei_ev_app,NULL, "all", animation_cursor,NULL);
     set_entry_focus(NULL);
     hw_event_cancel_app(get_id_animation());
+    free_userp();
     entry->focus=false;
     return true;
 

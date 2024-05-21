@@ -12,6 +12,14 @@
 
 
 entry_app_event* USER_P;
+
+
+/*------------------------------------------------------------------------------*/
+
+void free_userp(){
+    SAFE_FREE(USER_P);
+}
+
 /*------------------------------------------------------------------------------*/
 
 
@@ -33,6 +41,7 @@ void			ei_entry_configure		(ei_widget_t		widget,
         int width= hw_surface_get_rect(surfaceee).size.width;
         ei_widget_set_requested_size(widget,ei_size(width,20));
         free(falsestring);
+        hw_surface_free(surfaceee);
     }
     else if (!widget->geom_params)
         ei_widget_set_requested_size(widget,ei_size(50,20));
@@ -82,6 +91,7 @@ void			ei_entry_give_focus		(ei_widget_t		widget)
         ei_unbind(ei_ev_app,NULL, "all", animation_cursor,NULL);
         ei_unbind(ei_ev_keydown, NULL, "all", handle_tab_entry, old_entry);
         hw_event_cancel_app(get_id_animation());
+        free_userp();
     }
 
 
@@ -105,3 +115,7 @@ void			ei_entry_give_focus		(ei_widget_t		widget)
     ei_bind(ei_ev_app,NULL, "all", animation_cursor,NULL);
     ei_bind(ei_ev_keydown, NULL, "all", handle_tab_entry, entry);
 }
+
+/*------------------------------------------------------------------------------*/
+
+

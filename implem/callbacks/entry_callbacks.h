@@ -12,6 +12,9 @@ typedef struct entry_app_event{
     void* param;
 }entry_app_event;
 
+
+void free_userp();
+
 /**
  * @brief  check if clicked, then put focus or not on it (first time clicked)
  * @param widget entry

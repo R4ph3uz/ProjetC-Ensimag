@@ -227,6 +227,8 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
         border_line[3]= (ei_point_t){content_rect.top_left.x, content_rect.top_left.y + content_rect.size.height-1 };
         border_line[4] = content_rect.top_left;
         ei_draw_polyline(surface, border_line, 5, color_plus_fonce,clipper);
+        SAFE_FREE(border_line);
+        SAFE_FREE(carre_bas_droite);
     }
 }
 
