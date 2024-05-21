@@ -33,4 +33,13 @@ bool down_click_handler(ei_widget_t widget, ei_event_t* event, ei_user_param_t u
 
 bool button_mouse_move(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param);
 
+/**
+ * gere si on upclick en dehors du bouton
+ * @param widget
+ * @param event
+ * @param user_param
+ * @return
+ */
+bool up_click_handler_outside(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param);
+
 #endif //BUTTON_CALLBACKS_H

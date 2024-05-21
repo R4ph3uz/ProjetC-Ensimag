@@ -62,6 +62,7 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ei_geometrymanager_register(grid);
     ei_geometrymanager_register(placer);
 
+
     //Création de la root
     ROOT_SURFACE =  hw_create_window(main_window_size, fullscreen);
     PICKING_SURFACE = hw_surface_create(ROOT_SURFACE, main_window_size, false);
@@ -134,8 +135,11 @@ void ei_app_run(void)
         list_callback* list_call = get_list_callback();
         while(list_call!=NULL) {
 
-            if(list_call->tag && list_call->eventtype == new_event->type && strcmp(list_call->tag, widget->wclass->name)==0 ) {
-                isModified = (*list_call->callback)(widget,new_event,list_call->user_param)|| isModified ;
+            if(list_call->eventtype== ei_ev_mouse_buttondown || list_call->eventtype== ei_ev_mouse_buttonup) {
+                if (list_call->tag && list_call->eventtype == new_event->type &&
+                    strcmp(list_call->tag, widget->wclass->name) == 0) {
+                    isModified = (*list_call->callback)(widget, new_event, list_call->user_param) || isModified;
+                }
             }
             if( isModified)
                 break;

@@ -46,6 +46,7 @@ void			ei_frame_configure		(ei_widget_t		widget,
         if(*text == NULL){
             SAFE_FREE(*frame->text);
             SAFE_FREE(frame->text);
+            frame->text =NULL;
         }
         strcpy(*frame->text,*text);
     }

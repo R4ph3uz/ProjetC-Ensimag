@@ -31,9 +31,12 @@ void frame_releasefunc(ei_widget_t widget)
     SAFE_FREE(frame->text_color);
     SAFE_FREE(frame->text_font);
     SAFE_FREE(frame->text_anchor);
-    if(frame->img)
+    if(frame->img){
         hw_surface_free(*frame->img);
+    }
     SAFE_FREE(frame->img_rect);
+
+
     SAFE_FREE(frame->img_anchor);
 
     // free trucs spécifique aux widgets ?
@@ -248,7 +251,6 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     frame->text_font = SAFE_MALLOC(sizeof(ei_font_t));
     frame->text_color = SAFE_MALLOC(sizeof(ei_color_t));
     frame->text_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
-    frame->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
     frame->img_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
     frame->border_width = SAFE_MALLOC(sizeof(int));
     frame->color->alpha = 255;
@@ -264,6 +266,7 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     *frame->text_anchor =ei_anc_center;
     frame->img = NULL;
     *frame->img_anchor = ei_anc_center;
+    frame->img_rect = NULL;
 }
 
 /*--------------------------------------------------------------------------------*/

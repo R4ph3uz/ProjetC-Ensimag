@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "pick_event.h"
 #include "ei_application.h"
+#include "list_event.h"
 /*-------------------------------------------------------------------------------------------------------*/
 
 static uint32_t PICKID=0;
@@ -80,6 +81,7 @@ void			ei_widget_destroy		(ei_widget_t		widget)
     ei_app_invalidate_rect(&widget->screen_location);
     ei_geometrymanager_unmap(widget);
     SAFE_FREE(widget->pick_color);
+//    ei_unbind(ei_ev_mouse_buttondown, widget, NULL, NULL,NULL);
     if(widget->content_rect!=&widget->screen_location)
         SAFE_FREE(widget->content_rect);
     if (widget->destructor)
