@@ -20,12 +20,12 @@ size_t		ei_geom_param_size()
 
 void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_location)
 {
-    //Si différent
+
 
     if (widget->content_rect==NULL || (widget->screen_location.size.height != new_screen_location->size.height) || (
             widget->screen_location.size.width != new_screen_location->size.width) || (
             widget->screen_location.top_left.x != new_screen_location->top_left.x) || (
-            widget->screen_location.top_left.y != new_screen_location->top_left.y ))
+            widget->screen_location.top_left.y != new_screen_location->top_left.y )) // Si new_screen est différent de l'ancien screen location
     {
         // widget->screen_location=*new_screen_location;
         if(!widget->isChildIgnoreAddInvalidateRect){
@@ -37,12 +37,11 @@ void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_locati
         }
 
         memcpy(&widget->screen_location,new_screen_location,sizeof(widget->screen_location));
-        // Il faut schedule un redraw  d'après la doc, a voir comment faire vu que pour l'instant, cette fonction est appeler par draw , donc jsp trop
-        widget->wclass->geomnotifyfunc(widget);
-        if (widget->children_tail)
+        widget->wclass->geomnotifyfunc(widget); //Notifie du changement du screen_location
+        if (widget->children_tail) //Si widget a un enfant
         {
             ei_widget_t enfant=widget->children_head;
-            while(enfant!=NULL)
+            while(enfant!=NULL) //Pour chaque enfant
             {
                 if (enfant->geom_params){
                     enfant->isChildIgnoreAddInvalidateRect = true;
@@ -59,15 +58,14 @@ void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_locati
 
 void			ei_geometrymanager_register	(ei_geometrymanager_t* geometrymanager)
 {
-    // pour mieux comprendre voir ei_widgetclass
-    if(LISTE_GEOMETRYMANAGER==NULL)
+    if(LISTE_GEOMETRYMANAGER==NULL) //Si il y a aucun geometrymanager dans la liste
     {
-        LISTE_GEOMETRYMANAGER=geometrymanager;
+        LISTE_GEOMETRYMANAGER=geometrymanager; //On l'y ajoute
     }
-    else
+    else //Sinon
     {
         geometrymanager->next=LISTE_GEOMETRYMANAGER;
-        LISTE_GEOMETRYMANAGER=geometrymanager;
+        LISTE_GEOMETRYMANAGER=geometrymanager; //On ajoute le geometry manager en tête de la liste
     }
 }
 
@@ -76,11 +74,11 @@ void			ei_geometrymanager_register	(ei_geometrymanager_t* geometrymanager)
 ei_geometrymanager_t*	ei_geometrymanager_from_name	(ei_geometrymanager_name_t name)
 {
     ei_geometrymanager_t* actual = LISTE_GEOMETRYMANAGER;
-    while(actual != NULL)
+    while(actual != NULL) //pour chaque element de la liste des geometrymanager
     {
-        if (strcmp(actual->name, name)==0)
+        if (strcmp(actual->name, name)==0) //Si le nom du geometry manager de la liste est celui cherché
         {
-            return actual;
+            return actual; //On renvoie le geometry manager associé
         }
         actual=actual->next;
     }
@@ -91,8 +89,8 @@ ei_geometrymanager_t*	ei_geometrymanager_from_name	(ei_geometrymanager_name_t na
 
 void			ei_geometrymanager_unmap	(ei_widget_t widget)
 {
-    if (widget->geom_params)
-    {
+    if (widget->geom_params) //si il a un manager
+    { //free et supprimme ce qui est associé a geom params
         widget->geom_params->manager->releasefunc(widget);
         free(widget->geom_params->rel_y);
         free(widget->geom_params->width);
@@ -111,7 +109,7 @@ void			ei_geometrymanager_unmap	(ei_widget_t widget)
     widget->screen_location.size.height=0;
     widget->screen_location.size.width=0;
     widget->screen_location.top_left.x=0;
-    widget->screen_location.top_left.y=0;
+    widget->screen_location.top_left.y=0;      //remet  a 0 la screen location
     *widget->content_rect=widget->screen_location;
 
 }
@@ -122,16 +120,16 @@ ei_geometrymanager_t*	ei_widget_get_geom_manager	(ei_widget_t widget)
 {
     if (widget->geom_params)
     {
-        if (widget->geom_params->manager) {
-            return widget->geom_params->manager;
+        if (widget->geom_params->manager) {//si widget a un geometry manager
+            return widget->geom_params->manager; //renvoie son manager
         }
         else
-            return NULL;
+            return NULL; //sinon renvoie NULL
     }
     else
     {
 
-        return NULL;
+        return NULL;//sinon renvoie NULL
     }
 }
 
