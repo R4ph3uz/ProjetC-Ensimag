@@ -228,9 +228,8 @@ void ei_app_free(void)
 {
     free_list_callback();
     ei_widget_destroy(ROOT_WIDGET);
-    free(ROOT_WIDGET);
-    free(ROOT_SURFACE);
-    free(PICKING_SURFACE);
+    hw_surface_free(ROOT_SURFACE);
+    hw_surface_free(PICKING_SURFACE);
 }
 
 /* ----------------------------------------------------------------- */

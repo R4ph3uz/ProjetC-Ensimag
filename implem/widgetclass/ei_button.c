@@ -15,20 +15,20 @@ ei_widget_t button_allocfunc() {
 
 void button_releasefunc(ei_widget_t widget) {
     ei_impl_button_t* button = (ei_impl_button_t*) widget;
-    free(button->color);
-    free(button->border_width);
-    free(button->corner_radius);
-    free(button->relief);
-    free(button->text);
-    free(button->text_font);
-    free(button->text_color);
-    free(button->text_anchor);
-    free(button->img);
-    free(button->img_rect);
-    free(button->img_anchor);
+    SAFE_FREE(button->color);
+    SAFE_FREE(button->border_width);
+    SAFE_FREE(button->corner_radius);
+    SAFE_FREE(button->relief);
+    SAFE_FREE(button->text);
+    SAFE_FREE(button->text_color);
+    SAFE_FREE(button->text_anchor);
+    if(button->img)
+        hw_surface_free(button->img);
+    SAFE_FREE(button->img_rect);
+    SAFE_FREE(button->img_anchor);
 
-    free(button->callback);
-    free(button->user_param);
+    SAFE_FREE(button->callback);
+    SAFE_FREE(button->user_param);
 }
 
 /*--------------------------------------------------------------------------------*/
@@ -41,7 +41,6 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     button->corner_radius = SAFE_MALLOC(sizeof(int));
     button->relief=SAFE_MALLOC(sizeof(ei_relief_t));
     button->text = SAFE_MALLOC(sizeof(ei_string_t));
-    button->text_font = SAFE_MALLOC(sizeof(ei_font_t));
     button->text_color = SAFE_MALLOC(sizeof(ei_color_t));
     button->text_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
     button->img = SAFE_MALLOC(sizeof(ei_surface_t));
@@ -90,10 +89,6 @@ void button_drawfunc(ei_widget_t widget,
     draw_button(pick_surface, *widget->content_rect,*button->corner_radius,*button->widget.pick_color,ei_relief_none, clipper );
 
      if(button->text && *button->text){
-         ei_surface_t surface_text = hw_text_create_surface(*button->text, *button->text_font, *button->text_color);
-         ei_rect_t rect_surface_text = hw_surface_get_rect(surface_text);
-
-
          int width, height;
          hw_text_compute_size(*button->text, *button->text_font, &width,&height);
 
