@@ -50,6 +50,7 @@ void toplevel_drawfunc(ei_widget_t widget,
         ei_point_t place = {widget->content_rect->top_left.x+decal_x,widget->content_rect->top_left.y+decal_y};
         ei_color_t	blanc	= { 0xdf, 0xdf, 0xdf, 0xff };
         ei_rect_t* text_clipper = intersection_rectangle(*clipper, top_level->widget.screen_location);
+        if (text_clipper)
         ei_draw_text(surface, &place, *top_level->title, ei_default_font, blanc, text_clipper);
         SAFE_FREE(text_clipper);
     }
