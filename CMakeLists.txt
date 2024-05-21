@@ -130,10 +130,15 @@ target_link_libraries(hello_world	ei ${PLATFORM_LIB_FLAGS})
 add_executable(entry			${TEST_DIR}/entry.c)
 target_link_libraries(entry		ei ${PLATFORM_LIB_FLAGS})
 
-# target entry
+# target test_entry
 
 add_executable(test_entry			${TEST_DIR}/test_entry.c)
 target_link_libraries(test_entry		ei ${PLATFORM_LIB_FLAGS})
+
+# target Toplevel_in_toplevel
+
+add_executable(Toplevel_in_toplevel			${TEST_DIR}/Toplevel_in_toplevel.c)
+target_link_libraries(Toplevel_in_toplevel		ei ${PLATFORM_LIB_FLAGS})
 
 # target puzzle
 
