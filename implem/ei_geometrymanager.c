@@ -25,11 +25,17 @@ void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_locati
     if (widget->content_rect==NULL || (widget->screen_location.size.height != new_screen_location->size.height) || (
             widget->screen_location.size.width != new_screen_location->size.width) || (
             widget->screen_location.top_left.x != new_screen_location->top_left.x) || (
-            widget->screen_location.top_left.y != new_screen_location->top_left.y))
+            widget->screen_location.top_left.y != new_screen_location->top_left.y ))
     {
         // widget->screen_location=*new_screen_location;
-        ei_app_invalidate_rect(intersection_rectangle(widget->screen_location, widget->parent->screen_location));
-        ei_app_invalidate_rect(intersection_rectangle(*new_screen_location, widget->parent->screen_location));
+        if(!widget->isChildIgnoreAddInvalidateRect){
+            ei_app_invalidate_rect(intersection_rectangle(widget->screen_location, widget->parent->screen_location));
+            ei_app_invalidate_rect(intersection_rectangle(*new_screen_location, widget->parent->screen_location));
+        }
+        else{
+            widget->isChildIgnoreAddInvalidateRect = false;
+        }
+
         memcpy(&widget->screen_location,new_screen_location,sizeof(widget->screen_location));
         // Il faut schedule un redraw  d'après la doc, a voir comment faire vu que pour l'instant, cette fonction est appeler par draw , donc jsp trop
         widget->wclass->geomnotifyfunc(widget);
@@ -38,8 +44,11 @@ void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_locati
             ei_widget_t enfant=widget->children_head;
             while(enfant!=NULL)
             {
-                if (enfant->geom_params)
+                if (enfant->geom_params){
+                    enfant->isChildIgnoreAddInvalidateRect = true;
                     enfant->geom_params->manager->runfunc(enfant);
+                }
+
                 enfant=enfant->next_sibling;
             }
         }

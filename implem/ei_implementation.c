@@ -2,7 +2,7 @@
 #include "hw_interface.h"
 #include <stdlib.h>
 #include "ei_application.h"
-
+#include "widgetclass/ei_toplevel.h"
 /*-------------------------------------------------------------------------------------------------------*/
 
 void ei_placer_runfunc(ei_widget_t widget)
@@ -209,6 +209,28 @@ void		ei_impl_widget_draw_children	(ei_widget_t		widget,
 
             }
             actuel = actuel->next_sibling;
+        }
+    }
+    if (!strcmp(widget->wclass->name, "toplevel")){
+        ei_point_t* carre_bas_droite = SAFE_MALLOC(sizeof(ei_point_t)*4);
+        ei_color_t color_plus_fonce;
+        color_plus_fonce.red = 87;
+        color_plus_fonce.green = 93;
+        color_plus_fonce.blue = 100;
+        color_plus_fonce.alpha = 255;
+
+        ei_rect_t nouveau_rect = widget->screen_location;
+        carre_bas_droite[0] = (ei_point_t){ nouveau_rect.top_left.x+ nouveau_rect.size.width-1,nouveau_rect.top_left.y + nouveau_rect.size.height-1 };
+        carre_bas_droite[1] = (ei_point_t){ nouveau_rect.top_left.x+ nouveau_rect.size.width-10,nouveau_rect.top_left.y + nouveau_rect.size.height-1 };
+        carre_bas_droite[2] = (ei_point_t){nouveau_rect.top_left.x+ nouveau_rect.size.width-10, nouveau_rect.top_left.y + nouveau_rect.size.height-10};
+        carre_bas_droite[3] = (ei_point_t){ nouveau_rect.top_left.x+ nouveau_rect.size.width-1,nouveau_rect.top_left.y + nouveau_rect.size.height-10 };
+
+        ei_toplevel_t toplevel= (ei_toplevel_t ) widget;
+        if (*toplevel->resizable!=ei_axis_none)
+        {
+            ei_draw_polygon(surface, carre_bas_droite, 4, color_plus_fonce, clipper);
+            ei_draw_polygon(get_pick_surface(), carre_bas_droite, 4, *widget->pick_color, clipper);
+
         }
     }
 }
