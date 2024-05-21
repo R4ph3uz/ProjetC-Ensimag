@@ -549,7 +549,6 @@ bool controlx(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
             }
 
             free(new_text);
-            free(text);
             return true;
         }
         else{
