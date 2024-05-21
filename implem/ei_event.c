@@ -46,6 +46,10 @@ void		ei_unbind		(ei_eventtype_t		eventtype,
         remove_list_callback(callback, tag, eventtype, user_param);
     }
     else
-        widget->callback = NULL;
+        while(widget->callback !=NULL){
+            list_widget_callback* temp = widget->callback;
+            widget->callback = widget->callback->next;
+            SAFE_FREE(temp);
+        }
 }
 
