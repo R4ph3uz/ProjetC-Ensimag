@@ -43,8 +43,8 @@ void remove_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t e
         LIST_CALLBACK = LIST_CALLBACK->next;
             if (user_param!= parcours->user_param)
                 fprintf(stderr, "C'EST PAS LE MEME USER PARAM");
-        free(temp->tag);
-        free(temp);
+        SAFE_FREE(temp->tag);
+        SAFE_FREE(temp);
         return;
     }
 
@@ -58,8 +58,8 @@ void remove_list_callback(ei_callback_t callback, ei_tag_t tag, ei_eventtype_t e
             if (user_param!= parcours->next->user_param)
                 fprintf(stderr, "C'EST PAS LE MEME USER PARAM 2");
             parcours->next = parcours->next->next;
-            free(temp->tag);
-            free(temp);
+            SAFE_FREE(temp->tag);
+            SAFE_FREE(temp);
             return;
         }
         parcours = parcours->next;
@@ -80,7 +80,8 @@ list_callback* get_list_callback(void) {
 void free_list_callback() {
     while(LIST_CALLBACK!=NULL) {
         list_callback* temp = LIST_CALLBACK->next;
-        free(LIST_CALLBACK);
+        SAFE_FREE(LIST_CALLBACK->tag);
+        SAFE_FREE(LIST_CALLBACK);
         LIST_CALLBACK = temp;
     }
 }
