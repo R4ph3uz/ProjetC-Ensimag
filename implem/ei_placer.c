@@ -27,7 +27,7 @@ void		ei_place	(ei_widget_t		widget,
         widget->geom_params = SAFE_MALLOC(sizeof(ei_impl_geom_param_t));
         widget->geom_params->manager = create_placer_gm();
         widget->geom_params->is_reconfigurable = SAFE_MALLOC(sizeof(bool));
-        *widget->geom_params->is_reconfigurable=SAFE_MALLOC(sizeof(bool));
+        *widget->geom_params->is_reconfigurable=true;
         widget->geom_params->anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
 
         if (anchor) {       //initialise l'ancre
