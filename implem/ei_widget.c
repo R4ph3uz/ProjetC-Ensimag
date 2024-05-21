@@ -80,10 +80,10 @@ void			ei_widget_destroy		(ei_widget_t		widget)
     ei_app_invalidate_rect(&widget->screen_location);
     ei_geometrymanager_unmap(widget);
     SAFE_FREE(widget->pick_color);
-    if (widget->destructor)
-        widget->destructor(widget);
     if(widget->content_rect!=&widget->screen_location)
         SAFE_FREE(widget->content_rect);
+    if (widget->destructor)
+        widget->destructor(widget);
     (*(widget->wclass->releasefunc))(widget); // ici libère la mémoire
 }
 

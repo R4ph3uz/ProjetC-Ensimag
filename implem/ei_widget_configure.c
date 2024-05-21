@@ -43,10 +43,16 @@ void			ei_frame_configure		(ei_widget_t		widget,
             frame->text = SAFE_MALLOC(sizeof(ei_string_t ));
             *frame->text =  SAFE_MALLOC(sizeof(char)*30);
         }
+        if(*text == NULL){
+            SAFE_FREE(*frame->text);
+            SAFE_FREE(frame->text);
+        }
         strcpy(*frame->text,*text);
     }
+    if(text_font){
+        *frame->text_font =  *text_font;
+    }
 
-    COPY_IF_NOT_NULL(frame->text_font, text_font);
     COPY_IF_NOT_NULL(frame->text_color, text_color);
     COPY_IF_NOT_NULL(frame->text_anchor, text_anchor);
     COPY_IF_NOT_NULL(frame->img_anchor, img_anchor);
@@ -138,7 +144,9 @@ void			ei_button_configure		(ei_widget_t		widget,
         }
 
     }
-    COPY_IF_NOT_NULL(button->text_font, text_font);
+    if(text_font){
+        *button->text_font = *text_font;
+    }
     if (text_color != NULL) {
         if (!button->text_color) {
             button->text_color = SAFE_MALLOC(sizeof(*button->text_color));

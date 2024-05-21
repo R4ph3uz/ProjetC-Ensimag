@@ -177,7 +177,10 @@ void entry_drawfunc(ei_widget_t widget,
 
 
 void entry_geomnotifyfunc(ei_widget_t widget){
-    widget->content_rect=&widget->screen_location;
+    if(&widget->screen_location!=widget->content_rect){
+        SAFE_FREE(widget->content_rect);
+        widget->content_rect=&widget->screen_location;
+    }
 }
 
 /*---------------------------------------------------------------------------------------------------------------------*/

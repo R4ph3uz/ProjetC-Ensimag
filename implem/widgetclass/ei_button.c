@@ -23,6 +23,7 @@ void button_releasefunc(ei_widget_t widget) {
         SAFE_FREE(*button->text);
         SAFE_FREE(button->text);
     }
+    SAFE_FREE(button->text_font);
     SAFE_FREE(button->text_color);
     SAFE_FREE(button->text_anchor);
     if(button->img)
@@ -42,9 +43,9 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     button->border_width=SAFE_MALLOC(sizeof(int));
     button->corner_radius = SAFE_MALLOC(sizeof(int));
     button->relief=SAFE_MALLOC(sizeof(ei_relief_t));
+    button->text_font = SAFE_MALLOC(sizeof(ei_font_t));
     button->text_color = SAFE_MALLOC(sizeof(ei_color_t));
     button->text_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
-    button->text_font=SAFE_MALLOC(sizeof(ei_font_t));
     button->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
     button->img_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
 
@@ -59,10 +60,7 @@ void button_setdefaultsfunc(ei_widget_t widget) {
     *button->corner_radius = 10;
     *button->relief=ei_relief_raised;
     button->text = NULL;
-    ei_fontstyle_t style = ei_style_normal;
-    ei_const_string_t name = "misc/font.ttf";
-
-    *button->text_font = hw_text_font_create(name, style, 20);
+    *button->text_font = ei_default_font;
     *button->text_color= (ei_color_t) {10,10,10, 255};
     *button->text_anchor =ei_anc_center;
     button->img=NULL;

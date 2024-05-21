@@ -22,11 +22,17 @@ void frame_releasefunc(ei_widget_t widget)
     SAFE_FREE(frame->color);
     SAFE_FREE(frame->border_width);
     SAFE_FREE(frame->relief);
-    SAFE_FREE(frame->text);
-    SAFE_FREE(frame->text_font);
+    if(frame->text){
+        SAFE_FREE(*frame->text);
+        SAFE_FREE(frame->text);
+    }
+
+
     SAFE_FREE(frame->text_color);
+    SAFE_FREE(frame->text_font);
     SAFE_FREE(frame->text_anchor);
-    SAFE_FREE(frame->img);
+    if(frame->img)
+        hw_surface_free(*frame->img);
     SAFE_FREE(frame->img_rect);
     SAFE_FREE(frame->img_anchor);
 
@@ -224,7 +230,10 @@ void frame_geomnotifyfunc(ei_widget_t widget)
 {
     if(&widget->screen_location!=widget->content_rect)
         SAFE_FREE(widget->content_rect);
-    widget->content_rect=&widget->screen_location;
+    if(&widget->screen_location!=widget->content_rect){
+        SAFE_FREE(widget->content_rect);
+        widget->content_rect=&widget->screen_location;
+    }
 }
 
 /*--------------------------------------------------------------------------------*/
@@ -236,11 +245,9 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     /* Suite spécifique à une  frame*/
     frame->color = SAFE_MALLOC(sizeof(ei_color_t));
     frame->relief = SAFE_MALLOC(sizeof(ei_relief_t));
-    frame->text = SAFE_MALLOC(sizeof(ei_string_t));
     frame->text_font = SAFE_MALLOC(sizeof(ei_font_t));
     frame->text_color = SAFE_MALLOC(sizeof(ei_color_t));
     frame->text_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
-    frame->img = SAFE_MALLOC(sizeof(ei_surface_t));
     frame->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
     frame->img_anchor = SAFE_MALLOC(sizeof(ei_anchor_t));
     frame->border_width = SAFE_MALLOC(sizeof(int));
@@ -252,13 +259,10 @@ void frame_setdefaultsfunc(ei_widget_t widget)
     *frame->relief = ei_relief_none;
 
     frame->text = NULL;
-    ei_const_string_t name = "misc/font.ttf";
-    ei_fontstyle_t style = ei_style_normal;
-    *frame->text_font = hw_text_font_create(name, style, 20);
-    *frame->text_color= (ei_color_t) {0,0,0};
+    *frame->text_font = ei_default_font;
+    *frame->text_color= (ei_color_t) {0,0,0, 0 };
     *frame->text_anchor =ei_anc_center;
     frame->img = NULL;
-    frame->img_rect = NULL;
     *frame->img_anchor = ei_anc_center;
 }
 
