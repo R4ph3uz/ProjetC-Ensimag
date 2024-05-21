@@ -199,7 +199,7 @@ void ei_app_run(void)
 
         }
         ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),union_rect);
-        hw_surface_update_rects(ROOT_SURFACE,NULL);
+        hw_surface_update_rects(ROOT_SURFACE,get_invalidated_rect_list());
         //hw_surface_update_rects(ROOT_SURFACE,get_invalidated_rect_list()); //with invalidated rect (seem slower)
         reinitialize_invalidated_rect_list();
     }

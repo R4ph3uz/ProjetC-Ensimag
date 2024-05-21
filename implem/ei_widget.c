@@ -3,6 +3,7 @@
 #include "ei_types.h"
 #include <stdlib.h>
 #include "pick_event.h"
+#include "ei_application.h"
 /*-------------------------------------------------------------------------------------------------------*/
 
 static uint32_t PICKID=0;
@@ -62,6 +63,8 @@ ei_widget_t		ei_widget_create		(ei_const_string_t	class_name,
 
     widget->callback= NULL;
 
+    widget->isChildIgnoreAddInvalidateRect=false;
+
     return widget;
 
 }
@@ -78,11 +81,11 @@ void			ei_widget_destroy		(ei_widget_t		widget)
         ei_widget_destroy(widget->children_head);
         widget->children_head=prochain;
     }
-
+    ei_app_invalidate_rect(&widget->screen_location);
     ei_geometrymanager_unmap(widget);
     if (widget->destructor)
-    widget->destructor(widget);
-    //(*(widget->wclass->releasefunc))(widget); // ici libère la mémoire
+        widget->destructor(widget);
+    (*(widget->wclass->releasefunc))(widget); // ici libère la mémoire
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
