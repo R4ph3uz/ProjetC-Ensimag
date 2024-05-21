@@ -198,7 +198,7 @@ void ei_app_run(void)
              }
 
         }
-        ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),union_rect);
+        ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
         hw_surface_update_rects(ROOT_SURFACE,get_invalidated_rect_list());
         //hw_surface_update_rects(ROOT_SURFACE,get_invalidated_rect_list()); //with invalidated rect (seem slower)
         reinitialize_invalidated_rect_list();
@@ -228,6 +228,8 @@ void ei_app_free(void)
 {
     free_list_callback();
     ei_widget_destroy(ROOT_WIDGET);
+    ei_free_geometrymanager();
+    ei_free_widgetclass();
     hw_surface_free(ROOT_SURFACE);
     hw_surface_free(PICKING_SURFACE);
 }
