@@ -35,36 +35,40 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 {
     hw_init();
     initialize_pickid_array(); // < init dynamic array to have the widget corresponding to an id
+
+    //définit les widget
     ei_widgetclass_t* frame = create_frame_widgetclass();
     ei_widgetclass_t* button = create_button_widgetclass();
     ei_widgetclass_t* top_level = create_toplevel_widgetclass();
     ei_widgetclass_t* entry = create_entry_widgetclass();
+
+    //enregistre les widgets
     ei_widgetclass_register(frame);
     ei_widgetclass_register(button);
     ei_widgetclass_register(top_level);
     ei_widgetclass_register(entry);
 
+    //bind les events pour les widgets
     ei_bind(ei_ev_mouse_buttondown,NULL,  "button",down_click_handler, NULL );
     ei_bind(ei_ev_mouse_buttonup,NULL,  "button",up_click_handler,NULL );
-
     ei_bind(ei_ev_mouse_buttondown, NULL, "toplevel", toplevel_down_click_handler, NULL);
     ei_bind(ei_ev_mouse_buttondown,NULL,"entry",entry_down_click_handler,NULL);
 
-    //défini les geometry manager
+    //définit les geometry manager
     ei_geometrymanager_t* grid = create_grid_gm();
     ei_geometrymanager_t* placer = create_placer_gm();
-    // enregistres
+
+    // enregistre les geometry manager
     ei_geometrymanager_register(grid);
     ei_geometrymanager_register(placer);
+
+    //Création de la root
     ROOT_SURFACE =  hw_create_window(main_window_size, fullscreen);
     PICKING_SURFACE = hw_surface_create(ROOT_SURFACE, main_window_size, false);
-
-
     ROOT_WIDGET =  ei_widget_create("frame",NULL,NULL,NULL);
     ei_widget_set_requested_size(ROOT_WIDGET,main_window_size);
     ROOT_WIDGET->screen_location.top_left = ei_point_zero();
     ROOT_WIDGET->screen_location.size = main_window_size;
-
     ROOT_WIDGET->content_rect=&ROOT_WIDGET->screen_location;
 
 }
@@ -75,50 +79,52 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
 
 void ei_app_run(void)
 {
-    // draw func de root et ça se débrouille
+    // Dessine l'écran
     ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
     hw_surface_update_rects(ROOT_SURFACE, NULL);
 
-    // (*(ROOT_WIDGET->wclass->drawfunc))(ROOT_WIDGET, ei_app_root_surface(), NULL, NULL);
+    //Initialise des variables utiles pour la suite
     IS_RUNNING = true;
     CHANGEMENT_PREMIER_PLAN = false;
-    ei_widget_t widget = NULL;
+    ei_widget_t widget = ROOT_WIDGET;
     ei_event_t* new_event = SAFE_MALLOC(sizeof(ei_event_t));
-    widget=ROOT_WIDGET;
+    ei_widget_t widget_last_child = NULL;
 
-    ei_widget_t widget_last_child;
-    while(IS_RUNNING){
+    while(IS_RUNNING){ //Tant que le programme tourne
 
         hw_event_wait_next(new_event);
 
         ei_rect_t rect_before;
         ei_rect_t rect_after;
-        if(new_event->type == ei_ev_mouse_buttondown || new_event->type == ei_ev_mouse_buttonup ) {
+        if(new_event->type == ei_ev_mouse_buttondown || new_event->type == ei_ev_mouse_buttonup )
+        {
             ei_widget_t precwid=widget;
-            widget= ei_widget_pick(&(new_event->param.mouse.where)); // fonction faites pour ça
-            // widget = get_widget_by_pickid(get_pick_id(PICKING_SURFACE,new_event->param.mouse.where ));
+            widget= ei_widget_pick(&(new_event->param.mouse.where)); //widget est le widget sur lequel on vient de cliquer
+            widget_last_child=widget;
 
-
-            ei_widget_t widget2=widget;
-//            on met en premier plan le plus grand paraent du widget sur lequel on clique different de la root
-
+            //Si le widget n'est pas la root et est différent du widget précedent
             if (widget!=ROOT_WIDGET && widget!=precwid)
             {
-                if (widget2)
+                //widget_last_child parcours tout les parents de widget
+                if (widget_last_child)
                 {
-                    while (widget2->parent != ROOT_WIDGET) {
-                        widget2 = widget2->parent;
+                    while (widget_last_child!= ROOT_WIDGET) {
+                        if (strcmp(widget_last_child->wclass->name, "toplevel")==0)  // Si c'est un toplevel
+                        {
+                            if (widget_last_child->parent->children_tail!=widget_last_child) // Si le toplevel n'est pas déja au premier plan
+                            {
+                                //on met la toplevel au premier plan (en dernier enfant)
+                                CHANGEMENT_PREMIER_PLAN=true;
+                                supprime_de_ses_freres(widget_last_child);
+                                place_a_la_fin(widget_last_child);
+
+                            }
+                        }
+                        widget_last_child = widget_last_child->parent;
                     }
-                    widget_last_child = widget2;
                 }
 
-                if (widget2 && widget2->parent->children_tail!=widget2)
-                {
-                    CHANGEMENT_PREMIER_PLAN=true;
-                    supprime_de_ses_freres(widget2);
-                    place_a_la_fin(widget2);
 
-                }
 
             }
 
@@ -198,7 +204,7 @@ void ei_app_run(void)
              }
 
         }
-        ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),union_rect);
+        ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
         hw_surface_update_rects(ROOT_SURFACE,get_invalidated_rect_list());
         //hw_surface_update_rects(ROOT_SURFACE,get_invalidated_rect_list()); //with invalidated rect (seem slower)
         reinitialize_invalidated_rect_list();
