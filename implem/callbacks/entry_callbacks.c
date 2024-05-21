@@ -280,7 +280,6 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             // touche suppr si en selection
             char *new = cut_text(text, pos1, pos2);
             ei_entry_set_text((ei_widget_t) entry, new);
-            SAFE_FREE(text);
             SAFE_FREE(new);
             entry->position = pos1;
             entry->is_in_selection = false;
@@ -292,7 +291,6 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             // touch backspace
             char *new = cut_text(text, pos1, pos2);
             ei_entry_set_text((ei_widget_t) entry, new);
-            free(text);
             free(new);
             entry->position = pos1;
             entry->is_in_selection = false;
@@ -384,6 +382,7 @@ bool animation_cursor(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
             ei_entry_t entry = (ei_entry_t) app_event->param;
         if (entry) {
             entry->is_double_clickable = false;
+            free(app_event);
             return true;
         }
     }
@@ -461,7 +460,7 @@ ei_widget_t dfs_find_first_entry(ei_widget_t node){
 bool handle_tab_entry(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_param){
     ei_entry_t entry = user_param;
     if (event->param.key_code == SDLK_TAB && !ei_event_has_shift(event)){
-        bool founded;
+        bool founded = false;
         ei_widget_t next_entry = dfs_find_first_after_entry(entry,ei_app_root_widget(),&founded );
         if (next_entry){
             ei_entry_give_focus(next_entry);
