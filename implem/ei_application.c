@@ -123,12 +123,7 @@ void ei_app_run(void)
                         widget_last_child = widget_last_child->parent;
                     }
                 }
-
-
-
             }
-
-
             memcpy(&rect_before, &widget->screen_location,sizeof(ei_rect_t));
         }
 
@@ -160,6 +155,8 @@ void ei_app_run(void)
                 if(temp->eventtype == new_event->type){
                     isModified1 = isModified1 || (*temp->callback)(widget, new_event,widget->user_data);
                 }
+                if (isModified1)
+                    break;
                 temp=temp->next;
             }
         }
