@@ -149,7 +149,7 @@ typedef struct ei_impl_geom_param_t {
 	float*			rel_y;
 	float*			rel_width;
 	float*			rel_height;
-    bool *           is_reconfigurable;
+    bool *           is_reconfigurable; //True si la width/height dépend de la requested size
 } ei_impl_geom_param_t;
 
 /**

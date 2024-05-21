@@ -64,10 +64,10 @@ void	 		ei_widget_set_requested_size	(ei_widget_t		widget, ei_size_t 		requested
     widget->requested_size.width = requested_size.width;
     widget->requested_size.height = requested_size.height;
     if (( widget->geom_params) && *widget->geom_params->is_reconfigurable)
-    {
+    {       //Si le widget est reconfigurable (la taille du widget depend de la requested) ,alors, l'actualiser
         *widget->geom_params->height = requested_size.height;
         *widget->geom_params->width = requested_size.width;
-        widget->geom_params->manager->runfunc(widget);//laisser ?
+        widget->geom_params->manager->runfunc(widget);
     }
 }
 
