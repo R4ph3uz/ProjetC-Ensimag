@@ -19,7 +19,10 @@ void button_releasefunc(ei_widget_t widget) {
     SAFE_FREE(button->border_width);
     SAFE_FREE(button->corner_radius);
     SAFE_FREE(button->relief);
-    SAFE_FREE(button->text);
+    if(button->text!=NULL) {
+        SAFE_FREE(*button->text);
+        SAFE_FREE(button->text);
+    }
     SAFE_FREE(button->text_color);
     SAFE_FREE(button->text_anchor);
     if(button->img)
