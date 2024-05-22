@@ -569,6 +569,7 @@ bool controlv(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
             char* text =entry->text;
             char* text2= cut_text(text,pos1,pos2);
             ei_entry_set_text((ei_widget_t) entry,text2);
+            free(text2);
             entry->is_in_selection=false;
             entry->position=entry->debut_selection=entry->fin_selection=pos1;
         }
