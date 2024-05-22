@@ -147,6 +147,10 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 entry->position = (int32_t) fminf((float)pos1,(float)pos2);
             }
             else{ // supprime qu'un seul caractere
+                if(entry->position>=strlen(text)){
+                    entry->position=strlen(text);
+                    return false;
+                }
                 char* new = delete_char(text, entry->position+1);
                 ei_entry_set_text((ei_widget_t)entry,new);
                 SAFE_FREE(new);
@@ -159,58 +163,64 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
 
             //supprime tout un mot
             if (ei_event_has_ctrl(event)) {
-                char ch = text[entry->position-1];
                 int pos1 =entry->position;
                 int pos2 = bypass_control(entry->text,entry->position,-1);
                 char *new = cut_text(text, pos2, pos1);
+                //gérer le décalge si ctrl+backspace
+                if (entry->decal_x > 0 && strcmp(text, new)!=0){
+                    text=entry->text;
+                    int old_width, old_height;
+                    char* old_text = restrict_text(text, entry->position+1);
+                    hw_text_compute_size(old_text, *entry->text_font, &old_width, &old_height);
+                    int decalage = entry->decal_x-old_width+entry->widget.screen_location.size.width;
+
+                    int width, height;
+                    char* text_rest = restrict_text(new, entry->position);
+                    hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
+                    entry->decal_x = width-entry->widget.screen_location.size.width +decalage;
+                    if (width <entry->widget.screen_location.size.width )
+                        entry->decal_x =0;
+                    SAFE_FREE(old_text);
+                    SAFE_FREE(text_rest);
+                }
                 ei_entry_set_text((ei_widget_t)entry,new);
                 SAFE_FREE(new);
                 entry->debut_selection = (int32_t) fminf((float)pos1,(float)pos2);
                 entry->fin_selection = (int32_t) fminf((float)pos1,(float)pos2);
                 entry->position = (int32_t) fminf((float)pos1,(float)pos2);
-                //gérer le décalge si ctrl+backspace
-                if (entry->decal_x > 0){
-                    text=entry->text;
-                    int old_width, old_height;
-                    char* old_text = restrict_text(text, entry->position+1);
-                    hw_text_compute_size(old_text, *entry->text_font, &old_width, &old_height);
-                    SAFE_FREE(old_text);
-                    int decalage = entry->decal_x-old_width+entry->widget.screen_location.size.width;
-
-                    int width, height;
-                    char* text_rest = restrict_text(new, entry->position);
-                    hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
-                    SAFE_FREE(text_rest);
-                    entry->decal_x = width-entry->widget.screen_location.size.width +decalage;
-                    if (width <entry->widget.screen_location.size.width )
-                        entry->decal_x =0;
-                }
             }
             else{
-                char* new = delete_char(text, entry->position);
-                if (strcmp(text, new)!=0){
-                    ei_entry_set_text((ei_widget_t)entry,new);
-                    entry->position-=1;
-                    SAFE_FREE(new);
+                if(entry->position<=0){
+                    entry->position=0;
+                    entry->debut_selection=entry->position;
+                    entry->fin_selection=entry->position;
+                    return false;
                 }
+                char* new = delete_char(text, entry->position);
                 //calcul nouveau decalage
                 if (entry->decal_x > 0){
                     int old_width, old_height;
                     char* old_text = restrict_text(text, entry->position+1);
                     hw_text_compute_size(old_text, *entry->text_font, &old_width, &old_height);
-                    SAFE_FREE(old_text);
                     int decalage = entry->decal_x-old_width+entry->widget.screen_location.size.width;
 
                     int width, height;
                     char* text_rest = restrict_text(new, entry->position);
                     hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
-                    SAFE_FREE(text_rest);
                     entry->decal_x = width-entry->widget.screen_location.size.width +decalage;
                     if (width <entry->widget.screen_location.size.width )
                         entry->decal_x =0;
+                    SAFE_FREE(old_text);
+                    SAFE_FREE(text_rest);
+                }
+                if (strcmp(text, new)!=0){
+                    ei_entry_set_text((ei_widget_t)entry,new);
+                    entry->position-=1;
+                    SAFE_FREE(new);
                 }
                 entry->debut_selection=entry->position;
                 entry->fin_selection=entry->position;
+
             }
             return true;
         }
