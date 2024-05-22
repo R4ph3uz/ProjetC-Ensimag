@@ -290,8 +290,27 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
         if (event->type == ei_ev_keydown && event->param.key_code == SDLK_DELETE) {
             // touche suppr si en selection
             char *new = cut_text(text, pos1, pos2);
-            ei_entry_set_text((ei_widget_t) entry, new);
-            SAFE_FREE(new);
+            //calcul nouveau decalage
+            if (entry->decal_x > 0 && strcmp(text, new)!=0){
+                int old_width, old_height;
+                char* old_text = restrict_text(text, entry->position+1);
+                hw_text_compute_size(old_text, *entry->text_font, &old_width, &old_height);
+                int decalage = entry->decal_x-old_width+entry->widget.screen_location.size.width;
+
+                int width, height;
+                char* text_rest = restrict_text(new, entry->position);
+                hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
+                entry->decal_x = width-entry->widget.screen_location.size.width +decalage;
+                if (width <entry->widget.screen_location.size.width )
+                    entry->decal_x =0;
+                SAFE_FREE(old_text);
+                SAFE_FREE(text_rest);
+            }
+            if (strcmp(text, new)!=0){
+                ei_entry_set_text((ei_widget_t)entry,new);
+                entry->position-=1;
+                SAFE_FREE(new);
+            }
             entry->position = pos1;
             entry->is_in_selection = false;
             entry->debut_selection = entry->position;
@@ -301,11 +320,30 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
         if (event->type == ei_ev_keydown && event->param.key_code == SDLK_BACKSPACE) {
             // touch backspace
             char *new = cut_text(text, pos1, pos2);
-            ei_entry_set_text((ei_widget_t) entry, new);
-            SAFE_FREE(new);
-            entry->position = pos1;
-            entry->is_in_selection = false;
-            return true;
+            //calcul nouveau decalage
+            if (entry->decal_x > 0 && strcmp(text, new)!=0){
+                int old_width, old_height;
+                char* old_text = restrict_text(text, entry->position+1);
+                hw_text_compute_size(old_text, *entry->text_font, &old_width, &old_height);
+                int decalage = entry->decal_x-old_width+entry->widget.screen_location.size.width;
+
+                int width, height;
+                char* text_rest = restrict_text(new, entry->position);
+                hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
+                entry->decal_x = width-entry->widget.screen_location.size.width +decalage;
+                if (width <entry->widget.screen_location.size.width )
+                    entry->decal_x =0;
+                SAFE_FREE(old_text);
+                SAFE_FREE(text_rest);
+            }
+            if (strcmp(text, new)!=0){
+                ei_entry_set_text((ei_widget_t)entry,new);
+                entry->position=pos1;
+                SAFE_FREE(new);
+                entry->is_in_selection = false;
+                return true;
+            }
+            return false;
         }
         if (event->type == ei_ev_keydown && event->param.key_code == SDLK_LEFT) {
             if (entry->position > 0) {
