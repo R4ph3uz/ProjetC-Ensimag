@@ -134,7 +134,7 @@ void			ei_button_configure		(ei_widget_t		widget,
     if (text != NULL) {
         if(button->text==NULL) {
             button->text = SAFE_MALLOC(sizeof(ei_string_t ));
-            *button->text =  SAFE_MALLOC(sizeof(char)*30);
+            *button->text =  SAFE_MALLOC(sizeof(char)*60);
         }
         if(*text == NULL){
             SAFE_FREE(*button->text);
@@ -204,15 +204,6 @@ void			ei_toplevel_configure		(ei_widget_t		widget,
         ei_widget_set_requested_size(widget,*requested_size);
     else if (!widget->geom_params)
         ei_widget_set_requested_size(widget, ei_size(500,500));
-
-
-//    else
-//    {
-//        if (widget->requested_size.width<320)
-//            widget->requested_size.width=320;
-//        if (widget->requested_size.height<280)
-//            widget->requested_size.height=100;
-
 
     ei_toplevel_t toplevel = (ei_toplevel_t) widget;
     COPY_IF_NOT_NULL(toplevel->color,(ei_color_t*) color);
