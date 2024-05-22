@@ -475,11 +475,40 @@ bool handle_tab_entry(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
         ei_widget_t next_entry = dfs_find_first_after_entry(entry,ei_app_root_widget(),&founded );
         if (next_entry){
             ei_entry_give_focus(next_entry);
+            ei_widget_t widget_last_child = (ei_widget_t) next_entry;
+            while (widget_last_child!= ei_app_root_widget()) {
+                if (strcmp(widget_last_child->wclass->name, "toplevel")==0)  // Si c'est un toplevel
+                {
+                    if (widget_last_child->parent->children_tail!=widget_last_child) // Si le toplevel n'est pas déja au premier plan
+                    {
+                        supprime_de_ses_freres(widget_last_child);
+                        place_a_la_fin(widget_last_child);
+
+                    }
+                }
+                widget_last_child = widget_last_child->parent;
+            }
         }
         else{
             next_entry = dfs_find_first_entry(ei_app_root_widget());
-            if (next_entry)
+            if (next_entry){
                 ei_entry_give_focus(next_entry);
+                ei_widget_t widget_last_child = (ei_widget_t) next_entry;
+                while (widget_last_child!= ei_app_root_widget()) {
+                    if (strcmp(widget_last_child->wclass->name, "toplevel")==0)  // Si c'est un toplevel
+                    {
+                        if (widget_last_child->parent->children_tail!=widget_last_child) // Si le toplevel n'est pas déja au premier plan
+                        {
+                            supprime_de_ses_freres(widget_last_child);
+                            place_a_la_fin(widget_last_child);
+
+                        }
+                    }
+                    widget_last_child = widget_last_child->parent;
+                }
+
+            }
+
         }
         return true;
     }

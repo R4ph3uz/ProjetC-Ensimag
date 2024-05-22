@@ -235,10 +235,6 @@ void button_drawfunc(ei_widget_t widget,
 
         }
 
-        ei_rect_t test = ei_rect(place,(*button->img_rect)->size);
-        hw_surface_lock(*button->img);
-        ei_copy_surface(surface, &test, *button->img, *button->img_rect, true);
-        hw_surface_unlock(*button->img);
     }
 
     hw_surface_unlock(surface);
