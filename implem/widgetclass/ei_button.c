@@ -27,11 +27,9 @@ void button_releasefunc(ei_widget_t widget) {
     SAFE_FREE(button->text_font);
     SAFE_FREE(button->text_color);
     SAFE_FREE(button->text_anchor);
-    if(button->img)
-        // hw_surface_unlock(button->img);
-    {
-        hw_surface_free(button->img);
-        button->img = NULL;
+    if(button->img){
+        hw_surface_free(*button->img);
+        SAFE_FREE(button->img);
     }
     if(button->img_rect && *button->img_rect)
         SAFE_FREE(*button->img_rect)

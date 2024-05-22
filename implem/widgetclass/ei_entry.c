@@ -95,7 +95,7 @@ void entry_drawfunc(ei_widget_t widget,
         border[3] = (ei_point_t) {top_left_x - (*entry->border_width), top_left_y + widget->content_rect->size.height + *entry->border_width };
         ei_color_t color = (ei_color_t) {0,0,0, 255};
         ei_draw_polygon(surface, border, 4, color, clipper);
-        free(border);
+        SAFE_FREE(border);
     }
     ei_draw_polygon(surface, points, nb_points, *entry->color, clipper);
     ei_draw_polygon(pick_surface, points, nb_points, *entry->widget.pick_color, clipper);

@@ -33,7 +33,7 @@ void			ei_free_widgetclass	(ei_widgetclass_t widgetclass)
         LISTE_WIDGETCLASS=LISTE_WIDGETCLASS->next;
         if(LISTE_WIDGETCLASS && strcmp(LISTE_WIDGETCLASS->name, widgetclass.name)==0){
             temp->next = LISTE_WIDGETCLASS->next;
-            free(LISTE_WIDGETCLASS);
+            SAFE_FREE(LISTE_WIDGETCLASS);
             LISTE_WIDGETCLASS=first;
             return;
         }

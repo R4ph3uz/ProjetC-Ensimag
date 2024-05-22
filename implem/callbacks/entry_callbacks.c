@@ -141,7 +141,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 int pos2 = bypass_control(entry->text,entry->position,1);
                 char *new = cut_text(text, pos1, pos2);
                 ei_entry_set_text((ei_widget_t)entry,new);
-                free(new);
+                SAFE_FREE(new);
                 entry->debut_selection = (int32_t) fminf((float)pos1,(float)pos2);
                 entry->fin_selection = (int32_t) fminf((float)pos1,(float)pos2);
                 entry->position = (int32_t) fminf((float)pos1,(float)pos2);
@@ -149,7 +149,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             else{ // supprime qu'un seul caractere
                 char* new = delete_char(text, entry->position+1);
                 ei_entry_set_text((ei_widget_t)entry,new);
-                free(new);
+                SAFE_FREE(new);
                 entry->debut_selection=entry->position;
             }
             return true;
@@ -164,7 +164,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 int pos2 = bypass_control(entry->text,entry->position,-1);
                 char *new = cut_text(text, pos2, pos1);
                 ei_entry_set_text((ei_widget_t)entry,new);
-                free(new);
+                SAFE_FREE(new);
                 entry->debut_selection = (int32_t) fminf((float)pos1,(float)pos2);
                 entry->fin_selection = (int32_t) fminf((float)pos1,(float)pos2);
                 entry->position = (int32_t) fminf((float)pos1,(float)pos2);
@@ -174,13 +174,13 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                     int old_width, old_height;
                     char* old_text = restrict_text(text, entry->position+1);
                     hw_text_compute_size(old_text, *entry->text_font, &old_width, &old_height);
-                    free(old_text);
+                    SAFE_FREE(old_text);
                     int decalage = entry->decal_x-old_width+entry->widget.screen_location.size.width;
 
                     int width, height;
                     char* text_rest = restrict_text(new, entry->position);
                     hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
-                    free(text_rest);
+                    SAFE_FREE(text_rest);
                     entry->decal_x = width-entry->widget.screen_location.size.width +decalage;
                     if (width <entry->widget.screen_location.size.width )
                         entry->decal_x =0;
@@ -273,8 +273,8 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             entry->position += 1;
             entry->debut_selection=entry->fin_selection =entry->position;
             entry->is_in_selection = false;
-            free(new);
-            free(text2);
+            SAFE_FREE(new);
+            SAFE_FREE(text2);
             return true;
         }
         if (event->type == ei_ev_keydown && event->param.key_code == SDLK_DELETE) {
@@ -292,7 +292,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
             // touch backspace
             char *new = cut_text(text, pos1, pos2);
             ei_entry_set_text((ei_widget_t) entry, new);
-            free(new);
+            SAFE_FREE(new);
             entry->position = pos1;
             entry->is_in_selection = false;
             return true;
@@ -383,7 +383,7 @@ bool animation_cursor(ei_widget_t widget, ei_event_t* event, ei_user_param_t use
             ei_entry_t entry = (ei_entry_t) app_event->param;
         if (entry) {
             entry->is_double_clickable = false;
-            free(app_event);
+            SAFE_FREE(app_event);
             return true;
         }
     }
@@ -511,7 +511,7 @@ bool controlc(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
                 TEXTE_COPIE = SAFE_REALLOC(TEXTE_COPIE, sizeof(char) * (strlen(new_text)+1));
                 strcpy(TEXTE_COPIE, new_text);
             }
-            free(new_text);
+            SAFE_FREE(new_text);
             return true;
         } else {
             return false;
@@ -534,7 +534,7 @@ bool controlx(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
             char* new_text = texte_selectionne(text,pos1,pos2);
             char* new = cut_text(text, pos1, pos2);
             ei_entry_set_text((ei_widget_t) entry, new);
-            free(new);
+            SAFE_FREE(new);
             entry->position = pos1;
             entry->is_in_selection = false;
             entry->debut_selection = entry->position;
@@ -548,7 +548,7 @@ bool controlx(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
                 strcpy(TEXTE_COPIE,new_text);
             }
 
-            free(new_text);
+            SAFE_FREE(new_text);
             return true;
         }
         else{
@@ -570,7 +570,7 @@ bool controlv(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
             char* text =entry->text;
             char* text2= cut_text(text,pos1,pos2);
             ei_entry_set_text((ei_widget_t) entry,text2);
-            free(text2);
+            SAFE_FREE(text2);
             entry->is_in_selection=false;
             entry->position=entry->debut_selection=entry->fin_selection=pos1;
         }
@@ -581,7 +581,7 @@ bool controlv(ei_widget_t widget,ei_event_t* event,ei_user_param_t user_param){
         else{
             char* text2 = insert_word(text,TEXTE_COPIE,entry->position);
             ei_entry_set_text((ei_widget_t) entry, text2);
-            free(text2);
+            SAFE_FREE(text2);
             entry->position+=strlen(TEXTE_COPIE);
             return true;
         }

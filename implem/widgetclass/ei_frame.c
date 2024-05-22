@@ -86,7 +86,7 @@ void frame_drawfunc(ei_widget_t widget,
             ei_color_t color = (ei_color_t) {0,0,0, 255};
             ei_draw_polygon(surface, border, nb_points, color, clipper);
             ei_draw_polygon(surface, points, nb_points, *frame->color, clipper);
-            free(border);
+            SAFE_FREE(border);
         }
     }
 
@@ -225,7 +225,7 @@ void frame_drawfunc(ei_widget_t widget,
         hw_surface_unlock(surface);
     }
 
-    free(points);
+    SAFE_FREE(points);
 }
 
 /*--------------------------------------------------------------------------------*/

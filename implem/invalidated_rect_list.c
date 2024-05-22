@@ -23,7 +23,7 @@ void reinitialize_invalidated_rect_list(){
     while(INVALIDATED_RECT_LIST!=NULL) {
         ei_linked_rect_t* temp = INVALIDATED_RECT_LIST;
         INVALIDATED_RECT_LIST = INVALIDATED_RECT_LIST->next;
-        free(temp);
+        SAFE_FREE(temp);
     }
 
 }

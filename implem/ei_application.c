@@ -173,28 +173,20 @@ void ei_app_run(void)
                  }
 
                  if(temp->parent && temp->geom_params){
-                     ei_rect_t* test  = intersection_rectangle(hw_surface_get_rect(ROOT_SURFACE),temp->screen_location );
-                     rect_before = *test;
                      temp->geom_params->manager->runfunc(temp);
-                     ei_rect_t* test2  = intersection_rectangle(hw_surface_get_rect(ROOT_SURFACE),temp->screen_location );
-                     rect_after = *test2;
-                     ei_linked_rect_t list;
-                     list.rect = rect_before;
-                     list.next = NULL;
-                     union_rect = union_rectangle(rect_before, rect_after);
                  }
 
 
              }
         }
         ei_rect_t* union_r = union_rectangles(get_invalidated_rect_list());
-        ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),union_r);
+        ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
         SAFE_FREE(union_r);
         hw_surface_update_rects(ROOT_SURFACE,get_invalidated_rect_list());
         //hw_surface_update_rects(ROOT_SURFACE,get_invalidated_rect_list()); //with invalidated rect (seem slower)
         reinitialize_invalidated_rect_list();
     }
-    free(new_event);
+    SAFE_FREE(new_event);
 
 }
 

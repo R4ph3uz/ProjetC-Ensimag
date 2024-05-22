@@ -163,14 +163,14 @@ void draw_button(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_color_
         ei_draw_polygon(surface, conc2, nb_concat, color_plus_fonce, clipper);
     }
     else if(relief== ei_relief_none){
-        free(conc1);
+        SAFE_FREE(conc1);
         conc1 = rounded_frame(&rectangle, radius, full, &nb_points1);
     }
 
     ei_draw_polygon(surface, conc1, nb_points1, color, clipper);
-    free(conc1);
-    free(conc2);
-    free(conc3);
+    SAFE_FREE(conc1);
+    SAFE_FREE(conc2);
+    SAFE_FREE(conc3);
 }
 
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -294,10 +294,10 @@ void draw_toplevel(ei_surface_t surface, ei_rect_t rectangle,int radius ,ei_colo
         }
     }
 
-    free(border_line);
-    free(top_bar);
-    free(content_rect_points);
-    free(circle_p);
-    free(carre_bas_droite);
+    SAFE_FREE(border_line);
+    SAFE_FREE(top_bar);
+    SAFE_FREE(content_rect_points);
+    SAFE_FREE(circle_p);
+    SAFE_FREE(carre_bas_droite);
 }
 

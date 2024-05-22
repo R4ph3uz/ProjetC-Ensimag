@@ -89,7 +89,7 @@ void			ei_free_geometrymanager	(ei_geometrymanager_t geometrymanager)
         LISTE_GEOMETRYMANAGER=LISTE_GEOMETRYMANAGER->next;
         if(LISTE_GEOMETRYMANAGER && strcmp(LISTE_GEOMETRYMANAGER->name, geometrymanager.name)==0){
             temp->next = LISTE_GEOMETRYMANAGER->next;
-            free(LISTE_GEOMETRYMANAGER);
+            SAFE_FREE(LISTE_GEOMETRYMANAGER);
             LISTE_GEOMETRYMANAGER=first;
             return;
         }

@@ -40,7 +40,7 @@ void			ei_entry_configure		(ei_widget_t		widget,
         ei_surface_t surfaceee=hw_text_create_surface(falsestring,*entry->text_font,*entry->text_color);
         int width= hw_surface_get_rect(surfaceee).size.width;
         ei_widget_set_requested_size(widget,ei_size(width,20));
-        free(falsestring);
+        SAFE_FREE(falsestring);
         hw_surface_free(surfaceee);
         surfaceee=NULL;
     }
@@ -63,7 +63,7 @@ void			ei_entry_set_text		(ei_widget_t		widget,
                                           ei_const_string_t 	text)
 {
     ei_entry_t entry = (ei_entry_t) widget;
-    free(entry->text);
+    SAFE_FREE(entry->text);
     entry->text= SAFE_MALLOC(sizeof(char)* (strlen(text)+1));
     strcpy(entry->text,text);
 }
