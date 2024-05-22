@@ -19,12 +19,24 @@ void			ei_widgetclass_register		(ei_widgetclass_t* widgetclass)
 
 /*-------------------------------------------------------------------------------------------------------*/
 
-void			ei_free_widgetclass	()
+void			ei_free_widgetclass	(ei_widgetclass_t widgetclass)
 {
+    ei_widgetclass_t* first = LISTE_WIDGETCLASS;
+    if(strcmp(LISTE_WIDGETCLASS->name, widgetclass.name)==0)
+    {
+        LISTE_WIDGETCLASS = LISTE_WIDGETCLASS->next;
+        SAFE_FREE(first);
+        return;
+    }
     while(LISTE_WIDGETCLASS!=NULL) {
-        ei_widgetclass_t* temp= LISTE_WIDGETCLASS;
+        ei_widgetclass_t* temp = LISTE_WIDGETCLASS;
         LISTE_WIDGETCLASS=LISTE_WIDGETCLASS->next;
-        free(temp);
+        if(LISTE_WIDGETCLASS && strcmp(LISTE_WIDGETCLASS->name, widgetclass.name)==0){
+            temp->next = LISTE_WIDGETCLASS->next;
+            free(LISTE_WIDGETCLASS);
+            LISTE_WIDGETCLASS=first;
+            return;
+        }
     }
 }
 

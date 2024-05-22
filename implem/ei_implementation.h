@@ -46,8 +46,8 @@
 void ei_placer_releasefunc(ei_widget_t widget);
 
 
-void ei_free_geometrymanager();
-void ei_free_widgetclass();
+void ei_free_geometrymanager(ei_geometrymanager_t manager);
+void ei_free_widgetclass(ei_widgetclass_t widclass);
 
 
 /**

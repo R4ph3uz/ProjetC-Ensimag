@@ -16,7 +16,7 @@
 #include "widgetclass/ei_toplevel.h"
 #include "callbacks/toplevel_callbacks.h"
 #include "widgetclass/ei_entry.h"
-#include "grid.h"
+//#include "grid.h"
 #include "invalidated_rect_list.h"
 
 /* ----------------------------------------------------------------- */
@@ -55,11 +55,11 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ei_bind(ei_ev_mouse_buttondown,NULL,"entry",entry_down_click_handler,NULL);
 
     //définit les geometry manager
-    ei_geometrymanager_t* grid = create_grid_gm();
+//    ei_geometrymanager_t* grid = create_grid_gm();
     ei_geometrymanager_t* placer = create_placer_gm();
 
     // enregistre les geometry manager
-    ei_geometrymanager_register(grid);
+//    ei_geometrymanager_register(grid);
     ei_geometrymanager_register(placer);
 
 
@@ -171,19 +171,6 @@ void ei_app_run(void)
                      }
                      temp = temp->parent;
                  }
-
-//                 if(temp->parent && temp->geom_params){
-//                     ei_rect_t* test  = intersection_rectangle(hw_surface_get_rect(ROOT_SURFACE),temp->screen_location );
-//                     rect_before = *test;
-//                     temp->geom_params->manager->runfunc(temp);
-//                     ei_rect_t* test2  = intersection_rectangle(hw_surface_get_rect(ROOT_SURFACE),temp->screen_location );
-//                     rect_after = *test2;
-//                     ei_linked_rect_t list;
-//                     list.rect = rect_before;
-//                     list.next = NULL;
-//                     union_rect = union_rectangle(rect_before, rect_after);
-//                 }
-
              }
         }
         ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
@@ -217,8 +204,11 @@ void ei_app_free(void)
     free_text_copie();
     free_list_callback();
     ei_widget_destroy(ROOT_WIDGET);
-    ei_free_geometrymanager();
-    ei_free_widgetclass();
+    ei_free_geometrymanager(*ei_geometrymanager_from_name("placer"));
+    ei_free_widgetclass(*ei_widgetclass_from_name("entry"));
+    ei_free_widgetclass(*ei_widgetclass_from_name("toplevel"));
+    ei_free_widgetclass(*ei_widgetclass_from_name("button"));
+    ei_free_widgetclass(*ei_widgetclass_from_name("frame"));
     hw_surface_free(ROOT_SURFACE);
     hw_surface_free(PICKING_SURFACE);
     hw_quit();
