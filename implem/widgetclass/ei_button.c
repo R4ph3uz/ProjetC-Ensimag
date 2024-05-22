@@ -206,10 +206,33 @@ void button_drawfunc(ei_widget_t widget,
             place.x=widget->content_rect->top_left.x+(int)((float)(widget->content_rect->size.width))-(int)((float)rect.size.width);
             place.y=widget->content_rect->top_left.y+(int)((float)(widget->content_rect->size.height))-(int)((float)rect.size.height);
         }
-        if(button->img_rect == NULL) {
-            button->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
-            *button->img_rect = SAFE_MALLOC(sizeof(ei_rect_t));
-            **button->img_rect = hw_surface_get_rect(*button->img);
+        if(button->img) {
+            if(!button->img_rect){
+                button->img_rect = SAFE_MALLOC(sizeof(ei_rect_ptr_t));
+                *button->img_rect = SAFE_MALLOC(sizeof(ei_rect_t));
+                **button->img_rect = hw_surface_get_rect(*button->img);
+            }
+            ei_rect_t test = ei_rect(place, (*button->img_rect)->size);
+            ei_rect_t *intersection = intersection_rectangle(test, *clipper);
+
+            if (intersection) {
+                int point_debut_x = (intersection->top_left.x != clipper->top_left.x ? 0 : (*button->img_rect)->size.width -
+                                                                                           intersection->size.width)+
+                                    (*button->img_rect)->top_left.x;
+                int point_debut_y = (intersection->top_left.y != clipper->top_left.y ? 0 : (*button->img_rect)->size.height -
+                                                                                           intersection->size.height)
+                                    +(*button->img_rect)->top_left.y ;
+                ei_rect_t intersection_for_text = ei_rect(
+                        ei_point(point_debut_x,point_debut_y),
+                        intersection->size);
+
+
+                hw_surface_lock(*button->img);
+                ei_copy_surface(surface, intersection, *button->img, &intersection_for_text, true);
+                hw_surface_unlock(*button->img);
+            }
+            SAFE_FREE(intersection);
+
         }
 
         ei_rect_t test = ei_rect(place,(*button->img_rect)->size);

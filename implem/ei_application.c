@@ -18,7 +18,7 @@
 #include "widgetclass/ei_entry.h"
 //#include "grid.h"
 #include "invalidated_rect_list.h"
-
+#include "widgetclass/ei_toplevel.h"
 /* ----------------------------------------------------------------- */
 
 ei_impl_widget_t ARBRE_WIDGET;
@@ -54,6 +54,7 @@ void ei_app_create(ei_size_t main_window_size, bool fullscreen)
     ei_bind(ei_ev_mouse_buttondown, NULL, "toplevel", toplevel_down_click_handler, NULL);
     ei_bind(ei_ev_mouse_buttondown,NULL,"entry",entry_down_click_handler,NULL);
 
+    malloc_default_min_size();
     //définit les geometry manager
 //    ei_geometrymanager_t* grid = create_grid_gm();
     ei_geometrymanager_t* placer = create_placer_gm();
@@ -209,6 +210,7 @@ void ei_app_invalidate_rect(const ei_rect_t* rect)
 
 void ei_app_free(void)
 {
+    free_test_min_size();
     free_text_copie();
     free_list_callback();
     ei_widget_destroy(ROOT_WIDGET);

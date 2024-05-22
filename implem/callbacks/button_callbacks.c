@@ -69,7 +69,8 @@ bool up_click_handler_outside(ei_widget_t widget, ei_event_t* event, ei_user_par
         return false;
     }
     if (*button->relief)
-    *button->relief = ei_relief_raised;
+    if(button->relief)
+        *button->relief = ei_relief_raised;
     ei_unbind(ei_ev_mouse_move, NULL, "all", button_mouse_move,button);
     ei_unbind(ei_ev_mouse_buttonup, NULL, "all",up_click_handler_outside, button);
     return true;

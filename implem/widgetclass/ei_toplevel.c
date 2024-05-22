@@ -2,6 +2,15 @@
 #include "../utils/draw_utils.h"
 #include "ei_types.h"
 
+ei_size_t* TEST_MIN_SIZE ;
+
+void free_test_min_size(){
+    SAFE_FREE(TEST_MIN_SIZE);
+}
+
+void malloc_default_min_size(){
+    TEST_MIN_SIZE= malloc(sizeof(ei_size_t));
+}
 /*-----------------------------------------------------------------------------------------------*/
 
 ei_widget_t toplevel_allocfunc() {
@@ -80,12 +89,13 @@ void toplevel_setdefaultsfunc(ei_widget_t widget) {
     top_level->closable = SAFE_MALLOC(sizeof(bool));
     top_level->resizable = SAFE_MALLOC(sizeof(ei_axis_set_t));
     top_level->min_size = SAFE_MALLOC(sizeof(ei_size_t*));
-    (*top_level->min_size)= SAFE_MALLOC(sizeof(ei_size_t));
+
     *top_level->border_width= 1;
     *top_level->closable = true;
     *top_level->resizable = ei_axis_both;
     const char* title = "title";
     strcpy((char*) top_level->title ,title);
+    *top_level->min_size= TEST_MIN_SIZE;
     (*top_level->min_size)->width = 160;
     (*top_level->min_size)->height = 120;
     top_level->color->alpha = 255;

@@ -32,7 +32,7 @@ size_t get_polygon_arc_size(
     double end_rad = angle_fin * M_PI / 180.0;
 
     // Calculate the number of points
-    return (uint32_t)ceil(fabs(end_rad - start_rad) / (2 * M_PI / 360) / 4 + 1);
+    return (uint32_t)ceil(fabs(end_rad - start_rad) / (2 * M_PI / 360) / 2 + 1);
 
 }
 
@@ -54,7 +54,7 @@ void polygon_arc(ei_point_t centre,
     double end_rad = angle_fin * M_PI / 180.0;
 
     // Calculate the number of points
-    size_t size_tableau = (uint32_t)ceil(fabs(end_rad - start_rad) / (2 * M_PI / 360) / 4 + 1);
+    size_t size_tableau = (uint32_t)ceil(fabs(end_rad - start_rad) / (2 * M_PI / 360) / 2 + 1);
 
     // Generate the points
     for (uint32_t i = 0; i < size_tableau ; i++) {

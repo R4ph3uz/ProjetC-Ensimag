@@ -45,5 +45,7 @@ void toplevel_geomnotifyfunc(ei_widget_t widget);
  */
 ei_widgetclass_t* create_toplevel_widgetclass();
 
+void free_test_min_size();
+void malloc_default_min_size();
 
 #endif //EI_TOPLEVEL_H
