@@ -93,23 +93,20 @@ void ei_placer_releasefunc(ei_widget_t widget)
 
 /*-------------------------------------------------------------------------------------------------------*/
 ei_rect_t* intersection_rectangle(ei_rect_t rect1,ei_rect_t rect2) {
-    // Find the coordinates of the top-left corner of the intersection rectangle
     int x_tl = rect1.top_left.x > rect2.top_left.x ? rect1.top_left.x : rect2.top_left.x;
     int y_tl = rect1.top_left.y > rect2.top_left.y ? rect1.top_left.y : rect2.top_left.y;
 
-    // Find the coordinates of the bottom-right corner of the intersection rectangle
     int x_br = (rect1.top_left.x + rect1.size.width) < (rect2.top_left.x + rect2.size.width) ?
                (rect1.top_left.x + rect1.size.width) : (rect2.top_left.x + rect2.size.width);
     int y_br = (rect1.top_left.y + rect1.size.height) < (rect2.top_left.y + rect2.size.height) ?
                (rect1.top_left.y + rect1.size.height) : (rect2.top_left.y + rect2.size.height);
 
-    // Calculate the width and height of the intersection rectangle
     int width = x_br - x_tl;
     int height = y_br - y_tl;
 
-    // Check if the rectangles intersect
+    // Regarde si intersecte rectangle
     if (width <= 0 || height <= 0) {
-        // No intersection, return NULL
+        // Pas d'intersection return NULL;
         return NULL;
     } else {
         // Construct and return the intersection rectangle
