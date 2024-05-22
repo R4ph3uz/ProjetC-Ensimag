@@ -29,10 +29,10 @@ void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_locati
     {
         // widget->screen_location=*new_screen_location;
         if(!widget->isChildIgnoreAddInvalidateRect){
-            ei_rect_t* rectangle_intersecte = intersection_rectangle(widget->screen_location, widget->parent->screen_location);
+            ei_rect_t* rectangle_intersecte = intersection_rectangle(widget->screen_location, hw_surface_get_rect(ei_app_root_surface()));
             ei_app_invalidate_rect(rectangle_intersecte);
             SAFE_FREE(rectangle_intersecte);
-            ei_rect_t* rectangle_intersecte2 =intersection_rectangle(*new_screen_location, widget->parent->screen_location);
+            ei_rect_t* rectangle_intersecte2 =intersection_rectangle(*new_screen_location, hw_surface_get_rect(ei_app_root_surface()));
             ei_app_invalidate_rect(rectangle_intersecte2);
             SAFE_FREE(rectangle_intersecte2);
         }
@@ -45,6 +45,7 @@ void			ei_geometry_run_finalize(ei_widget_t widget, ei_rect_t* new_screen_locati
         if (widget->children_tail) //Si widget a un enfant
         {
             ei_widget_t enfant=widget->children_head;
+
             while(enfant!=NULL) //Pour chaque enfant
             {
                 if (enfant->geom_params){
