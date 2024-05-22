@@ -184,15 +184,18 @@ void ei_app_run(void)
 //                     union_rect = union_rectangle(rect_before, rect_after);
 //                 }
 
+
              }
         }
-        ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),NULL);
+        ei_rect_t* union_r = union_rectangles(get_invalidated_rect_list());
+        ei_impl_widget_draw_children(ROOT_WIDGET,ei_app_root_surface(),get_pick_surface(),union_r);
+        SAFE_FREE(union_r);
         hw_surface_update_rects(ROOT_SURFACE,get_invalidated_rect_list());
         //hw_surface_update_rects(ROOT_SURFACE,get_invalidated_rect_list()); //with invalidated rect (seem slower)
         reinitialize_invalidated_rect_list();
     }
     free(new_event);
-
+    hw_quit();
 }
 
 

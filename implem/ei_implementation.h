@@ -204,5 +204,8 @@ void supprime_de_ses_freres(ei_widget_t widget);
  */
 void place_a_la_fin(ei_widget_t widget);
 
+
+ei_rect_t* union_rectangles(const ei_linked_rect_t* tete);
+
 #endif
 

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "ei_application.h"
 #include "widgetclass/ei_toplevel.h"
+#include "limits.h"
 /*-------------------------------------------------------------------------------------------------------*/
 
 void ei_placer_runfunc(ei_widget_t widget)
@@ -291,3 +292,37 @@ void place_a_la_fin(ei_widget_t widget2) {
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
+
+ei_rect_t* union_rectangles(const ei_linked_rect_t* tete) {
+    if (tete == NULL) {
+        return NULL;
+    }
+
+    int min_x = INT_MAX;
+    int min_y = INT_MAX;
+    int max_x = INT_MIN;
+    int max_y = INT_MIN;
+
+    const ei_linked_rect_t* courant = tete;
+    while (courant != NULL) {
+        int rect_min_x = courant->rect.top_left.x;
+        int rect_min_y = courant->rect.top_left.y;
+        int rect_max_x = rect_min_x + courant->rect.size.width;
+        int rect_max_y = rect_min_y + courant->rect.size.height;
+
+        if (rect_min_x < min_x) min_x = rect_min_x;
+        if (rect_min_y < min_y) min_y = rect_min_y;
+        if (rect_max_x > max_x) max_x = rect_max_x;
+        if (rect_max_y > max_y) max_y = rect_max_y;
+
+        courant = courant->next;
+    }
+
+    ei_rect_t* union_rect = SAFE_MALLOC(sizeof(ei_rect_t));
+    union_rect->top_left.x = min_x;
+    union_rect->top_left.y = min_y;
+    union_rect->size.width = max_x - min_x;
+    union_rect->size.height = max_y - min_y;
+
+    return union_rect;
+}
