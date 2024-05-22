@@ -145,10 +145,10 @@ void find_word(char* text, int where, int* debut, int*fin){
 
 char* texte_selectionne(char* text, int32_t debut, int32_t fin){
     int taille_cut = fin-debut;
-    char* res = SAFE_MALLOC(sizeof(char)*(strlen(text)-taille_cut+1) ) ;
+    char* res = SAFE_CALLOC(sizeof(char)*(strlen(text)-taille_cut+2) ) ;
     for(int i = debut; i < fin; i++)
         res[i-debut] = text[i];
-    res[taille_cut] = '\0';
+    res[taille_cut+1] = '\0';
     return res;
 }
 

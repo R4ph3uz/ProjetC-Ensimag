@@ -170,6 +170,7 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
                 entry->position = (int32_t) fminf((float)pos1,(float)pos2);
                 //gérer le décalge si ctrl+backspace
                 if (entry->decal_x > 0){
+                    text=entry->text;
                     int old_width, old_height;
                     char* old_text = restrict_text(text, entry->position+1);
                     hw_text_compute_size(old_text, *entry->text_font, &old_width, &old_height);
@@ -178,8 +179,8 @@ bool entry_write(ei_widget_t widget, ei_event_t* event, ei_user_param_t user_par
 
                     int width, height;
                     char* text_rest = restrict_text(new, entry->position);
-                    free(text_rest);
                     hw_text_compute_size(text_rest, *entry->text_font, &width, &height);
+                    free(text_rest);
                     entry->decal_x = width-entry->widget.screen_location.size.width +decalage;
                     if (width <entry->widget.screen_location.size.width )
                         entry->decal_x =0;
