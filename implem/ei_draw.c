@@ -48,6 +48,7 @@ void	ei_draw_text		(ei_surface_t		surface,
         hw_surface_unlock(surface_text);
     }
     hw_surface_free(surface_text);
+    surface_text=NULL;
 }
 
 /*------------------------------------------------------------------------------*/
