@@ -155,7 +155,7 @@ char* texte_selectionne(char* text, int32_t debut, int32_t fin){
 /*--------------------------------------------------------------------------------------------------------------------------*/
 
 int bypass_control(const char* string, int position, int direction) {
-    const int len = strlen(string);
+    const int len = (int) strlen(string);
 
     if(direction==1) {
         if (position<0)
