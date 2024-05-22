@@ -197,7 +197,7 @@ void ei_app_invalidate_rect(const ei_rect_t* rect)
 {
     if(rect) {
         ei_linked_rect_t* list = get_invalidated_rect_list();
-        ei_linked_rect_t* new_head = malloc(sizeof(ei_linked_rect_t));
+        ei_linked_rect_t* new_head = SAFE_MALLOC(sizeof(ei_linked_rect_t));
         new_head->rect= *rect;
         new_head->next = list;
         set_invalidated_rect_list(new_head);
