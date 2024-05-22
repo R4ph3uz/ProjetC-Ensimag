@@ -42,6 +42,7 @@ void			ei_entry_configure		(ei_widget_t		widget,
         ei_widget_set_requested_size(widget,ei_size(width,20));
         free(falsestring);
         hw_surface_free(surfaceee);
+        surfaceee=NULL;
     }
     else if (!widget->geom_params)
         ei_widget_set_requested_size(widget,ei_size(50,20));

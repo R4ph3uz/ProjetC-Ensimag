@@ -33,6 +33,7 @@ void frame_releasefunc(ei_widget_t widget)
     SAFE_FREE(frame->text_anchor);
     if(frame->img){
         hw_surface_free(*frame->img);
+        *frame->img=NULL;
     }
     SAFE_FREE(frame->img_rect);
 
